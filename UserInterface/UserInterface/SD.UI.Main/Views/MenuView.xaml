@@ -1,0 +1,52 @@
+﻿<UserControl
+    x:Class="SD.UI.Main.Views.MenuView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodels="clr-namespace:SD.UI.Main.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MenuViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <Menu Margin="4,0,0,0">
+        <MenuItem Padding="16,-4,16,0" Header="_File">
+            <MenuItem
+                Command="{Binding CloseFileCommand}"
+                Header="_Close"
+                Icon="{materialDesign:PackIcon Kind=StepBackward}"
+                IsEnabled="{Binding FemModel.FileExists}" />
+            <Separator />
+            <MenuItem
+                Command="{Binding ExitAppCommand}"
+                Header="_Exit"
+                Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
+            <!--  InputGestureText="Ctrl+E"  -->
+        </MenuItem>
+        <MenuItem Padding="16,-4,16,0" Header="_Tools">
+            <!--
+                You can set the highlighted color with:
+                materialDesign:MenuItemAssist.HighlightedBackground="Fuchsia"
+            -->
+            <MenuItem
+                Command="{Binding BeamWindLoadCommand}"
+                Header="Beam wind loading"
+                Icon="{materialDesign:PackIcon Kind=ContentSave}"
+                IsEnabled="{Binding FemModel.FileExists}" />
+            <MenuItem
+                Command="{Binding BucklingAnalysisCommand}"
+                Header="Buckling Analysis"
+                Icon="{materialDesign:PackIcon Kind=Pillar}"
+                IsEnabled="{Binding FemModel.FileExists}" />
+            <!--  Command="{Binding BeamSansWindLoadCommand}"  -->
+
+            <!--
+                Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+                CommandParameter="{x:Static Dock.Right}"
+            -->
+            <!--<Separator />-->
+
+        </MenuItem>
+    </Menu>
+</UserControl>

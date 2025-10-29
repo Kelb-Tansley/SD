@@ -1,0 +1,109 @@
+﻿<UserControl
+    x:Class="SD.UI.Main.Views.HeaderView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SD.UI.Controls;assembly=SD.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="clr-namespace:SD.UI.Constants;assembly=SD.UI"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource MaterialDesignToolBarBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{StaticResource MenuHeaderRowHeight}" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Icon  -->
+            <Border>
+                <Button Margin="6" Style="{StaticResource SystemIconButton}">
+                    <Image Source="{Binding Source=app_icon.ico, Converter={StaticResource IconToImageSourceConverter}}" />
+                </Button>
+            </Border>
+
+            <!--<TextBlock
+                Grid.Column="1"
+                Margin="8"
+                VerticalAlignment="Center"
+                Style="{StaticResource MaterialDesignBody2TextBlock}">
+                Structural Design
+            </TextBlock>-->
+
+            <ContentControl
+                Grid.Column="1"
+                Panel.ZIndex="1"
+                prism:RegionManager.RegionName="{x:Static ui:RegionNames.MenuRegion}"
+                FocusVisualStyle="{x:Null}"
+                WindowChrome.IsHitTestVisibleInChrome="True" />
+
+            <Border
+                Grid.Column="3"
+                Margin="0,0,0,0"
+                Panel.ZIndex="1">
+                <!--  TitleBar  -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <!--  Close Button  -->
+                    <Button
+                        x:Name="CloseButton"
+                        Grid.Column="2"
+                        Command="{Binding WindowCloseCommand}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource WindowCloseButton}">
+                        <controls:XamlImage Template="{DynamicResource Icon_Close}" />
+                    </Button>
+                    <!--  Maximize Restore Button  -->
+                    <Button
+                        x:Name="MaximizeRestoreButton"
+                        Grid.Column="1"
+                        Command="{Binding MainWindowResizer.MaximizeCommand}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource WindowControlButton}">
+                        <controls:XamlImage x:Name="MaximizeRestoreIcon">
+                            <controls:XamlImage.Style>
+                                <Style TargetType="{x:Type controls:XamlImage}">
+                                    <Setter Property="Template" Value="{DynamicResource Icon_Maximize}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
+                                            <Setter Property="Template" Value="{DynamicResource Icon_Restore}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </controls:XamlImage.Style>
+                        </controls:XamlImage>
+                    </Button>
+                    <!--  Minimize Button  -->
+                    <Button
+                        x:Name="MinimizeButton"
+                        Grid.Column="0"
+                        Command="{Binding MainWindowResizer.MinimizeCommand}"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource WindowControlButton}">
+                        <controls:XamlImage Template="{DynamicResource Icon_Minimize}" />
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

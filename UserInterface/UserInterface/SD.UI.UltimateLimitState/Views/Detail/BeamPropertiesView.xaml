@@ -1,0 +1,244 @@
+﻿<UserControl
+    x:Class="SD.UI.UltimateLimitState.Views.BeamPropertiesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SD.UI.Controls;assembly=SD.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:validation="clr-namespace:SD.UI.Validation;assembly=SD.UI"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <!--  SANS Beam Section Settings  -->
+        <DataGrid
+            Height="Auto"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            HeadersVisibility="All"
+            ItemsSource="{Binding FemModelParameters.BeamProperties}"
+            Visibility="{Binding DesignModel.DesignCode, Converter={StaticResource DesignCodeToVisibilityConverter}, ConverterParameter=SANS}">
+            <DataGrid.Columns>
+                <materialDesign:DataGridTextColumn
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    Header="ID"
+                    IsReadOnly="True">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding Path="Number">
+                            <Binding.ValidationRules>
+                                <validation:NotEmptyValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsPlateGirder, UpdateSourceTrigger=PropertyChanged}" Header="Plate Girder">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsLateralRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Lateral Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsTopFlangeRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Top Flange Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="ToolTip" Value="The top flange of a section is typically seen as the portion of the beam in compression when subject to a +ve bending moment." />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsBottomFlangeRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Bottom Flange Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="ToolTip" Value="The bottom flange of a section is typically seen as the portion of the beam in tension when subject to a +ve bending moment." />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsTorsionalRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Torsional Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <materialDesign:DataGridTextColumn ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" Header="Stiffener Spacing">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding Path="WebStiffenerSpacing">
+                            <Binding.ValidationRules>
+                                <validation:NotEmptyValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <materialDesign:DataGridTextColumn ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" Header="Ane Factor">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding Path="NetAreaFactor">
+                            <Binding.ValidationRules>
+                                <validation:NotEmptyValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <materialDesign:DataGridTextColumn
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    Header="Name"
+                    IsReadOnly="True">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding Path="Name">
+                            <Binding.ValidationRules>
+                                <validation:NotEmptyValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!--  AS Beam Section Settings  -->
+        <DataGrid
+            Height="432"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            HeadersVisibility="All"
+            ItemsSource="{Binding FemModelParameters.BeamProperties}"
+            SelectedItem="{Binding SelectedBeamSection}"
+            Visibility="{Binding DesignModel.DesignCode, Converter={StaticResource DesignCodeToVisibilityConverter}, ConverterParameter=AS}">
+            <DataGrid.Columns>
+                <materialDesign:DataGridTextColumn
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    Header="ID"
+                    IsReadOnly="True">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding Path="Number" />
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <materialDesign:DataGridTextColumn
+                    Binding="{Binding Name}"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    Header="Name"
+                    IsReadOnly="True" />
+                <!--<DataGridCheckBoxColumn Binding="{Binding IsPlateGirder, UpdateSourceTrigger=PropertyChanged}" Header="Plate Girder">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>-->
+                <DataGridComboBoxColumn
+                    Header="Steel Grade"
+                    SelectedItemBinding="{Binding Material.SteelGrade}"
+                    Selector.IsSelected="True">
+                    <DataGridComboBoxColumn.ElementStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridComboBox}" TargetType="{x:Type ComboBox}">
+                            <Setter Property="ItemsSource" Value="{Binding Path=Material.AvailableSteelGrades}" />
+                        </Style>
+                    </DataGridComboBoxColumn.ElementStyle>
+                    <DataGridComboBoxColumn.EditingElementStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridComboBox}" TargetType="{x:Type ComboBox}">
+                            <Setter Property="ItemsSource" Value="{Binding Path=Material.AvailableSteelGrades}" />
+                            <EventSetter Event="SelectionChanged" Handler="ComboBox_SelectionChanged" />
+                        </Style>
+                    </DataGridComboBoxColumn.EditingElementStyle>
+                </DataGridComboBoxColumn>
+
+                <!--<DataGridTemplateColumn Width="180" Header="Steel Grade">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Material.SteelGrade}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Material.AvailableSteelGrades}" Style="{StaticResource MaterialDesignDataGridComboBox}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.SteelGradeChangedCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>-->
+                <materialDesign:DataGridTextColumn
+                    Binding="{Binding Material.FyElement1}"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    Header="Element 1"
+                    IsReadOnly="True" />
+                <materialDesign:DataGridTextColumn
+                    Binding="{Binding Material.FyElement2}"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    Header="Element 2"
+                    IsReadOnly="True" />
+                <materialDesign:DataGridTextColumn
+                    Binding="{Binding Material.FyElement3}"
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    Header="Element 3"
+                    IsReadOnly="True" />
+                <materialDesign:DataGridTextColumn
+                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                    Header="Min Fy"
+                    IsReadOnly="True">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding Path="Material.MinFy" />
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <materialDesign:DataGridTextColumn ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" Header="Stiffener Spacing">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding Path="WebStiffenerSpacing">
+                            <Binding.ValidationRules>
+                                <validation:NotEmptyValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <materialDesign:DataGridTextColumn ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}" Header="An Factor">
+                    <materialDesign:DataGridTextColumn.Binding>
+                        <Binding Path="NetAreaFactor">
+                            <Binding.ValidationRules>
+                                <validation:NotEmptyValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:DataGridTextColumn.Binding>
+                </materialDesign:DataGridTextColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsLateralRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Lateral Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsCompressionFlangeRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Compression Flange Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsTorsionalRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Torsional Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

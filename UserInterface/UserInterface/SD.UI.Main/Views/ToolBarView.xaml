@@ -1,0 +1,119 @@
+﻿<UserControl
+    x:Class="SD.UI.Main.Views.ToolBarView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:constants="clr-namespace:SD.Core.Shared.Constants;assembly=SD.Core.Shared"
+    xmlns:converters="clr-namespace:SD.UI.Converters;assembly=SD.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:viewmodels="clr-namespace:SD.UI.Main.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ToolBarViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ClosingCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <UserControl.Resources>
+        <converters:ComboBoxValueToStringConverter x:Key="ComboBoxValueToStringConverter" />
+        <converters:ComboBoxValueToBoolConverter x:Key="ComboBoxValueToBoolConverter" />
+        <converters:ComboBoxValueToLoadCaseConverter x:Key="ComboBoxValueToLoadCaseConverter" />
+        <system:Double x:Key="IconSize">24</system:Double>
+        <system:Double x:Key="ButtonWidth">90</system:Double>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource MaterialDesignToolBarBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="8,0" Orientation="Horizontal">
+            <ComboBox
+                Width="130"
+                Margin="1,0,16,0"
+                materialDesign:HintAssist.Hint="Design Code"
+                ItemsSource="{x:Static constants:DesignCodes.AllDesignCodes}"
+                SelectedItem="{Binding DesignModel.DesignCode}"
+                Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding DesignCodeChangedCommand}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <!--<RadioButton
+                Margin="8,0"
+                Content="LSA"
+                GroupName="SOLVER_TYPE"
+                IsChecked="{Binding DesignModel.IsLsa, Mode=TwoWay}"
+                IsEnabled="False"
+                ToolTip="Design for Linear Static Analysis" />
+            <RadioButton
+                Margin="8,0"
+                Content="NLA"
+                GroupName="SOLVER_TYPE"
+                IsChecked="{Binding DesignModel.IsNla, Mode=TwoWay}"
+                IsEnabled="False"
+                ToolTip="Design for Non-Linear Analysis coming soon" />-->
+            <CheckBox
+                Margin="8,0"
+                Command="{Binding RefreshCommand}"
+                Content="Auto Design Length"
+                IsChecked="{Binding DesignModel.IsDesignLengthCalulated}"
+                Style="{StaticResource MaterialDesignFilterChipSecondaryCheckBox}"
+                ToolTip="The auto design length calulator uses allignment and restraint conditions &#x0a;to determine the design length of the beam element. If unselected, the beam &#x0a;length will be that of the node to node length in Strand7." />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+
+            <Button
+                Margin="5,10"
+                materialDesign:ElevationAssist.Elevation="Dp0"
+                Command="{Binding RefreshCommand}"
+                IsEnabled="{Binding ProcessModel.IsFemModelLoaded}"
+                Style="{StaticResource MaterialDesignFlatButton}"
+                ToolTip="Refreshing the Strand7 model will reload the model and results file and re-calculate.">
+                <materialDesign:PackIcon
+                    Width="{StaticResource IconSize}"
+                    Height="{StaticResource IconSize}"
+                    Kind="Refresh" />
+            </Button>
+
+            <!--<Button
+                Margin="5,10"
+                materialDesign:ElevationAssist.Elevation="Dp0"
+                Command="{Binding FolderBrowseCommand}"
+                Style="{StaticResource MaterialDesignFlatButton}"
+                ToolTip="Browse for Strand7 file">
+                <materialDesign:PackIcon
+                    Width="{StaticResource IconSize}"
+                    Height="{StaticResource IconSize}"
+                    Kind="OpenInApp" />
+            </Button>-->
+
+            <Button
+                Margin="5,10,10,10"
+                materialDesign:ElevationAssist.Elevation="Dp0"
+                Command="{Binding OpenSettingsCommand}"
+                IsEnabled="{Binding ProcessModel.IsFemModelLoaded}"
+                Style="{StaticResource MaterialDesignFlatButton}">
+                <materialDesign:PackIcon
+                    Width="{StaticResource IconSize}"
+                    Height="{StaticResource IconSize}"
+                    Kind="Cog" />
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

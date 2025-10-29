@@ -1,0 +1,118 @@
+﻿<UserControl
+    x:Class="SD.UI.UltimateLimitState.Views.BeamFemModelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:SD.UI.UltimateLimitState.ViewModels"
+    xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+    d:DataContext="{d:DesignInstance Type=viewmodels:BeamFemModelViewModel}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding UnloadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Visibility="{Binding ViewManagementModel.IsDrawerOpen, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            <WindowsFormsHost Visibility="{Binding IsFemLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <wf:PictureBox x:Name="FemBeamDesignPanel" BindingContextChanged="FemBeamDesignPanel_SizeChanged" />
+            </WindowsFormsHost>
+            <Grid Visibility="{Binding IsFemLoaded, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <ProgressBar
+                    IsIndeterminate="True"
+                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                    Value="35" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <WrapPanel>
+                <CheckBox
+                    Content="Shear Force (1/x)"
+                    IsChecked="{Binding DisplayComponent.ShearForceX}"
+                    Style="{StaticResource DisplayCheckbox}" />
+                <CheckBox
+                    Content="Bending Moment (1/x)"
+                    IsChecked="{Binding DisplayComponent.BendingMomentX}"
+                    Style="{StaticResource DisplayCheckbox}" />
+                <CheckBox
+                    Content="Shear Force (2/y)"
+                    IsChecked="{Binding DisplayComponent.ShearForceY}"
+                    Style="{StaticResource DisplayCheckbox}" />
+                <CheckBox
+                    Content="Bending Moment (2/y)"
+                    IsChecked="{Binding DisplayComponent.BendingMomentY}"
+                    Style="{StaticResource DisplayCheckbox}" />
+                <CheckBox
+                    Content="Axial Force"
+                    IsChecked="{Binding DisplayComponent.AxialForce}"
+                    Style="{StaticResource DisplayCheckbox}" />
+                <CheckBox
+                    Content="Torque"
+                    IsChecked="{Binding DisplayComponent.Torque}"
+                    Style="{StaticResource DisplayCheckbox}" />
+            </WrapPanel>
+            <Button
+                Grid.Column="1"
+                Margin="12,2,12,2"
+                HorizontalAlignment="Right"
+                Command="{Binding RefreshCommand}"
+                DockPanel.Dock="Right"
+                Style="{StaticResource MaterialDesignFlatButton}"
+                ToolTip="Refresh Panel">
+                <materialDesign:PackIcon
+                    Width="24"
+                    Height="24"
+                    Kind="Refresh" />
+            </Button>
+            <Button
+                Grid.Column="2"
+                Margin="0,2"
+                HorizontalAlignment="Right"
+                Command="{Binding ZoomOutCommand}"
+                DockPanel.Dock="Right"
+                Style="{StaticResource MaterialDesignFlatButton}"
+                ToolTip="Reduce Panel Scope">
+                <materialDesign:PackIcon
+                    Width="24"
+                    Height="24"
+                    Kind="Minus" />
+            </Button>
+            <Button
+                Grid.Column="3"
+                Margin="4,2"
+                HorizontalAlignment="Right"
+                Command="{Binding ZoomInCommand}"
+                DockPanel.Dock="Right"
+                Style="{StaticResource MaterialDesignFlatButton}"
+                ToolTip="Increase Panel Scope">
+                <materialDesign:PackIcon
+                    Width="24"
+                    Height="24"
+                    Kind="Plus" />
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

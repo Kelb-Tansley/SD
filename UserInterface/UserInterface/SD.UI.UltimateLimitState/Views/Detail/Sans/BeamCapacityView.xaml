@@ -1,0 +1,52 @@
+﻿<UserControl
+    x:Class="SD.UI.UltimateLimitState.Views.BeamCapacityView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Top"
+    mc:Ignorable="d">
+    <Grid HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="130" />
+            <ColumnDefinition Width="Auto" MinWidth="65" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Margin="0,0,12,0">
+            <Label Content="Cr" />
+            <Label Content="Tr" />
+            <Label Content="Vrx-x" />
+            <Label Content="Vry-y" />
+            <Label Content="Mrx-x" />
+            <Label Content="Mry-y" />
+            <Label Content="Axial Class" />
+            <Label Content="Flexural Class" />
+            <Label Content="KL/r (Major)" />
+            <Label Content="KL/r (Minor)" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+            <Label Content="{Binding Capacity.Cr, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.Tr, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.VrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.VrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.MrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.MrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding AxialClass.SectionClassNumber}" />
+            <Label Content="{Binding FlexuralClass.SectionClassNumber}" />
+            <Label Content="{Binding Capacity.SlendernessMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.SlendernessMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="2">
+            <Label Content="kN" />
+            <Label Content="kN" />
+            <Label Content="kN" />
+            <Label Content="kN" />
+            <Label Content="kN.m" />
+            <Label Content="kN.m" />
+        </StackPanel>
+    </Grid>
+</UserControl>

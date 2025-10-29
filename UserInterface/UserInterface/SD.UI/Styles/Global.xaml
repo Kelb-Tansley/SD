@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Constants\Constants.xaml" />
+        <ResourceDictionary Source="Converters\Converters.xaml" />
+        <ResourceDictionary Source="Fonts\Fonts.xaml" />
+        <ResourceDictionary Source="Window\Windows.xaml" />
+        <ResourceDictionary Source="Buttons\WindowButtons.xaml" />
+        <ResourceDictionary Source="Buttons\Buttons.xaml" />
+        <ResourceDictionary Source="CheckBox\CheckBox.xaml" />
+        <ResourceDictionary Source="Border\DropShadows.xaml" />
+        <ResourceDictionary Source="Images\Canvas\Canvas.xaml" />
+        <ResourceDictionary Source="Images\Icons\Icons.xaml" />
+        <ResourceDictionary Source="Images\Images.xaml" />
+        <ResourceDictionary Source="Label\Label.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

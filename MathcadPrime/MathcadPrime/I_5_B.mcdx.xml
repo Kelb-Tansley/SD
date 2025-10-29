@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ConversionLog Date="7/3/2024 1:59:54 PM">
+  <WorksheetData SourceVersion="14/15" Source="D:\dev\repos\Pdg\Hatch.Pdg.Structural.Design\MathcadPrime\I_5_B.xmcd" Destination="D:\dev\repos\Pdg\Hatch.Pdg.Structural.Design\MathcadPrime\I_5_B.mcdx" />
+  <Worksheet SourceRegionCount="378" WorksheetIssueCount="0" RegionsWithIssueCount="3"><IssueGroup Category="Calculation Differences" Count="2"><ConversionIssue Count="2" Text="The conversion has changed the math font. Upon recalculation, check that your results have not changed." /></IssueGroup><IssueGroup Category="Display Differences" Count="1"><ConversionIssue Count="1" Text="An instance of 'otherwise' was converted to an equivalent 'if' expression." /></IssueGroup></Worksheet>
+</ConversionLog>

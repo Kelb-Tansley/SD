@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\AppliedLoad - Copy.feature.cs" />
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\CompressionOnly.feature.cs" />
+    <SpecFlowObsoleteCodeBehindFiles Remove="Features\ElementLength.feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+	  <PackageReference Include="FluentAssertions" Version="6.12.2" />
+	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+	  <PackageReference Include="SolidToken.SpecFlow.DependencyInjection" Version="3.9.3" />
+	  <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
+	  <PackageReference Include="SpecFlow.MsTest" Version="3.9.74" />
+	  <PackageReference Include="MSTest.TestAdapter" Version="3.6.3" />
+	  <PackageReference Include="MSTest.TestFramework" Version="3.6.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SD.Tests.Shared\SD.Tests.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Features\SectionProperties.feature.cs">
+      <DependentUpon>SectionProperties.feature</DependentUpon>
+    </Compile>
+    <Compile Update="Features\AppliedLoad.feature.cs">
+      <DependentUpon>AppliedLoad.feature</DependentUpon>
+    </Compile>
+    <Compile Update="Features\ElementLength.feature.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="TestFiles\Applied loads.LSA">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Applied loads.LSL">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Applied loads.st7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Columns Resistance Tests.st7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Element Length Restraint Tests.st7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Element Length Tests.st7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Section Properties.st7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <SpecFlowFeatureFiles Update="Features\SectionProperties.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\AppliedLoad.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Features\ElementLength.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </SpecFlowFeatureFiles>
+  </ItemGroup>
+</Project>

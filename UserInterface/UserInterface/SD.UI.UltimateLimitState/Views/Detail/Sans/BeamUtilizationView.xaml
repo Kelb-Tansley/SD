@@ -1,0 +1,105 @@
+﻿<UserControl
+    x:Class="SD.UI.UltimateLimitState.Views.BeamUtilizationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Top"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="130" />
+            <ColumnDefinition Width="Auto" MinWidth="65" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="0,0,12,0">
+            <Label Content="Tu/Tr" />
+            <Label Content="Cu/Cr" />
+            <Label Content="Mu/Mr(Major)" />
+            <Label Content="Mu/Mr(Minor)" />
+            <Label Content="Mu/Mr(1+2)" />
+            <Label Content="Vu/Vr(Major)" />
+            <Label Content="Vu/Vr(Minor)" />
+            <Label Content="13.8 a)" />
+            <Label Content="13.8 b)" />
+            <Label Content="13.8 c)" />
+            <Label Content="V+M(Major)" />
+            <Label Content="V+M(Minor)" />
+            <Label Content="T+M(1+2)" />
+            <Label Content="Von Mises" />
+            <Label Content="Slenderness(Major)" />
+            <Label Content="Slenderness(Minor)" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+            <Label Content="{Binding Utilization.Tension, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.Compression, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.BendingMajor, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.BendingMinor, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.BiAxialBending, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.ShearMajor, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.ShearMinor, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.CompressionAndBendingSectionStrength, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.CompressionAndBendingMemberStrength, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.CompressionAndBendingBucklingStrength, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.ShearAndBendingMajor, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.ShearAndBendingMinor, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.TensionAndBending, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.AllowableStress, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.SlendernessMajor, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.SlendernessMinor, Converter={StaticResource DoubleToPercentageConverter}}" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="2">
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label />
+            <Label Content="{Binding Forces.VonMises, Converter={StaticResource DoubleTwoDecimalsConverter}}" ContentStringFormat="({0} MPa)" />
+            <Label />
+            <Label />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.ColumnSpan="5"
+            Margin="0,4,0,0">
+            <StackPanel Orientation="Horizontal">
+                <Label
+                    Margin="0,0,4,0"
+                    Content="Peak utilization:"
+                    FontWeight="Bold" />
+                <Label Content="{Binding Utilization.MaxUtilization, Converter={StaticResource DoubleToPercentageConverter}}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label
+                    Margin="0,0,4,0"
+                    Content="Reason:"
+                    FontWeight="Bold" />
+                <Label Content="{Binding Utilization.MaxUtilizationDescription}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

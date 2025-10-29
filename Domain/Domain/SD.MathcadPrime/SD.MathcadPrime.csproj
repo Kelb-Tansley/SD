@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AssemblyVersion>1.0.0.3</AssemblyVersion>
+		<FileVersion>1.0.0.3</FileVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="Ptc.MathcadPrime.Automation">
+			<HintPath>C:\Program Files\PTC\Mathcad Prime 10.0.0.0\Ptc.MathcadPrime.Automation.dll</HintPath>
+			<Private>True</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\SD.Core.Shared\SD.Core.Shared.csproj" />
+		<ProjectReference Include="..\SD.Element.Design.Sans\SD.Element.Design.Sans.csproj" />
+		<ProjectReference Include="..\SD.Element.Design.AS\SD.Element.Design.AS.csproj" />
+		<ProjectReference Include="..\SD.Element.Design\SD.Element.Design.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Templates\AS\AS4100 RH Sections.mcdx">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\AS\AS4100 T Sections.mcdx">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Doubly Symmetric I or H.mcdx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\EA or UA.mcdx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\I or H.mcdx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\Monosymmetric Channel.mcdx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\AS\AS4100 I Sections.mcdx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\PFC.mcdx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\RHS.mcdx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\T.mcdx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Templates\AS\AS4100 I Sections.mcdx">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>

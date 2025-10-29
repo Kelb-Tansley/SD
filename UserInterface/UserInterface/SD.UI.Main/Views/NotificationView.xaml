@@ -1,0 +1,100 @@
+﻿<UserControl
+    x:Class="SD.UI.Main.Views.NotificationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:SD.UI.Main.ViewModels"
+    Width="800"
+    Height="500"
+    d:DataContext="{d:DesignInstance Type=viewmodels:NotificationViewModel}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style
+            x:Key="NotificationButton"
+            BasedOn="{StaticResource MaterialDesignOutlinedButton}"
+            TargetType="Button">
+            <Setter Property="Padding" Value="0,4,0,0" />
+            <Setter Property="Margin" Value="0,0,16,0" />
+            <Setter Property="MinWidth" Value="80" />
+        </Style>
+    </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ClosingCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Width="Auto"
+            Margin="16,4"
+            VerticalAlignment="Center"
+            Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+            Text="{Binding Notification.Title}"
+            TextWrapping="Wrap" />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <TextBlock
+                    Width="Auto"
+                    Margin="16,4"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignBody1TextBlock}"
+                    Text="{Binding Notification.Description}"
+                    TextWrapping="Wrap" />
+            </Grid>
+        </ScrollViewer>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Width="36"
+                Height="36"
+                Margin="6,4"
+                Command="{Binding CopyNotificationCommand}"
+                Style="{StaticResource MaterialDesignIconForegroundButton}"
+                ToolTip="Copy error message">
+                <materialDesign:PackIcon Width="18" Kind="ContentCopy" />
+            </Button>
+            <DockPanel Grid.Column="1">
+                <Button
+                    Command="{Binding CancelCommand}"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource NotificationButton}"
+                    Visibility="{Binding CancelCommandVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Label Content="Cancel" />
+                </Button>
+                <Button
+                    Command="{Binding NoCommand}"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource NotificationButton}"
+                    Visibility="{Binding NoCommandVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Label Content="No" />
+                </Button>
+                <Button
+                    HorizontalAlignment="Right"
+                    Command="{Binding YesCommand}"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource NotificationButton}"
+                    Visibility="{Binding YesCommandVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Label Content="Yes" />
+                </Button>
+                <Button
+                    HorizontalAlignment="Right"
+                    Command="{Binding OkCommand}"
+                    Style="{StaticResource NotificationButton}"
+                    Visibility="{Binding OkCommandVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Label Content="Ok" />
+                </Button>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

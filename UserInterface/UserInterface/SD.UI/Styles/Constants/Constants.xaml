@@ -1,0 +1,12 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <GridLength x:Key="MenuHeaderRowHeight">42</GridLength>
+    <sys:Double x:Key="MenuHeaderRowHeightMin">42</sys:Double>
+
+    <!--  Window Constants  -->
+    <sys:Double x:Key="LargePopUpMinHeight">552</sys:Double>
+    <sys:Double x:Key="LargePopUpMinWidth">600</sys:Double>
+</ResourceDictionary>

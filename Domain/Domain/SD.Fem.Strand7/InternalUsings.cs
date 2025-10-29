@@ -1,0 +1,15 @@
+﻿global using SD.Core.Shared.Contracts;
+global using SD.Core.Shared.Models;
+global using SD.Core.Shared.Models.BeamModels;
+global using SD.Core.Strand;
+global using SD.Core.Strand.Helpers;
+global using SD.Core.Strand.Models;
+global using SD.Fem.Strand7.Interfaces;
+global using System.Diagnostics.CodeAnalysis;
+global using System.Text;
+global using SD.Fem.Strand7.Helpers;
+global using SD.Core.Shared.Enum;
+global using SD.Core.Shared.Extensions;
+global using SD.Core.Shared.Models.UI;
+global using System.IO;
+global using SD.Element.Design.Interfaces;

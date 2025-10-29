@@ -1,0 +1,56 @@
+﻿<UserControl
+    x:Class="SD.UI.Main.Views.NavigationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="clr-namespace:SD.UI.Constants;assembly=SD.UI"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <materialDesign:Card>
+        <TabControl Style="{StaticResource MaterialDesignNavigationRailTabControl}" TabStripPlacement="Right">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center"
+                            Kind="Domain" />
+                        <TextBlock HorizontalAlignment="Center" Text="Model" />
+                    </StackPanel>
+                </TabItem.Header>
+                <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.FemRegion}" />
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center"
+                            Kind="PencilRuler" />
+                        <TextBlock HorizontalAlignment="Center" Text="ULS" />
+                    </StackPanel>
+                </TabItem.Header>
+                <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.SingleElementDesignRegionTabbed}" />
+            </TabItem>
+            <!--  The SLS view will be excluded from MVP  -->
+            <!--<TabItem>
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center"
+                            Kind="WindowShutterOpen" />
+                        <TextBlock HorizontalAlignment="Center" Text="SLS" />
+                    </StackPanel>
+                </TabItem.Header>
+                <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.ServiceabilityDesignRegionTabbed}" />
+            </TabItem>-->
+        </TabControl>
+    </materialDesign:Card>
+</UserControl>

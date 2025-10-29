@@ -1,0 +1,203 @@
+﻿<UserControl
+    x:Class="SD.UI.Loading.Views.WindLoadingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:SD.UI.Loading.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:WindLoadingViewModel}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel VerticalAlignment="Stretch">
+            <TextBlock
+                Margin="0,4,0,16"
+                Foreground="{StaticResource MaterialDesignLightForeground}"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                Text="Applied Beam Wind Loads" />
+            <StackPanel
+                Margin="16,12,0,12"
+                HorizontalAlignment="Stretch"
+                Orientation="Horizontal">
+                <TextBlock
+                    MinWidth="70"
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                    Text="Load case:" />
+                <ComboBox
+                    MinWidth="280"
+                    materialDesign:HintAssist.Hint="Load case"
+                    ItemsSource="{Binding LoadCases}"
+                    SelectedItem="{Binding SelectedLoadCase}"
+                    Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="ItemTemplate">
+                            <StackPanel Height="20" Orientation="Horizontal">
+                                <Label Margin="0,3,0,0" Content="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel
+                Margin="16,12,0,12"
+                HorizontalAlignment="Stretch"
+                Orientation="Horizontal">
+                <TextBlock
+                    MinWidth="250"
+                    Margin="0,0,8,0"
+                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                    Text="Peak wind pressure:" />
+                <TextBox
+                    MinWidth="100"
+                    HorizontalAlignment="Stretch"
+                    materialDesign:HintAssist.Hint="Unit is Pascal"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    materialDesign:TextFieldAssist.SuffixText="Pa"
+                    Style="{StaticResource MaterialDesignTextBox}"
+                    Text="{Binding WindLoadingModel.WindPressure}" />
+            </StackPanel>
+            <StackPanel
+                Margin="16,12,0,12"
+                HorizontalAlignment="Stretch"
+                Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                    Text="Wind direction:" />
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox
+                        MinWidth="28"
+                        Margin="28,8"
+                        ItemsSource="{Binding LoadDirections}"
+                        SelectedIndex="1"
+                        SelectedItem="{Binding SelectedLoadDirection}"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding LoadDirectionChangedCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                        Text="X" />
+                    <TextBox
+                        MinWidth="32"
+                        Margin="8"
+                        VerticalAlignment="Center"
+                        IsReadOnly="True"
+                        Style="{StaticResource MaterialDesignTextBox}"
+                        Text="{Binding WindLoadingModel.XVectorCoord}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                        Text="Y" />
+                    <TextBox
+                        MinWidth="32"
+                        Margin="8"
+                        VerticalAlignment="Center"
+                        IsReadOnly="True"
+                        Style="{StaticResource MaterialDesignTextBox}"
+                        Text="{Binding WindLoadingModel.YVectorCoord}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                        Text="Z" />
+                    <TextBox
+                        MinWidth="32"
+                        Margin="8"
+                        VerticalAlignment="Center"
+                        IsReadOnly="True"
+                        Style="{StaticResource MaterialDesignTextBox}"
+                        Text="{Binding WindLoadingModel.ZVectorCoord}" />
+                </StackPanel>
+            </StackPanel>
+
+            <TextBlock
+                Margin="16,12,0,12"
+                Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                Text="Element shape load factors:" />
+            <StackPanel
+                Margin="16,12,0,12"
+                HorizontalAlignment="Stretch"
+                Orientation="Horizontal">
+                <TextBlock
+                    MinWidth="250"
+                    Margin="0,0,8,0"
+                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                    Text="Sharp edge sections:" />
+                <TextBox
+                    MinWidth="100"
+                    HorizontalAlignment="Stretch"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignTextBox}"
+                    Text="{Binding WindLoadingModel.SharpEdgeFactor}" />
+            </StackPanel>
+            <StackPanel
+                Margin="16,12,0,12"
+                HorizontalAlignment="Stretch"
+                Orientation="Horizontal">
+                <TextBlock
+                    MinWidth="250"
+                    Margin="0,0,8,0"
+                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                    Text="Circular sections:" />
+                <TextBox
+                    MinWidth="100"
+                    HorizontalAlignment="Stretch"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignTextBox}"
+                    Text="{Binding WindLoadingModel.CircularSectionFactor}" />
+            </StackPanel>
+            <StackPanel
+                Margin="16,12,0,12"
+                HorizontalAlignment="Stretch"
+                Orientation="Horizontal">
+                <TextBlock
+                    MinWidth="250"
+                    Margin="0,0,8,0"
+                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                    Text="Rectangular sections:" />
+                <TextBox
+                    MinWidth="100"
+                    HorizontalAlignment="Stretch"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Style="{StaticResource MaterialDesignTextBox}"
+                    Text="{Binding WindLoadingModel.RectangularSectionFactor}" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Width="100"
+                Margin="12"
+                Command="{Binding ApplyWindLoadCommand}"
+                Content="Apply"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                ToolTip="Apply wind loads." />
+            <Button
+                Width="100"
+                Margin="12"
+                Command="{Binding CancelCommand}"
+                Content="Cancel"
+                Style="{StaticResource MaterialDesignOutlinedButton}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

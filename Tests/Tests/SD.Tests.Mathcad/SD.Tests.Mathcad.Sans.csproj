@@ -1,0 +1,89 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+	<ItemGroup>
+	  <SpecFlowObsoleteCodeBehindFiles Remove="Features\BeamColumn - Copy.feature.cs" />
+	  <SpecFlowObsoleteCodeBehindFiles Remove="Features\CompressionOnly - Copy.feature.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentAssertions" Version="6.12.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+		<PackageReference Include="SolidToken.SpecFlow.DependencyInjection" Version="3.9.3" />
+		<PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
+		<PackageReference Include="SpecFlow.MsTest" Version="3.9.74" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.6.3" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.6.3" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Domain\SD.Element.Design\SD.Element.Design.csproj" />
+		<ProjectReference Include="..\..\Domain\SD.Fem.Strand7\SD.Fem.Strand7.csproj" />
+		<ProjectReference Include="..\..\Hatch.Pdg.SD\Hatch.Pdg.SD.csproj" />
+		<ProjectReference Include="..\..\UserInterface\SD.UI\SD.UI.csproj" />
+		<ProjectReference Include="..\SD.Tests.Shared\SD.Tests.Shared.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Features\SingleBeam.feature.cs">
+	    <DependentUpon>SingleBeam.feature</DependentUpon>
+	  </Compile>
+	  <Compile Update="Features\BeamColumn.feature.cs">
+	    <DependentUpon>BeamColumn.feature</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="TestFiles\BeamColumn\BeamColumnSimpleTests.LSA">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\BeamColumn\BeamColumnSimpleTests.LSL">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\BeamColumn\Bending and Compression Resistance Tests.LSA">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\BeamColumn\BeamColumnSimpleTests.st7">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Compression\Columns Resistance Tests.LSA">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Compression\Columns Resistance Tests.LSL">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Compression\Columns Resistance Tests.st7">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Single\I or H.LSA">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Single\I or H.LSL">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Single\I or H.st7">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Single\PFC.LSA">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Single\PFC.LSL">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestFiles\Single\PFC.st7">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <SpecFlowFeatureFiles Update="Features\SingleBeam.feature">
+	    <Visible>$(UsingMicrosoftNETSdk)</Visible>
+	    <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+	  </SpecFlowFeatureFiles>
+	  <SpecFlowFeatureFiles Update="Features\BeamColumn.feature">
+	    <Visible>$(UsingMicrosoftNETSdk)</Visible>
+	    <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+	  </SpecFlowFeatureFiles>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="TestFiles\Single\" />
+	</ItemGroup>
+</Project>

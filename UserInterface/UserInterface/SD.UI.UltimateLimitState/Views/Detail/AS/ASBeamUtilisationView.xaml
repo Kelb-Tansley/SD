@@ -1,0 +1,102 @@
+﻿<UserControl
+    x:Class="SD.UI.UltimateLimitState.Views.ASBeamUtilisationView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    VerticalAlignment="Stretch"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Titles Column 1  -->
+        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+            <Label HorizontalAlignment="Right" Content="Tension" />
+            <Label HorizontalAlignment="Right" Content="Compression" />
+            <Label HorizontalAlignment="Right" Content="Major Bending" />
+            <Label HorizontalAlignment="Right" Content="Minor Bending" />
+            <Label HorizontalAlignment="Right" Content="Major Shear" />
+            <Label HorizontalAlignment="Right" Content="Minor Shear" />
+            <Label HorizontalAlignment="Right" Content="Biaxial Bending" />
+            <Label HorizontalAlignment="Right" Content="Major Bending &amp; Shear" />
+            <Label HorizontalAlignment="Right" Content="Minor Bending &amp; Shear" />
+            <Label HorizontalAlignment="Right" Content="Biaxial Bending &amp; Axial" />
+            <Label HorizontalAlignment="Right" Content="Major Bending &amp; Axial" />
+            <Label HorizontalAlignment="Right" Content="Minor Bending &amp; Axial" />
+            <Label HorizontalAlignment="Right" Content="Von Mises" />
+        </StackPanel>
+
+        <!--  Utilisations Column 1  -->
+        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+            <Label Content="{Binding Utilization.AxialTension, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.AxialCompression, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.MajorAxisBending, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.MinorAxisBending, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.MajorAxisShear, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.MinorAxisShear, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.BiaxialBending, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.MajorBendingShear, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.MinorBendingShear, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.BiaxialBendingAxial, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.MajorBendingAxial, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.MinorBendingAxial, Converter={StaticResource DoubleToPercentageConverter}}" />
+            <Label Content="{Binding Utilization.AllowableStress, Converter={StaticResource DoubleToPercentageConverter}}" />
+        </StackPanel>
+
+        <!--  Forces Column 1  -->
+        <StackPanel Grid.Column="2">
+            <Label Content="{Binding Forces.Tension, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kN}" ContentStringFormat="({0} kN)" />
+            <Label Content="{Binding Forces.Compression, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kN}" ContentStringFormat="({0} kN)" />
+            <Label Content="{Binding Forces.MaxAbsMuMajor, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kNm}" ContentStringFormat="({0} kNm)" />
+            <Label Content="{Binding Forces.MaxAbsMuMinor, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kNm}" ContentStringFormat="({0} kNm)" />
+            <Label Content="{Binding Forces.MaxAbsVuMajor, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kN}" ContentStringFormat="({0} kN)" />
+            <Label Content="{Binding Forces.MaxAbsVuMinor, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kN}" ContentStringFormat="({0} kN)" />
+            <Label Content="{Binding Utilization.BiaxialBending, Converter={StaticResource DoubleTwoDecimalsConverter}}" ContentStringFormat="({0})" />
+            <Label Content="{Binding Forces.MaxAbsVuMajor, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kN}" ContentStringFormat="({0} kN)" />
+            <Label Content="{Binding Forces.MaxAbsVuMinor, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kN}" ContentStringFormat="({0} kN)" />
+            <Label Content="{Binding Utilization.BiaxialBendingAxial, Converter={StaticResource DoubleTwoDecimalsConverter}}" ContentStringFormat="({0})" />
+            <Label Content="{Binding Forces.MaxAbsMuMajor, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kNm}" ContentStringFormat="({0} kNm)" />
+            <Label Content="{Binding Forces.MaxAbsMuMinor, Converter={StaticResource DoubleToUnitConverter}, ConverterParameter=kNm}" ContentStringFormat="({0} kNm)" />
+            <Label Content="{Binding Forces.VonMises, Converter={StaticResource DoubleTwoDecimalsConverter}}" ContentStringFormat="({0} MPa)" />
+        </StackPanel>
+
+        <Border Grid.Row="1" Grid.ColumnSpan="3" />
+
+        <StackPanel
+            Grid.Row="2"
+            Grid.ColumnSpan="6"
+            Margin="0,12,0,0">
+            <StackPanel Orientation="Horizontal">
+                <Label
+                    Margin="0,0,4,0"
+                    Content="Peak Utilisation:"
+                    FontWeight="Bold" />
+                <Label Content="{Binding Utilization.MaxUtilization, Converter={StaticResource DoubleToPercentageConverter}}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label
+                    Margin="0,0,4,0"
+                    Content="Reason:"
+                    FontWeight="Bold" />
+                <Label Content="{Binding Utilization.MaxUtilizationDescription}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

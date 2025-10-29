@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AssemblyVersion>1.0.0.3</AssemblyVersion>
+		<FileVersion>1.0.0.3</FileVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+		<PackageReference Include="Prism.Wpf" Version="9.0.537" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\SD.Core.Shared\SD.Core.Shared.csproj" />
+		<ProjectReference Include="..\..\Data\SD.Data\SD.Data.csproj" />
+		<ProjectReference Include="..\..\Domain\SD.Element.Design\SD.Element.Design.csproj" />
+		<ProjectReference Include="..\SD.UI.Loading\SD.UI.Loading.csproj" />
+		<ProjectReference Include="..\SD.UI.Serviceability\SD.UI.Serviceability.csproj" />
+		<ProjectReference Include="..\SD.UI.Tools\SD.UI.Tools.csproj" />
+		<ProjectReference Include="..\SD.UI.UltimateLimitState\SD.UI.UltimateLimitState.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Views\DesignSettingsView.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\FileBrowserView.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\HeaderView.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\NavigationView.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\NotificationView.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\SettingsView.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Views\ToolBarView.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
+	</ItemGroup>
+
+</Project>

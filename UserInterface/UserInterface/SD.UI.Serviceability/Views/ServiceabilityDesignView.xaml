@@ -1,0 +1,46 @@
+﻿<UserControl
+    x:Class="SD.UI.Serviceability.Views.ServiceabilityDesignView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="clr-namespace:SD.UI.Constants;assembly=SD.UI"
+    xmlns:viewmodels="clr-namespace:SD.UI.Serviceability.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ServiceabilityDesignViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Background="{DynamicResource MaterialDesignPaper}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.SlsLoadCombinationsViewRegion}" />
+
+        <GridSplitter
+            Grid.Column="1"
+            Width="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch" />
+
+        <Border
+            Grid.Column="2"
+            Margin="0"
+            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+            BorderThickness="1">
+            <ContentControl Grid.Column="1" prism:RegionManager.RegionName="{x:Static ui:RegionNames.SlsFemModelViewRegion}" />
+        </Border>
+    </Grid>
+</UserControl>

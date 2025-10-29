@@ -1,0 +1,106 @@
+﻿<UserControl
+    x:Class="SD.UI.UltimateLimitState.Views.SelectedBeamDetailsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:selectors="clr-namespace:SD.UI.Selectors;assembly=SD.UI"
+    xmlns:views="clr-namespace:SD.UI.UltimateLimitState.Views"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="SansDetailsView">
+                <ScrollViewer
+                    DataContext="{Binding Path=DataContext.SelectedBeamResult, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}}"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto">
+                    <!--  SANS  -->
+                    <StackPanel>
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="Effective Length">
+                            <views:BeamEffectiveLengthView Margin="8" />
+                        </Expander>
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="ULS Utilization">
+                            <views:BeamUtilizationView Margin="8" />
+                        </Expander>
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="Member Capacity">
+                            <views:BeamCapacityView Margin="8" />
+                        </Expander>
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="Section Properties">
+                            <views:BeamSectionProperties Margin="8" />
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </DataTemplate>
+
+            <DataTemplate x:Key="ASDetailsView">
+                <ScrollViewer
+                    DataContext="{Binding Path=DataContext.SelectedBeamResult, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}}"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto">
+                    <!--  AS  -->
+                    <StackPanel TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="Effective Length">
+                            <views:BeamEffectiveLengthView Margin="8" />
+                        </Expander>
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="ULS Utilisation">
+                            <views:ASBeamUtilisationView Margin="8" />
+                        </Expander>
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="ULS Capacity">
+                            <views:ASBeamCapacityView Margin="8" />
+                        </Expander>
+                        <Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="Section Properties">
+                            <views:ASBeamSectionProperties Margin="8" />
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </DataTemplate>
+
+            <selectors:UlsDetailsDesignCodeSelector
+                x:Key="UlsDetailsDesignCodeSelector"
+                ASDetailsDataTemplate="{StaticResource ASDetailsView}"
+                SansDetailsDataTemplate="{StaticResource SansDetailsView}" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <ContentPresenter
+            Content="{Binding Path=DataContext.SelectedDesignCode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}}"
+            ContentTemplateSelector="{StaticResource UlsDetailsDesignCodeSelector}"
+            DataContext="{Binding Path=DataContext.SelectedDesignCode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}}" />
+    </Grid>
+</UserControl>

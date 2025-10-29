@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<BaseOutputPath>..\..\..\bin</BaseOutputPath>
+		<AssemblyVersion>1.0.0.3</AssemblyVersion>
+		<FileVersion>1.0.0.3</FileVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ApplicationDefinition Include="Strand7.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\SD.Core.Infrastructure\SD.Core.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\Core\SD.Core.Strand\SD.Core.Strand.csproj" />
+		<ProjectReference Include="..\..\Data\SD.Data\SD.Data.csproj" />
+		<ProjectReference Include="..\..\UserInterface\SD.UI\SD.UI.csproj" />
+		<ProjectReference Include="..\SD.Fem.Strand7\SD.Fem.Strand7.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Strand7Logger.config">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>

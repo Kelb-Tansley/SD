@@ -1,0 +1,166 @@
+﻿<Window
+    x:Class="SD.UI.Windows.SDMessageBoxWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behavior="clr-namespace:SD.UI.Behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    Title=""
+    Width="800"
+    Height="300"
+    MinWidth="350"
+    MinHeight="250"
+    MaxWidth="570"
+    MaxHeight="550"
+    x:ClassModifier="internal"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False"
+    SizeToContent="WidthAndHeight"
+    Style="{StaticResource PopUpWindowStyle}"
+    TextOptions.TextFormattingMode="Display"
+    TextOptions.TextRenderingMode="ClearType"
+    Topmost="True"
+    UseLayoutRounding="True"
+    WindowStartupLocation="CenterOwner"
+    WindowStyle="SingleBorderWindow"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" MinHeight="69">
+            <DockPanel>
+                <Image
+                    Name="Image_MessageBox"
+                    Width="32"
+                    Height="32"
+                    Margin="32,0,12,0"
+                    HorizontalAlignment="Left"
+                    DockPanel.Dock="Left"
+                    Visibility="Collapsed" />
+                <ScrollViewer>
+                    <Grid>
+                        <TextBlock
+                            Name="TextBlock_Message"
+                            Width="Auto"
+                            Margin="16,4"
+                            VerticalAlignment="Center"
+                            behavior:TextBlockFormatterBehavior.FormattedText="{Binding Text, RelativeSource={RelativeSource Mode=Self}}"
+                            TextWrapping="Wrap" />
+                    </Grid>
+                </ScrollViewer>
+            </DockPanel>
+        </Grid>
+        <Grid Grid.Row="1" MinHeight="49">
+            <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderThickness="0,1,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Name="Button_Clipboard_Copy"
+                        Width="36"
+                        Height="36"
+                        Margin="6,4"
+                        Click="Button_Clipboard_Copy_Click"
+                        Style="{StaticResource MaterialDesignIconForegroundButton}"
+                        ToolTip="Copy error message"
+                        Visibility="Collapsed">
+                        <md:PackIcon Width="18" Kind="ContentCopy" />
+                    </Button>
+                    <DockPanel Grid.Column="1" Margin="6,0">
+
+                        <!--  Cancel Button  -->
+                        <Button
+                            Name="Button_Cancel"
+                            Height="26"
+                            MinWidth="88"
+                            MaxWidth="160"
+                            Margin="6,0"
+                            HorizontalAlignment="Right"
+                            Click="Button_Cancel_Click"
+                            DockPanel.Dock="Right"
+                            IsCancel="True"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Visibility="Collapsed">
+                            <Label
+                                Name="Label_Cancel"
+                                Padding="0"
+                                Style="{StaticResource ButtonContentStyle}">
+                                _Cancel
+                            </Label>
+                        </Button>
+
+                        <!--  No Button  -->
+                        <Button
+                            Name="Button_No"
+                            Height="28"
+                            MinWidth="88"
+                            MaxWidth="200"
+                            Margin="6,0"
+                            HorizontalAlignment="Right"
+                            Click="Button_No_Click"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Visibility="Collapsed">
+                            <Label
+                                Name="Label_No"
+                                Padding="0"
+                                Style="{StaticResource ButtonContentStyle}">
+                                _No
+                            </Label>
+                        </Button>
+
+                        <!--  Yes Button  -->
+                        <Button
+                            Name="Button_Yes"
+                            Height="28"
+                            MinWidth="88"
+                            MaxWidth="200"
+                            Margin="20,0,6,0"
+                            HorizontalAlignment="Right"
+                            Click="Button_Yes_Click"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Visibility="Collapsed">
+                            <Label
+                                Name="Label_Yes"
+                                Padding="0"
+                                Style="{StaticResource ButtonContentStyle}">
+                                _Yes
+                            </Label>
+                        </Button>
+
+                        <!--  OK Button  -->
+                        <Button
+                            Name="Button_OK"
+                            Height="28"
+                            MinWidth="88"
+                            MaxWidth="160"
+                            Margin="35,0,6,0"
+                            HorizontalAlignment="Right"
+                            Click="Button_OK_Click"
+                            Style="{StaticResource MaterialDesignOutlinedButton}">
+                            <Label
+                                Name="Label_Ok"
+                                Padding="0"
+                                Style="{StaticResource ButtonContentStyle}">
+                                _OK
+                            </Label>
+                        </Button>
+                    </DockPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

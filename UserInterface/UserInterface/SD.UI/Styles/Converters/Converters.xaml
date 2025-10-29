@@ -1,0 +1,21 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:SD.UI.Converters">
+    <converter:DelayedBooleanToVisibilityConverter x:Key="DelayedBooleanToVisibilityConverter" />
+    <converter:DelayedBooleanToVisibilityConverter
+        x:Key="InverseDelayedBooleanToVisibilityConverter"
+        FalseValue="Visible"
+        TrueValue="Hidden" />
+    <converter:IconToImageSourceConverter x:Key="IconToImageSourceConverter" />
+    <converter:DoubleTwoDecimalsConverter x:Key="DoubleTwoDecimalsConverter" />
+    <converter:GreaterThanConverter x:Key="GreaterThanConverter" />
+    <converter:DoubleToUnitConverter x:Key="DoubleToUnitConverter" />
+    <converter:DoubleToPercentageConverter x:Key="DoubleToPercentageConverter" />
+    <converter:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    <converter:WrapPanelConverter x:Key="WrapPanelConverter" />
+    <converter:BeamTypeConverter x:Key="BeamTypeConverter" />
+    <converter:DesignCodeToVisibilityConverter x:Key="DesignCodeToVisibilityConverter" />
+    <converter:ObjectNullToVisibilityConverter x:Key="ObjectNullToVisibilityConverter" />
+    <converter:InvertedObjectNullToVisibilityConverter x:Key="InvertedObjectNullToVisibilityConverter" />
+</ResourceDictionary>

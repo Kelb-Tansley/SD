@@ -1,0 +1,7 @@
+﻿global using SD.Core.Shared.Contracts;
+global using SD.Core.Shared.Models;
+global using SD.Core.Shared.Models.BeamModels;
+global using System.Text;
+global using System.IO;
+global using SD.Element.Design.Interfaces;
+global using Microsoft.EntityFrameworkCore;

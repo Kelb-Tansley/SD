@@ -1,0 +1,205 @@
+﻿<UserControl
+    x:Class="SD.UI.UltimateLimitState.Views.ASBeamSectionProperties"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    VerticalAlignment="Stretch"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--
+            <Button
+                Grid.Column="5"
+                Width="20"
+                Height="20"
+                Margin="0,-82,0,0"
+                Padding="0"
+                Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryLightButton}"
+                ToolTip="View detailed beam properties">
+                <materialDesign:PackIcon
+                    Width="18"
+                    Height="18"
+                    Kind="InformationSymbol" />
+            </Button>
+        -->
+
+        <Label
+            Margin="0,0,10,10"
+            VerticalAlignment="Top"
+            Content="Name" />
+        <Label
+            Grid.Column="1"
+            Grid.ColumnSpan="5"
+            Margin="0,0,0,10"
+            VerticalAlignment="Top"
+            Content="{Binding Beam.Section.Name}"
+            FontWeight="Bold" />
+
+        <!--  Outstanding Properties  -->
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0,0,10,0">
+            <Label Content="Ag" />
+            <Label Content="Mass" />
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.Agr, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.SectionMass, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=2}"
+                FontWeight="Bold" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="5,0,0,0">
+            <Label Content="mm²" />
+            <Label Content="kg/m" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="3"
+            Margin="20,0,10,0">
+            <Label Content="J" />
+            <Label Content="Cw" />
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="4">
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.J, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.Cw, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+        </StackPanel>
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="5"
+            Margin="5,0,0,0">
+            <Label Content="mm⁴" />
+            <Label Content="mm⁶" />
+        </StackPanel>
+
+        <!--  Major axis properties  -->
+        <Label
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Margin="0,10,0,0"
+            VerticalAlignment="Bottom">
+            <TextBlock TextDecorations="Underline">Major Axis</TextBlock>
+        </Label>
+        <StackPanel Grid.Row="3" Margin="0,0,10,0">
+            <Label Content="Ix" />
+            <Label Content="Zx" />
+            <Label Content="Sx" />
+            <Label Content="rx" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Grid.Column="1">
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.IMajor, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.ZeMajor, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.ZplMajor, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.RMajor, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="3"
+            Grid.Column="2"
+            Margin="5,0,0,0">
+            <Label Content="mm⁴" />
+            <Label Content="mm³" />
+            <Label Content="mm³" />
+            <Label Content="mm" />
+        </StackPanel>
+
+        <!--  Minor axis properties  -->
+        <Label
+            Grid.Row="2"
+            Grid.Column="3"
+            Grid.ColumnSpan="3"
+            Margin="20,10,0,0"
+            VerticalAlignment="Bottom">
+            <TextBlock TextDecorations="Underline">Minor Axis</TextBlock>
+        </Label>
+        <StackPanel
+            Grid.Row="3"
+            Grid.Column="3"
+            Margin="20,0,10,0">
+            <Label Content="Iy" />
+            <Label Content="Zy" />
+            <Label Content="Sy" />
+            <Label Content="ry" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Grid.Column="4">
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.IMinor, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.ZeMinor, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.ZplMinor, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+            <Label
+                HorizontalAlignment="Right"
+                Content="{Binding Beam.Section.RMinor, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=0}"
+                FontWeight="Bold" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="3"
+            Grid.Column="5"
+            Margin="5,0,0,0">
+            <Label Content="mm⁴" />
+            <Label Content="mm³" />
+            <Label Content="mm³" />
+            <Label Content="mm" />
+        </StackPanel>
+    </Grid>
+</UserControl>
