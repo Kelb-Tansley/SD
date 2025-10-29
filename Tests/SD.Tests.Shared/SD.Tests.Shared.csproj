@@ -17,7 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Hatch.Pdg.SD\Hatch.Pdg.SD.csproj" />
+		<ProjectReference Include="..\..\Hatch.Pdg.SD\SD.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

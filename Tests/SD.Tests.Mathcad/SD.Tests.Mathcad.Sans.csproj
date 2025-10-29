@@ -20,7 +20,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Domain\SD.Element.Design\SD.Element.Design.csproj" />
 		<ProjectReference Include="..\..\Domain\SD.Fem.Strand7\SD.Fem.Strand7.csproj" />
-		<ProjectReference Include="..\..\Hatch.Pdg.SD\Hatch.Pdg.SD.csproj" />
+		<ProjectReference Include="..\..\Hatch.Pdg.SD\SD.csproj" />
 		<ProjectReference Include="..\..\UserInterface\SD.UI\SD.UI.csproj" />
 		<ProjectReference Include="..\SD.Tests.Shared\SD.Tests.Shared.csproj" />
 	</ItemGroup>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hatch.Pdg.SD", "Hatch.Pdg.SD.csproj", "{D5010D3A-3D08-45D7-9541-DBBC5E06465D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD", "SD.csproj", "{D5010D3A-3D08-45D7-9541-DBBC5E06465D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserInterface", "UserInterface", "{36F88179-01C6-47F2-BBB5-10449474146C}"
 	ProjectSection(SolutionItems) = preProject
