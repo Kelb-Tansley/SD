@@ -1,0 +1,133 @@
+﻿<Window
+    x:Class="Hatch.Pdg.SD.Views.Shell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behavior="clr-namespace:SD.UI.Behaviors;assembly=SD.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="clr-namespace:SD.UI.Constants;assembly=SD.UI"
+    xmlns:viewmodels="clr-namespace:Hatch.Pdg.SD.ViewModels"
+    Title="Structural Design"
+    behavior:MainWindowBehavior.WindowResizer="MainWindowResizer"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    Background="{DynamicResource MaterialDesignToolBarBackground}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    IsEnabled="{Binding ShowShell}"
+    Style="{StaticResource MainWindowStyle}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    Topmost="False"
+    Visibility="{Binding ShowShell, Converter={StaticResource BooleanToVisibilityConverter}}"
+    WindowStartupLocation="CenterOwner"
+    WindowState="Maximized"
+    mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ClosingCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="SizeChanged">
+            <i:InvokeCommandAction Command="{Binding WindowResizeCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <materialDesign:DialogHost
+        DialogContentUniformCornerRadius="20"
+        DialogTheme="Inherit"
+        IsOpen="{Binding ViewManagementModel.IsDialogOpen}">
+        <materialDesign:DialogHost.DialogContent>
+            <Grid>
+                <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.NotificationRegion}" Visibility="{Binding NotificationDisplayed, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.SettingsRegion}" Visibility="{Binding NotificationDisplayed, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+            </Grid>
+        </materialDesign:DialogHost.DialogContent>
+        <materialDesign:DrawerHost
+            x:Name="DrawerHost"
+            Padding="16"
+            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            IsBottomDrawerOpen="True"
+            IsRightDrawerOpen="{Binding ViewManagementModel.IsRightDrawerOpen}"
+            RightDrawerBackground="Transparent"
+            RightDrawerCornerRadius="20 20 0 0">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="DrawerClosing">
+                    <i:InvokeCommandAction Command="{Binding DrawerClosingCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <materialDesign:DrawerHost.RightDrawerContent>
+                <Grid Margin="24">
+                    <Border
+                        MinWidth="450"
+                        Padding="32"
+                        Background="{DynamicResource MaterialDesignLightBackground}"
+                        CornerRadius="16">
+                        <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.RightDrawerContentRegion}" />
+                    </Border>
+                </Grid>
+            </materialDesign:DrawerHost.RightDrawerContent>
+            <materialDesign:DrawerHost.BottomDrawerContent>
+                <Grid Margin="24">
+                    <Border
+                        Padding="32"
+                        Background="{DynamicResource MaterialDesignLightBackground}"
+                        CornerRadius="16">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="Bold">Disclaimer</Run>
+                            <LineBreak />
+                            The software provided herein is intended to assist in the design of structural steelwork in the mining and industrial sectors. While every effort has been made to ensure the accuracy and reliability of the software, it is provided "as is" without warranty of any kind, either express or implied.<LineBreak />
+                            <LineBreak />
+                            <Run FontWeight="Bold">Liability Disclaimer</Run>
+                            <LineBreak />
+                            The developers of this software shall not be held liable for any direct, indirect, incidental, or consequential damages or losses arising out of the use or inability to use the software, including but not limited to structural failure, property damage, personal injury, or death.<LineBreak />
+                            <LineBreak />
+                            <Run FontWeight="Bold">User Responsibility</Run>
+                            <LineBreak />
+                            It is the sole responsibility of the user to ensure the accuracy, completeness, and suitability of the software for their specific application. Users must conduct their own independent verification and validation of the software's output and ensure that all designs comply with relevant codes, standards, and regulations. The use of this software does not replace the need for professional engineering judgment and expertise.<LineBreak />
+                            <LineBreak />
+                            By using this software, you acknowledge that you have read, understood, and agreed to this disclaimer.</TextBlock>
+                    </Border>
+                </Grid>
+            </materialDesign:DrawerHost.BottomDrawerContent>
+            <Grid>
+                <Grid Background="{DynamicResource MaterialDesignToolBarBackground}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+
+                    <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.HeaderRegion}" />
+
+                    <ContentControl
+                        Grid.Row="1"
+                        prism:RegionManager.RegionName="{x:Static ui:RegionNames.ToolbarRegion}"
+                        Visibility="{Binding ProcessModel.IsFemModelLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                    <Grid Grid.Row="2" Visibility="{Binding ProcessModel.IsPrimaryProcessRunning, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                        <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.NavigationRegion}" Visibility="{Binding IsFemLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.BrowserRegion}" Visibility="{Binding IsBrowserLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Grid>
+                </Grid>
+                <Grid
+                    Panel.ZIndex="10000"
+                    Background="{StaticResource MaterialDesignLightBackground}"
+                    Opacity="0.6"
+                    Visibility="{Binding ProcessModel.IsPrimaryProcessRunning, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">
+                    <ProgressBar
+                        IsIndeterminate="True"
+                        Style="{StaticResource MaterialDesignCircularProgressBar}"
+                        Value="0" />
+                </Grid>
+                <materialDesign:Snackbar
+                    Margin="8"
+                    IsActive="{Binding SnackbarModel.IsActive}"
+                    Message="{Binding SnackbarModel.Message}" />
+            </Grid>
+        </materialDesign:DrawerHost>
+    </materialDesign:DialogHost>
+</Window>
