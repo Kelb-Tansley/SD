@@ -31,26 +31,10 @@ namespace SD.MathcadPrime.Events
                 MessageBox.Show("Worksheet was renamed:\n\nFrom:t" + previousFullName + "\n\nTo:\t" + currentFullName);
         }
 
-        public void OnWorksheetInputsOutputsSelected(string documentFullName, string documentName, IMathcadPrimeInputs inputs, IMathcadPrimeOutputs outputs)
-        {
-        }
-
         public void OnExit()
         {
             if (ShowEvents)
                 MessageBox.Show("Mathcad Prime is closed by User");
-        }
-
-        public void OnWorksheetStatesGenerated(string documentFullName, string documentName, WorksheetOperations operations, IMathcadPrimeInputsOutputsStates itemsStates, IMathcadPrimeInputsOutputsConflicts conflicts)
-        {
-        }
-
-        public void OnWorksheetStatesGenerating(string documentFullName, string documentName, WorksheetOperations operations, IMathcadPrimeInputsOutputsStates itemsStates, IMathcadPrimeInputsOutputsConflicts conflicts)
-        {
-        }
-
-        public void OnWorksheetRequestToUpdateInputs(string documentFullName, string documentName, IMathcadPrimeValuesSetter setter)
-        {
         }
     }
 }
