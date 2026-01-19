@@ -16,7 +16,7 @@ using SD.UI.Tools.Views;
 using SD.UI.UltimateLimitState.Views;
 using SD.UI.ViewModel;
 
-namespace Hatch.Pdg.SD.ViewModels;
+namespace SD.ViewModels;
 public partial class ShellViewModel : FemViewModelBase
 {
     private readonly IAuthenticationService _authenticationService;
@@ -75,7 +75,7 @@ public partial class ShellViewModel : FemViewModelBase
         _regionManager.RegisterViewWithRegion(RegionNames.ToolbarRegion, typeof(ToolBarView));
         _regionManager.RegisterViewWithRegion(RegionNames.NavigationRegion, typeof(NavigationView));
         _regionManager.RegisterViewWithRegion(RegionNames.BrowserRegion, typeof(FileBrowserView));
-        
+
         _regionManager.RegisterViewWithRegion(RegionNames.RightDrawerContentRegion, typeof(GeneralToolsView));
 
         _regionManager.RegisterViewWithRegion(RegionNames.SettingsRegion, typeof(SettingsView));
@@ -87,19 +87,21 @@ public partial class ShellViewModel : FemViewModelBase
     [RelayCommand]
     public void Loaded()
     {
-        var certified = _authenticationService.CertifyApplication();
-        if (certified.IsFailure)
-        {
-            _notificationService.ShutdownAfterErrorNotice(new Notification("Application Certification Error", certified.Message));
-            return;
-        }
+        AuthenticateUser();
 
-        var authorised = _authenticationService.AuthoriseUser();
-        if (authorised.IsFailure)
-        {
-            _notificationService.ShutdownAfterErrorNotice(new Notification("Application Authorisation Error", authorised.Message));
-            return;
-        }
+        //var certified = _authenticationService.CertifyApplication();
+        //if (certified.IsFailure)
+        //{
+        //    _notificationService.ShutdownAfterErrorNotice(new Notification("Application Certification Error", certified.Message));
+        //    return;
+        //}
+
+        //var authorised = _authenticationService.AuthoriseUser();
+        //if (authorised.IsFailure)
+        //{
+        //    _notificationService.ShutdownAfterErrorNotice(new Notification("Application Authorisation Error", authorised.Message));
+        //    return;
+        //}
 
         _appShutdownEvent = _eventAggregator.GetEvent<AppShutdownEvent>();
 
@@ -107,8 +109,8 @@ public partial class ShellViewModel : FemViewModelBase
             Task.Run(() => Task.Delay(5000)).GetAwaiter().GetResult();
 
         var strand7Connect = _connectionService.ConnectToStrand7Api();
-        if (!strand7Connect)
-            _appShutdownEvent.Publish();
+        // if (!strand7Connect)
+        //   _appShutdownEvent.Publish();
 
         _splashService.CloseSplash(false);
         ShowShell = true;
@@ -128,6 +130,11 @@ public partial class ShellViewModel : FemViewModelBase
         _shellResizeResizeEvent = _eventAggregator.GetEvent<ShellResizeEvent>();
 
         BrowserLoaded();
+    }
+
+    private void AuthenticateUser()
+    {
+
     }
 
     [RelayCommand]

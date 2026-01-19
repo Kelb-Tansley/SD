@@ -1,11 +1,11 @@
-﻿using Hatch.Pdg.SD.ViewModels;
-using Hatch.Pdg.SD.Views;
+﻿using SD.ViewModels;
+using SD.Views;
 using Prism.Events;
 using Prism.Ioc;
 using SD.Core.Shared.Contracts;
 using SD.UI.Events;
 
-namespace Hatch.Pdg.SD.Services;
+namespace SD.Services;
 public class DesignService(IContainerProvider containerProvider,
                            IProcessModel processModel,
                            IEventAggregator eventAggregator) : IDesignService

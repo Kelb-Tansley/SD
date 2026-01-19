@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Hatch.Pdg.SD.Views;
+namespace SD.Views;
 public partial class Design : Window
 {
     public Design()

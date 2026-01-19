@@ -498,6 +498,9 @@ public class StrandApiService(
     }
     public void CloseAllFemFiles(int modelId)
     {
+        if (!_connectionService.IsApiConnected)
+            return;
+
         _ = St7.St7CloseResultFile(modelId).HandleApiError();
         _ = St7.St7CloseFile(modelId).HandleApiError();
     }

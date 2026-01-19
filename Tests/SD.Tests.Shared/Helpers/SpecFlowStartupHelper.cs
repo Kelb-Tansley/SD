@@ -1,7 +1,7 @@
 ﻿using SD.MathcadPrime.Interfaces;
 using SD.MathcadPrime.Services;
-using Hatch.Pdg.SD.Adapters;
-using Hatch.Pdg.SD.Services;
+using SD.Adapters;
+using SD.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.Events;

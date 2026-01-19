@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Hatch.Pdg.SD.Views
+namespace SD.Views
 {
     /// <summary>
     /// Interaction logic for Splash.xaml

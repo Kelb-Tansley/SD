@@ -4,7 +4,7 @@ using SD.Element.Design.Sans.Models;
 using SD.Fem.Strand7.Services;
 using SD.Fem.Strand7.Interfaces;
 using SD.Core.Shared.Contracts;
-using Hatch.Pdg.SD.Views;
+using SD.Views;
 using SD.UI.Singletons;
 using SD.Core.Shared.Models;
 using SD.Data.Services;
@@ -13,12 +13,12 @@ using SD.Data.Interfaces;
 using SD.Data.Entities;
 using SD.Data.Mapping;
 using SD.Core.Shared.Models.BeamModels;
-using Hatch.Pdg.SD.Services;
+using SD.Services;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using SD.UI.Services;
 using SD.Element.Design.Sans.Services;
-using Hatch.Pdg.SD.Adapters;
+using SD.Adapters;
 using SD.MathcadPrime.Interfaces;
 using SD.MathcadPrime.Services;
 using System.Reflection;
@@ -31,7 +31,7 @@ using SD.Element.Design.Models;
 using SD.Element.Design.Services;
 using SD.Core.Infrastructure.Interfaces;
 
-namespace Hatch.Pdg.SD;
+namespace SD;
 public partial class App : PrismApplication
 {
     private AppShutdownEvent? _shutdownEvent;

@@ -87,7 +87,6 @@ public partial class ToolBarViewModel : ViewModelBase
 
         _fileOpenedEvent.Publish();
 
-        // Close the dialog
         openFileDialog.Dispose();
     }
 

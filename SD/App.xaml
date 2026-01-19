@@ -1,5 +1,5 @@
 ﻿<prism:PrismApplication
-    x:Class="Hatch.Pdg.SD.App"
+    x:Class="SD.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -9,11 +9,15 @@
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:CustomColorTheme
                     BaseTheme="Light"
-                    PrimaryColor="#425563"
-                    SecondaryColor="#E84A37" />
+                    PrimaryColor="#4A4A4A"
+                    SecondaryColor="#1F4E79" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
+
+<!--PrimaryColor="#425563"
+    
+SecondaryColor="#E84A37"-->

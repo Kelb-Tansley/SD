@@ -6,7 +6,7 @@ using SD.Element.Design.AS.Services;
 using SD.Element.Design.Interfaces;
 using SD.Element.Design.Sans.Services;
 
-namespace Hatch.Pdg.SD.Adapters;
+namespace SD.Adapters;
 public class DesignCodeAdapter : IDesignCodeAdapter
 {
     private readonly IContainerProvider? _containerProvider = null;

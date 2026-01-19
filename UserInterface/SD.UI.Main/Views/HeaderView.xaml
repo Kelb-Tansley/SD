@@ -34,7 +34,7 @@
             <!--  Icon  -->
             <Border>
                 <Button Margin="6" Style="{StaticResource SystemIconButton}">
-                    <Image Source="{Binding Source=app_icon.ico, Converter={StaticResource IconToImageSourceConverter}}" />
+                    <Image Source="{Binding Source=bridge_multi_res.ico, Converter={StaticResource IconToImageSourceConverter}}" />
                 </Button>
             </Border>
 

@@ -22,6 +22,11 @@ public class ConnectionService(
     public bool ConnectToStrand7Api()
     {
         ArgumentNullException.ThrowIfNull(appSettings.Strand7Api?.Paths);
+        if (!appSettings.Strand7Api.ApiInstalled)
+        {
+            splashService.SetMessageInSplash("Strand7 API not installed...");
+            return false;
+        }
 
         splashService.SetMessageInSplash("Locating Strand7 API and licensing information...");
 

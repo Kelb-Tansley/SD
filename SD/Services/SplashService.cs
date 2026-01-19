@@ -1,11 +1,11 @@
-﻿using Hatch.Pdg.SD.ViewModels;
+﻿using SD.ViewModels;
 using Prism.Events;
 using SD.Core.Shared.Events;
 using SD.Element.Design.Interfaces;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Hatch.Pdg.SD.Services;
+namespace SD.Services;
 public class SplashService : ISplashService
 {
     private readonly AppShutdownEvent _shutdownEvent;

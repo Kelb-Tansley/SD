@@ -7,7 +7,7 @@ using SD.Data.Interfaces;
 using SD.Element.Design.Interfaces;
 using System.Reflection;
 
-namespace Hatch.Pdg.SD.ViewModels;
+namespace SD.ViewModels;
 public partial class SplashViewModel : ObservableObject
 {
     [ObservableProperty]

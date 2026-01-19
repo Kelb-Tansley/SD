@@ -5,7 +5,7 @@ using Microsoft.Identity.Client;
 using SD.Core.Shared.Contracts;
 using SD.Element.Design.Interfaces;
 
-namespace Hatch.Pdg.SD.Services;
+namespace SD.Services;
 public class TokenCacheService : ITokenCacheService
 {
     public TokenCacheService(IAppSettings appSettings)

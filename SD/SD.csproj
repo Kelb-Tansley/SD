@@ -7,17 +7,24 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<ApplicationIcon>app_icon.ico</ApplicationIcon>
-		<PackageIcon>app_icon-4.png</PackageIcon>
+		<ApplicationIcon>bridge_multi_res.ico</ApplicationIcon>
+		<PackageIcon>bridge_multi_res_128.png</PackageIcon>
 		<AssemblyVersion>1.0.0.3</AssemblyVersion>
 		<FileVersion>1.0.0.3</FileVersion>
 		<AnalysisLevel>latest</AnalysisLevel>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="app_icon.ico">
+		<Content Include="bridge_multi_res.ico">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\..\..\Users\Kelby.Tansley\Downloads\bridge_multi_res_128.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>

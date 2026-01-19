@@ -50,7 +50,7 @@ public partial class Strand7
                 //Allow some time for old processes to die
                 Task.Delay(delay).GetAwaiter().GetResult();
 
-                Process.Start(new ProcessStartInfo($"Hatch.Pdg.SD.exe")
+                Process.Start(new ProcessStartInfo($"SD.exe")
                 {
                     UseShellExecute = true,
                     CreateNoWindow = true,
