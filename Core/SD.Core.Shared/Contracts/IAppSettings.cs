@@ -9,4 +9,5 @@ public interface IAppSettings
     public string AuthLocation { get; }
     public string ContourLocation { get; }
     public string MathcadLocation { get; }
+    public string UserPreferencesLocation { get; }
 }

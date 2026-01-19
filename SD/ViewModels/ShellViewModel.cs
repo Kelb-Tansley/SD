@@ -3,8 +3,10 @@ using CommunityToolkit.Mvvm.Input;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
+using SD.Core.Shared.Entity;
 using SD.Core.Shared.Events;
 using SD.Core.Shared.Models;
+using SD.Data.Services;
 using SD.Element.Design.Interfaces;
 using SD.UI.Constants;
 using SD.UI.Events;
@@ -17,6 +19,7 @@ using SD.UI.UltimateLimitState.Views;
 using SD.UI.ViewModel;
 
 namespace SD.ViewModels;
+
 public partial class ShellViewModel : FemViewModelBase
 {
     private readonly IAuthenticationService _authenticationService;
@@ -41,7 +44,7 @@ public partial class ShellViewModel : FemViewModelBase
     public IProcessModel _processModel;
     [ObservableProperty]
     public ISnackbarModel _snackbarModel;
-
+    private readonly IUserPreferencesService _userPreferencesService;
     private FemLoadedEvent? _femLoadedEvent;
     private DialogOpenedEvent? _dialogOpenedEvent;
     private DialogClosedEvent? _dialogClosedEvent;
@@ -58,7 +61,8 @@ public partial class ShellViewModel : FemViewModelBase
                           ISplashService splashService,
                           IRuntimeAppSettings runtimeAppSettings,
                           IEventAggregator eventAggregator,
-                          ISnackbarModel snackbarModel) : base(viewManagementModel)
+                          ISnackbarModel snackbarModel,
+                          IUserPreferencesService userPreferencesService) : base(viewManagementModel)
     {
         _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
@@ -69,6 +73,7 @@ public partial class ShellViewModel : FemViewModelBase
         _runtimeAppSettings = runtimeAppSettings ?? throw new ArgumentNullException(nameof(runtimeAppSettings));
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _snackbarModel = snackbarModel ?? throw new ArgumentNullException(nameof(snackbarModel));
+        _userPreferencesService = userPreferencesService ?? throw new ArgumentNullException(nameof(userPreferencesService));
 
         _regionManager.RegisterViewWithRegion(RegionNames.MenuRegion, typeof(MenuView));
         _regionManager.RegisterViewWithRegion(RegionNames.HeaderRegion, typeof(HeaderView));
@@ -85,9 +90,11 @@ public partial class ShellViewModel : FemViewModelBase
     }
 
     [RelayCommand]
-    public void Loaded()
+    public async Task Loaded()
     {
         AuthenticateUser();
+
+        await GetUserPreferences();
 
         //var certified = _authenticationService.CertifyApplication();
         //if (certified.IsFailure)
@@ -130,6 +137,16 @@ public partial class ShellViewModel : FemViewModelBase
         _shellResizeResizeEvent = _eventAggregator.GetEvent<ShellResizeEvent>();
 
         BrowserLoaded();
+    }
+
+    private async Task GetUserPreferences()
+    {
+        await _userPreferencesService.SaveUserPreferences(new UserPreferences
+        {
+            UserName = "DefaultUser",
+            WindowStates = new WindowStates() { HasModelViewDocked = true, HasResultsViewDocked = true }
+        });
+        await _userPreferencesService.GetUserPreferences("DefaultUser");
     }
 
     private void AuthenticateUser()

@@ -137,7 +137,7 @@ public class BucklingAnalysisService(IFemModelDisplayService femModelDisplayServ
 
     private async Task SaveAndOpenCsvResultsAsync(List<string> csvResults)
     {
-        await _femFilePathService.StoreBlobFileAsync(_csvFilePath, csvResults);
-        _femFilePathService.OpenBlobFile(_csvFilePath);
+        await _femFilePathService.StoreCsvResultsFileAsync(_csvFilePath, csvResults);
+        _femFilePathService.OpenCsvResultsFile(_csvFilePath);
     }
 }

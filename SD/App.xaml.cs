@@ -113,9 +113,6 @@ public partial class App : PrismApplication
         containerRegistry.Register<IEffectiveLengthService, StrandEffectiveLengthService>();
         containerRegistry.Register<IBucklingAnalysisService, BucklingAnalysisService>();
 
-        containerRegistry.Register<IDataAccessService, DataAccessService>();
-        containerRegistry.Register<IFemFilePathService, FemFilePathService>();
-
         containerRegistry.Register<ITokenCacheService, TokenCacheService>();
         containerRegistry.Register<IAuthenticationService, AuthenticationService>();
 
@@ -167,6 +164,10 @@ public partial class App : PrismApplication
 
     private static void RegisterRepositories(IContainerRegistry containerRegistry)
     {
+        containerRegistry.Register<IDataAccessService, DataAccessService>();
+        containerRegistry.Register<IFemFilePathService, FemFilePathService>();
+        containerRegistry.Register<IUserPreferencesService, UserPreferencesService>();
+
         //containerRegistry.Register<IRepository<BeamPropertySettings>, Repository<BeamPropertySettings>>();
         //containerRegistry.Register<IRepository<DesignSettings>, Repository<DesignSettings>>();
         containerRegistry.Register<IUnitOfWork, UnitOfWork>();

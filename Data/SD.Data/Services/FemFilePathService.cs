@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
 using SD.Core.Shared.Models.Core;
 using SD.Data.Interfaces;
-using System.Diagnostics;
 
 namespace SD.Data.Services;
-public class FemFilePathService(IAppSettings appSettings, IRuntimeAppSettings runtimeAppSettings) : IFemFilePathService
+
+public partial class FemFilePathService(IAppSettings appSettings, IRuntimeAppSettings runtimeAppSettings) : BlobFileService, IFemFilePathService
 {
     private readonly IAppSettings _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
     private readonly IRuntimeAppSettings _runtimeAppSettings = runtimeAppSettings ?? throw new ArgumentNullException(nameof(runtimeAppSettings));
@@ -55,41 +55,6 @@ public class FemFilePathService(IAppSettings appSettings, IRuntimeAppSettings ru
         await StoreBlobFileAsync(Strand7ConnectFilePath, path);
     }
 
-    public static string ReadBlobFile(string fileName)
-    {
-        var content = string.Empty;
-        if (File.Exists(fileName))
-            content = File.ReadAllText(fileName);
-
-        return content;
-    }
-
-    public void StoreBlobFile(string fileName, string content)
-    {
-        var csv = CreateCsvFileAndContent(fileName, [content]);
-        File.WriteAllText(fileName, csv.ToString());
-    }
-
-    public async Task StoreBlobFileAsync(string fileName, string content)
-    {
-        var csv = CreateCsvFileAndContent(fileName, [content]);
-        await File.WriteAllTextAsync(fileName, csv.ToString());
-    }
-
-    public async Task StoreBlobFileAsync(string fileName, List<string> content)
-    {
-        var csv = CreateCsvFileAndContent(fileName, content);
-        await File.WriteAllTextAsync(fileName, csv.ToString());
-    }
-
-    private StringBuilder CreateCsvFileAndContent(string fileName, List<string> content)
-    {
-        CreateFileAndFolderIfNew(fileName);
-        var csv = new StringBuilder();
-        content.ForEach(line => { csv.AppendLine(line); });
-        return csv;
-    }
-
     public async Task<List<FemFile>> GetPreviousFemFiles()
     {
         try
@@ -101,23 +66,6 @@ public class FemFilePathService(IAppSettings appSettings, IRuntimeAppSettings ru
         {
             throw;
         }
-    }
-
-    public void OpenBlobFile(string filePath)
-    {
-        if (string.IsNullOrWhiteSpace(filePath))
-            throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
-
-        if (!File.Exists(filePath))
-            throw new FileNotFoundException("File not found.", filePath);
-
-        var processStartInfo = new ProcessStartInfo
-        {
-            FileName = filePath,
-            UseShellExecute = true
-        };
-
-        Process.Start(processStartInfo);
     }
 
     public async Task<List<FemFile>> AddUpdateFilePathsAsync(string filePath)
@@ -152,29 +100,6 @@ public class FemFilePathService(IAppSettings appSettings, IRuntimeAppSettings ru
         await File.WriteAllTextAsync(filePath, csv.ToString());
     }
 
-    private static void CreateFileAndFolderIfNew(string filePath)
-    {
-        try
-        {
-            var fileInfo = new FileInfo(filePath);
-
-            if (!fileInfo.Exists && fileInfo.Directory != null)
-            {
-                fileInfo.Directory.Create();
-
-                if (!File.Exists(filePath))
-                {
-                    var stream = File.Create(filePath);
-                    stream.Close();
-                    stream.Dispose();
-                }
-            }
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
 
     private static async Task<List<FemFile>> GetAllFemFiles(string filePath)
     {
@@ -184,5 +109,15 @@ public class FemFilePathService(IAppSettings appSettings, IRuntimeAppSettings ru
             femFiles.Add(new FemFile() { FemModelFilePath = file });
 
         return femFiles;
+    }
+
+    public void OpenCsvResultsFile(string filePath)
+    {
+        OpenBlobFile(filePath);
+    }
+
+    public async Task StoreCsvResultsFileAsync(string fileName, List<string> content)
+    {
+        await StoreBlobFileAsync(fileName, content);
     }
 }

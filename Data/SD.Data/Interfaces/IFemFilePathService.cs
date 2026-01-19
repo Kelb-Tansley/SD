@@ -10,8 +10,8 @@ public interface IFemFilePathService
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="FemFile"/>.</returns>
     public Task<List<FemFile>> AddUpdateFilePathsAsync(string filePath);
     public Task<List<FemFile>> GetPreviousFemFiles();
-    public void OpenBlobFile(string filePath);
+    public void OpenCsvResultsFile(string filePath);
     public IRuntimeAppSettings? GetRuntimeSettings();
     public void SaveRuntimeSettings();
-    public Task StoreBlobFileAsync(string fileName, List<string> content);
+    public Task StoreCsvResultsFileAsync(string fileName, List<string> content);
 }
