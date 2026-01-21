@@ -1,38 +1,31 @@
 ﻿using SD.Data.Interfaces;
 
 namespace SD.Data.Repository;
-public class UnitOfWork : IUnitOfWork
+
+public class UnitOfWork(StructuralDesignContext context) : IUnitOfWork
 {
-    private readonly StructuralDesignContext _context;
+    private readonly StructuralDesignContext _context = context;
     private readonly Dictionary<Type, object> _repositories = [];
 
-    public UnitOfWork(StructuralDesignContext context)
+    public async Task Commit()
     {
-        _context = context;
-    }
-
-    public void Commit()
-    {
-        _context.SaveChanges();
-    }
-
-    public void Rollback()
-    {
-        // Rollback changes if needed
+        await _context.SaveChangesAsync();
     }
 
     public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
     {
-        if (_repositories.ContainsKey(typeof(TEntity)))
-            return (IRepository<TEntity>)_repositories[typeof(TEntity)];
+        var type = typeof(TEntity);
+        if (_repositories.TryGetValue(type, out object? value))
+            return (IRepository<TEntity>)value!;
 
         var repository = new Repository<TEntity>(_context);
-        _repositories.Add(typeof(TEntity), repository);
+        _repositories.Add(type, repository);
         return repository;
     }
 
     public void Dispose()
     {
         _context.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

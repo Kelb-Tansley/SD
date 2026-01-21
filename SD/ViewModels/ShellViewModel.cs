@@ -6,6 +6,7 @@ using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Entity;
 using SD.Core.Shared.Events;
 using SD.Core.Shared.Models;
+using SD.Core.Shared.Models.BeamModels.Sections;
 using SD.Data.Services;
 using SD.Element.Design.Interfaces;
 using SD.UI.Constants;
@@ -17,6 +18,7 @@ using SD.UI.Singletons;
 using SD.UI.Tools.Views;
 using SD.UI.UltimateLimitState.Views;
 using SD.UI.ViewModel;
+using System.Windows.Documents;
 
 namespace SD.ViewModels;
 
@@ -45,6 +47,8 @@ public partial class ShellViewModel : FemViewModelBase
     [ObservableProperty]
     public ISnackbarModel _snackbarModel;
     private readonly IUserPreferencesService _userPreferencesService;
+    private readonly IDataAccessService _dataAccessService;
+
     private FemLoadedEvent? _femLoadedEvent;
     private DialogOpenedEvent? _dialogOpenedEvent;
     private DialogClosedEvent? _dialogClosedEvent;
@@ -62,7 +66,8 @@ public partial class ShellViewModel : FemViewModelBase
                           IRuntimeAppSettings runtimeAppSettings,
                           IEventAggregator eventAggregator,
                           ISnackbarModel snackbarModel,
-                          IUserPreferencesService userPreferencesService) : base(viewManagementModel)
+                          IUserPreferencesService userPreferencesService,
+                          IDataAccessService dataAccessService) : base(viewManagementModel)
     {
         _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
@@ -74,6 +79,7 @@ public partial class ShellViewModel : FemViewModelBase
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _snackbarModel = snackbarModel ?? throw new ArgumentNullException(nameof(snackbarModel));
         _userPreferencesService = userPreferencesService ?? throw new ArgumentNullException(nameof(userPreferencesService));
+        _dataAccessService = dataAccessService ?? throw new ArgumentNullException(nameof(dataAccessService));
 
         _regionManager.RegisterViewWithRegion(RegionNames.MenuRegion, typeof(MenuView));
         _regionManager.RegisterViewWithRegion(RegionNames.HeaderRegion, typeof(HeaderView));
@@ -141,6 +147,10 @@ public partial class ShellViewModel : FemViewModelBase
 
     private async Task GetUserPreferences()
     {
+        var result = await _dataAccessService.SaveFemFileByName("FirstFile");
+        var file = await _dataAccessService.GetFemFileIdByName("FirstFile");
+
+        await _dataAccessService.SaveBeamSettings("someFile", new List<ChannelSection>());
         await _userPreferencesService.SaveUserPreferences(new UserPreferences
         {
             UserName = "DefaultUser",

@@ -2,6 +2,7 @@
 using SD.Data.Interfaces;
 
 namespace SD.Data.Mapping;
+
 public class BeamPropertySettingsMapper : IEntityMapper<BeamPropertySettings, Section>
 {
     public BeamPropertySettings Map(Section prop)
@@ -11,8 +12,9 @@ public class BeamPropertySettingsMapper : IEntityMapper<BeamPropertySettings, Se
             CreatedDate = DateTime.Now,
             ModifiedDate = DateTime.Now,
             PropertyNumber = prop.Number,
-            FileName = string.Empty,
-            IsLateralRestraint = prop.IsLateralRestraint
+            FemFile = new FemFileEntity { Id = Guid.NewGuid(), CreatedDate = DateTime.Now, ModifiedDate = DateTime.Now, FileName = string.Empty },
+            IsLateralRestraint = prop.IsLateralRestraint,
+            Id = Guid.NewGuid()
         };
     }
 

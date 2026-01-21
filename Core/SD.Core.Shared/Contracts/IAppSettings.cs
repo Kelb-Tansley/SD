@@ -10,4 +10,5 @@ public interface IAppSettings
     public string ContourLocation { get; }
     public string MathcadLocation { get; }
     public string UserPreferencesLocation { get; }
+    public string StorageLocation { get; }
 }

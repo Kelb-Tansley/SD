@@ -30,6 +30,7 @@ using SD.Core.Shared.Events;
 using SD.Element.Design.Models;
 using SD.Element.Design.Services;
 using SD.Core.Infrastructure.Interfaces;
+using SD.Data;
 
 namespace SD;
 public partial class App : PrismApplication
@@ -168,9 +169,7 @@ public partial class App : PrismApplication
         containerRegistry.Register<IFemFilePathService, FemFilePathService>();
         containerRegistry.Register<IUserPreferencesService, UserPreferencesService>();
 
-        //containerRegistry.Register<IRepository<BeamPropertySettings>, Repository<BeamPropertySettings>>();
-        //containerRegistry.Register<IRepository<DesignSettings>, Repository<DesignSettings>>();
-        containerRegistry.Register<IUnitOfWork, UnitOfWork>();
+        containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
     }
 
     private static void RegisterMappers(IContainerRegistry containerRegistry)

@@ -10,6 +10,7 @@ public class AppSettings : IAppSettings
         Directory.CreateDirectory(ContourLocation);
         Directory.CreateDirectory(MathcadLocation);
         Directory.CreateDirectory(UserPreferencesLocation);
+        Directory.CreateDirectory(StorageLocation);
     }
 
     public string? AppDataLocation { get; set; }
@@ -19,4 +20,5 @@ public class AppSettings : IAppSettings
     public string ContourLocation => Environment.ExpandEnvironmentVariables(AppDataLocation) + "Contour";
     public string MathcadLocation => Environment.ExpandEnvironmentVariables(AppDataLocation) + "Mathcad";
     public string UserPreferencesLocation => Environment.ExpandEnvironmentVariables(AppDataLocation) + "User Preferences";
+    public string StorageLocation => Environment.ExpandEnvironmentVariables(AppDataLocation) + "Storage";
 }
