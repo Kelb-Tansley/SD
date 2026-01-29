@@ -13,13 +13,15 @@ using SD.Core.Shared.Models.Core;
 using SD.Core.Shared.Events;
 
 namespace SD.Services;
+
 public class AuthenticationService : IAuthenticationService
 {
     private readonly ApiSettings _apiSettings;
     private readonly ITokenCacheService _tokenCacheService;
     private readonly ISplashService _splashService;
     private readonly IEventAggregator _eventAggregator;
-    private readonly IPublicClientApplication _signInClient;
+    private readonly IPublicClientApplication _pca;
+    private readonly string[] _scopes;
 
     public AuthenticationService(ApiSettings apiSettings, ITokenCacheService tokenCacheService, ISplashService splashService, IEventAggregator eventAggregator)
     {
@@ -27,25 +29,57 @@ public class AuthenticationService : IAuthenticationService
         _tokenCacheService = tokenCacheService;
         _splashService = splashService;
         _eventAggregator = eventAggregator;
-        _signInClient = PublicClientApplicationBuilder.Create(_apiSettings.AppRegClientId)
-                            .WithAuthority(AzureCloudInstance.AzurePublic, _apiSettings.AppRegTenantId)
-            .WithClientId(_apiSettings.AppRegClientId)
-            //.WithRedirectUri(@"https://localhost:5003/.auth/login/aad/callback")
-            .WithRedirectUri("http://localhost")
-                            //.WithDefaultRedirectUri()
-                            .Build();
+        //_pca = PublicClientApplicationBuilder.Create(_apiSettings.AppRegClientId)
+        //                    .WithAuthority(AzureCloudInstance.AzurePublic, _apiSettings.AppRegTenantId)
+        //    .WithClientId(_apiSettings.AppRegClientId)
+        //    //.WithRedirectUri(@"https://localhost:5003/.auth/login/aad/callback")
+        //    .WithRedirectUri("http://localhost")
+        //                    //.WithDefaultRedirectUri()
+        //                    .Build();
 
-        _tokenCacheService.EnableSerialization(_signInClient.UserTokenCache);
+        _pca = PublicClientApplicationBuilder.Create(_apiSettings.AppRegClientId)
+           .WithAuthority(AzureCloudInstance.AzurePublic, _apiSettings.AppRegTenantId)
+           .WithRedirectUri("http://localhost") 
+           .Build();
+
+
+        _tokenCacheService.EnableSerialization(_pca.UserTokenCache);
+        _scopes = new[] { $"api://{_apiSettings.ApiAppRegClientId}/.default" };
+    }
+    public async Task<string> SignInAndGetTokenAsync()
+    {
+        try
+        {
+            var accounts = await _pca.GetAccountsAsync();
+            var result = await _pca.AcquireTokenSilent(_scopes, accounts.FirstOrDefault())
+                                   .ExecuteAsync();
+            return result.AccessToken;
+        }
+        catch (MsalUiRequiredException)
+        {
+            try
+            {
+                var result = await _pca.AcquireTokenInteractive(_scopes)
+                                       .WithPrompt(Prompt.SelectAccount)
+                                       .ExecuteAsync();
+                return result.AccessToken;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 
     private async Task SignOutInvalidAccount()
     {
-        var accounts = await _signInClient.GetAccountsAsync();
+        var accounts = await _pca.GetAccountsAsync();
         if (accounts.Any())
         {
             try
             {
-                await _signInClient.RemoveAsync(accounts.FirstOrDefault());
+                await _pca.RemoveAsync(accounts.FirstOrDefault());
             }
             catch (MsalException)
             {
@@ -58,18 +92,18 @@ public class AuthenticationService : IAuthenticationService
     {
         var scopes = new List<string>() { $"{_apiSettings.AppRegClientId}/Read" };
         //var scopes = new string[] { "user.read" };
-        var firstAccount = (await _signInClient.GetAccountsAsync())?.FirstOrDefault();
+        var firstAccount = (await _pca.GetAccountsAsync())?.FirstOrDefault();
 
         try
         {
-            return (await _signInClient.AcquireTokenSilent(scopes, firstAccount)
+            return (await _pca.AcquireTokenSilent(scopes, firstAccount)
                     .ExecuteAsync()).AccessToken;
         }
         catch (MsalUiRequiredException)
         {
             try
             {
-                var result = await _signInClient.AcquireTokenInteractive(scopes)
+                var result = await _pca.AcquireTokenInteractive(scopes)
                     .WithAccount(firstAccount)
                     //.WithParentActivityOrWindow(new WindowInteropHelper(Application.Current.MainWindow).Handle)
                     .WithPrompt(Prompt.SelectAccount)

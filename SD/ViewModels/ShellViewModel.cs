@@ -98,7 +98,7 @@ public partial class ShellViewModel : FemViewModelBase
     [RelayCommand]
     public async Task Loaded()
     {
-        AuthenticateUser();
+        await AuthenticateUser();
 
         await GetUserPreferences();
 
@@ -159,9 +159,9 @@ public partial class ShellViewModel : FemViewModelBase
         await _userPreferencesService.GetUserPreferences("DefaultUser");
     }
 
-    private void AuthenticateUser()
+    private async Task AuthenticateUser()
     {
-
+        await _authenticationService.SignInAndGetTokenAsync();
     }
 
     [RelayCommand]
