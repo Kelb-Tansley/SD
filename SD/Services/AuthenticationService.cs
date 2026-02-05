@@ -1,16 +1,17 @@
-﻿using SD.Constants;
-using Microsoft.Identity.Client;
+﻿using Microsoft.Identity.Client;
 using Microsoft.Win32;
-using SD.Element.Design.Interfaces;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography;
-using System.Security.Principal;
 using Prism.Events;
-using System.DirectoryServices.AccountManagement;
-using SD.Core.Shared.Models;
-using SD.Core.Shared.Extensions;
-using SD.Core.Shared.Models.Core;
+using SD.Constants;
 using SD.Core.Shared.Events;
+using SD.Core.Shared.Extensions;
+using SD.Core.Shared.Models;
+using SD.Core.Shared.Models.Core;
+using SD.Element.Design.Interfaces;
+using System.DirectoryServices.AccountManagement;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
 
 namespace SD.Services;
 
@@ -20,15 +21,21 @@ public class AuthenticationService : IAuthenticationService
     private readonly ITokenCacheService _tokenCacheService;
     private readonly ISplashService _splashService;
     private readonly IEventAggregator _eventAggregator;
+    private readonly IWebApiHttpClient _webApiHttpClient;
     private readonly IPublicClientApplication _pca;
     private readonly string[] _scopes;
 
-    public AuthenticationService(ApiSettings apiSettings, ITokenCacheService tokenCacheService, ISplashService splashService, IEventAggregator eventAggregator)
+    public AuthenticationService(ApiSettings apiSettings,
+                                 ITokenCacheService tokenCacheService,
+                                 ISplashService splashService,
+                                 IEventAggregator eventAggregator,
+                                 IWebApiHttpClient webApiHttpClient)
     {
         _apiSettings = apiSettings;
         _tokenCacheService = tokenCacheService;
         _splashService = splashService;
         _eventAggregator = eventAggregator;
+        _webApiHttpClient = webApiHttpClient;
         //_pca = PublicClientApplicationBuilder.Create(_apiSettings.AppRegClientId)
         //                    .WithAuthority(AzureCloudInstance.AzurePublic, _apiSettings.AppRegTenantId)
         //    .WithClientId(_apiSettings.AppRegClientId)
@@ -39,12 +46,13 @@ public class AuthenticationService : IAuthenticationService
 
         _pca = PublicClientApplicationBuilder.Create(_apiSettings.AppRegClientId)
            .WithAuthority(AzureCloudInstance.AzurePublic, _apiSettings.AppRegTenantId)
-           .WithRedirectUri("http://localhost") 
+           .WithRedirectUri("http://localhost")
            .Build();
 
 
         _tokenCacheService.EnableSerialization(_pca.UserTokenCache);
-        _scopes = new[] { $"api://{_apiSettings.ApiAppRegClientId}/.default" };
+        //_scopes = new[] { $"api://{_apiSettings.ApiAppRegClientId}/.default" };
+        _scopes = new[] { $"{_apiSettings.ApiAppRegClientId}/.default" };
     }
     public async Task<string> SignInAndGetTokenAsync()
     {
@@ -126,21 +134,31 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
-            return true; // TODO: Awaiting approval by Andrew Burt before we can implement this auth method
-            var userSignInToken = await GetSignedInUserAccessToken();
+            var accessToken = await SignInAndGetTokenAsync();
 
-            if (_tokenCacheService.IsTokenEmptyOrInvalid(userSignInToken))
-            {
-                await SignOutInvalidAccount();
-                return await IsUserValid();
-            }
-            else
-                return true;
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(accessToken);
+
+            var secret = jwt.Claims.FirstOrDefault(c => c.Type == "oid")?.Value;
+
+            var response = await _webApiHttpClient.GetUserLicense(accessToken);
+
+            var valid = response.ValidateAndDecodeLicenseToken(secret);
+            return valid;
+            //return true; // TODO: Awaiting approval by Andrew Burt before we can implement this auth method
+            //var userSignInToken = await GetSignedInUserAccessToken();
+
+            //if (_tokenCacheService.IsTokenEmptyOrInvalid(userSignInToken))
+            //{
+            //    await SignOutInvalidAccount();
+            //    return await IsUserValid();
+            //}
+            //else
+            //    return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             throw;
         }
     }
 }
-

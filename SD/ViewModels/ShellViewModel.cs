@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MaterialDesignExtensions.Model;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
@@ -98,7 +99,12 @@ public partial class ShellViewModel : FemViewModelBase
     [RelayCommand]
     public async Task Loaded()
     {
-        await AuthenticateUser();
+        var isAuthenticated = await AuthenticateUser();
+        if (!isAuthenticated)
+        {
+            _notificationService.ShutdownAfterErrorNotice(new Notification("Authentication Error", "User authentication failed. The application will now close."));
+            return;
+        }
 
         await GetUserPreferences();
 
@@ -159,9 +165,9 @@ public partial class ShellViewModel : FemViewModelBase
         await _userPreferencesService.GetUserPreferences("DefaultUser");
     }
 
-    private async Task AuthenticateUser()
+    private async Task<bool> AuthenticateUser()
     {
-        await _authenticationService.SignInAndGetTokenAsync();
+        return await _authenticationService.IsUserValid();
     }
 
     [RelayCommand]

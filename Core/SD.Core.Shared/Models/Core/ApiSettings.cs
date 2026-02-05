@@ -4,4 +4,5 @@ public class ApiSettings
     public string AppRegClientId { get; set; }
     public string AppRegTenantId { get; set; }
     public string ApiAppRegClientId { get; set; }
+    public string BaseAddress { get; set; }
 }

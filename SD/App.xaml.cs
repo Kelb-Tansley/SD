@@ -1,38 +1,40 @@
-﻿using System.Windows;
-using SD.Element.Design.Interfaces;
-using SD.Element.Design.Sans.Models;
-using SD.Fem.Strand7.Services;
-using SD.Fem.Strand7.Interfaces;
-using SD.Core.Shared.Contracts;
-using SD.Views;
-using SD.UI.Singletons;
-using SD.Core.Shared.Models;
-using SD.Data.Services;
-using SD.Data.Repository;
-using SD.Data.Interfaces;
-using SD.Data.Entities;
-using SD.Data.Mapping;
-using SD.Core.Shared.Models.BeamModels;
-using SD.Services;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using SD.UI.Services;
-using SD.Element.Design.Sans.Services;
+﻿using Microsoft.Extensions.Configuration;
 using SD.Adapters;
+using SD.Core.Infrastructure.Interfaces;
+using SD.Core.Infrastructure.Logging;
+using SD.Core.Shared.Contracts;
+using SD.Core.Shared.Events;
+using SD.Core.Shared.Models;
+using SD.Core.Shared.Models.BeamModels;
+using SD.Core.Shared.Models.Core;
+using SD.Data;
+using SD.Data.Entities;
+using SD.Data.Interfaces;
+using SD.Data.Mapping;
+using SD.Data.Repository;
+using SD.Data.Services;
+using SD.Element.Design.AS.Services;
+using SD.Element.Design.Interfaces;
+using SD.Element.Design.Models;
+using SD.Element.Design.Sans.Models;
+using SD.Element.Design.Sans.Services;
+using SD.Element.Design.Services;
+using SD.Fem.Strand7.Interfaces;
+using SD.Fem.Strand7.Services;
 using SD.MathcadPrime.Interfaces;
 using SD.MathcadPrime.Services;
-using System.Reflection;
-using SD.Core.Infrastructure.Logging;
+using SD.Services;
+using SD.UI.Services;
+using SD.UI.Singletons;
+using SD.Views;
 using System.Diagnostics;
-using SD.Core.Shared.Models.Core;
-using SD.Element.Design.AS.Services;
-using SD.Core.Shared.Events;
-using SD.Element.Design.Models;
-using SD.Element.Design.Services;
-using SD.Core.Infrastructure.Interfaces;
-using SD.Data;
+using System.IO;
+using System.Net.Http;
+using System.Reflection;
+using System.Windows;
 
 namespace SD;
+
 public partial class App : PrismApplication
 {
     private AppShutdownEvent? _shutdownEvent;
@@ -144,6 +146,12 @@ public partial class App : PrismApplication
         RegisterMappers(containerRegistry);
         RegisterConfigSettings(containerRegistry);
         RegisterRuntimeSettings(containerRegistry);
+        RegisterHttpClients(containerRegistry);
+    }
+
+    private void RegisterHttpClients(IContainerRegistry containerRegistry)
+    {
+        containerRegistry.RegisterSingleton<IWebApiHttpClient, WebApiHttpClient>();
     }
 
     private void RegisterLogger(IContainerRegistry containerRegistry)
