@@ -99,28 +99,18 @@ public partial class ShellViewModel : FemViewModelBase
     [RelayCommand]
     public async Task Loaded()
     {
-        var isAuthenticated = await AuthenticateUser();
-        if (!isAuthenticated)
+        try
         {
-            _notificationService.ShutdownAfterErrorNotice(new Notification("Authentication Error", "User authentication failed. The application will now close."));
+            if (!await _authenticationService.IsUserValid())
+                throw new Exception("Invalid credentials.");
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShutdownAfterErrorNotice(new Notification("Authentication Error", $"User authentication failed with error: {ex.Message}. \n\n The application will now close."));
             return;
         }
 
         await GetUserPreferences();
-
-        //var certified = _authenticationService.CertifyApplication();
-        //if (certified.IsFailure)
-        //{
-        //    _notificationService.ShutdownAfterErrorNotice(new Notification("Application Certification Error", certified.Message));
-        //    return;
-        //}
-
-        //var authorised = _authenticationService.AuthoriseUser();
-        //if (authorised.IsFailure)
-        //{
-        //    _notificationService.ShutdownAfterErrorNotice(new Notification("Application Authorisation Error", authorised.Message));
-        //    return;
-        //}
 
         _appShutdownEvent = _eventAggregator.GetEvent<AppShutdownEvent>();
 
@@ -163,11 +153,6 @@ public partial class ShellViewModel : FemViewModelBase
             WindowStates = new WindowStates() { HasModelViewDocked = true, HasResultsViewDocked = true }
         });
         await _userPreferencesService.GetUserPreferences("DefaultUser");
-    }
-
-    private async Task<bool> AuthenticateUser()
-    {
-        return await _authenticationService.IsUserValid();
     }
 
     [RelayCommand]

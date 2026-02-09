@@ -16,7 +16,7 @@ public class WebApiHttpClient : IWebApiHttpClient
 
     public async Task<string> GetUserLicense(string bearer)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Get, "api/License/checkLicenseValidity");
+        using var request = new HttpRequestMessage(HttpMethod.Get, "api/License/getLicenseValidity");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearer);
 
         var response = await _httpClient.SendAsync(request);

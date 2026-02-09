@@ -6,6 +6,7 @@ using System.Net.Http;
 using SD.Core.Shared.Events;
 
 namespace SD.Fem.Strand7.Services;
+
 public class ConnectionService(
     IFemFilePathService femFilePathService,
     IRuntimeAppSettings runtimeAppSettings,
@@ -190,6 +191,7 @@ public class ConnectionService(
 
     public void ReleaseStrand7Api()
     {
-        St7.St7Release().HandleApiError();
+        if (appSettings!.Strand7Api!.ApiInstalled)
+            St7.St7Release().HandleApiError();
     }
 }

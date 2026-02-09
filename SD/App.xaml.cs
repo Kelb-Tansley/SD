@@ -7,7 +7,6 @@ using SD.Core.Shared.Events;
 using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.BeamModels;
 using SD.Core.Shared.Models.Core;
-using SD.Data;
 using SD.Data.Entities;
 using SD.Data.Interfaces;
 using SD.Data.Mapping;
@@ -16,7 +15,6 @@ using SD.Data.Services;
 using SD.Element.Design.AS.Services;
 using SD.Element.Design.Interfaces;
 using SD.Element.Design.Models;
-using SD.Element.Design.Sans.Models;
 using SD.Element.Design.Sans.Services;
 using SD.Element.Design.Services;
 using SD.Fem.Strand7.Interfaces;
@@ -29,7 +27,6 @@ using SD.UI.Singletons;
 using SD.Views;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Reflection;
 using System.Windows;
 
@@ -71,10 +68,13 @@ public partial class App : PrismApplication
         // Ensure this runs on the UI thread
         Current.Dispatcher.Invoke(() =>
         {
-            foreach (Window window in Current.Windows)
-                window.Close();
+            if (Current != null)
+            {
+                foreach (Window window in Current.Windows)
+                    window.Close();
 
-            Current.Shutdown();
+                Current.Shutdown();
+            }
         });
     }
 
@@ -206,8 +206,16 @@ public partial class App : PrismApplication
 
     private void OnCurrentExit(object sender, ExitEventArgs e)
     {
-        var mathcadService = Container.Resolve<IMathcadService>();
-        mathcadService.CloseMathcad();
+        try
+        {
+            var mathcadService = Container.Resolve<IMathcadService>();
+            if (mathcadService != null)
+                mathcadService.CloseMathcad();
+        }
+        catch (Exception)
+        {
+            return;
+        }
     }
 
     #region Exception Handling

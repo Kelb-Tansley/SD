@@ -2,6 +2,7 @@
 using SD.Core.Shared.Contracts;
 
 namespace SD.Core.Shared.Models.Core;
+
 public class AppSettings : IAppSettings
 {
     public void Initialize()
@@ -13,7 +14,7 @@ public class AppSettings : IAppSettings
         Directory.CreateDirectory(StorageLocation);
     }
 
-    public string? AppDataLocation { get; set; }
+    public string AppDataLocation { get; set; } = string.Empty;
     public Strand7Api? Strand7Api { get; set; }
 
     public string AuthLocation => Environment.ExpandEnvironmentVariables(AppDataLocation) + "Auth";

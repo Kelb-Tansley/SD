@@ -6,10 +6,9 @@ namespace SD.Services;
 
 public static class ValidateAndDecodeLicenseTokenService
 {
-    public static bool ValidateAndDecodeLicenseToken(this string token, string secretKey)
+    public static bool ValidateAndDecodeLicenseToken(this string token, string secret)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes(secretKey);
+        var key = Encoding.UTF8.GetBytes(secret);
 
         var validationParameters = new TokenValidationParameters
         {
@@ -26,19 +25,19 @@ public static class ValidateAndDecodeLicenseTokenService
         try
         {
             // Validate signature, issuer, audience, and expiration
+            var tokenHandler = new JwtSecurityTokenHandler();
             var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
 
             // Extract claims
-            var licensedClaim = principal.Claims.FirstOrDefault(c => c.Type == "Licensed")?.Value;
-            var messageClaim = principal.Claims.FirstOrDefault(c => c.Type == "Message")?.Value;
-            var expiresClaim = principal.Claims.FirstOrDefault(c => c.Type == "ExpiresAt")?.Value;
+            var licensedClaim = principal.Claims.FirstOrDefault(c => c.Type == "Licensed")?.Value ?? throw new SecurityTokenException("Missing licensed claim");
+            var expiresClaim = principal.Claims.FirstOrDefault(c => c.Type == "ExpiresAt")?.Value ?? throw new SecurityTokenException("Missing expiration claim");
 
             bool.TryParse(licensedClaim, out var licensed);
             return licensed;
         }
-        catch (SecurityTokenException ex)
+        catch (SecurityTokenException)
         {
-            return false;
+            throw;
         }
     }
 }

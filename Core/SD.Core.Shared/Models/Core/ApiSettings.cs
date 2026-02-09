@@ -1,8 +1,6 @@
 ﻿namespace SD.Core.Shared.Models.Core;
+
 public class ApiSettings
 {
-    public string AppRegClientId { get; set; }
-    public string AppRegTenantId { get; set; }
-    public string ApiAppRegClientId { get; set; }
-    public string BaseAddress { get; set; }
+    public string? BaseAddress { get; set; }
 }
