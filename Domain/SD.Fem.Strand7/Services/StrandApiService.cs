@@ -3,6 +3,7 @@ using SD.Core.Shared.Models.Loading;
 using SD.Element.Design.Services;
 
 namespace SD.Fem.Strand7.Services;
+
 public class StrandApiService(
     IDesignCodeAdapter femDesignAdapter,
     IConnectionService connectionService,
@@ -808,5 +809,14 @@ public class StrandApiService(
         return beamStressResults;
     }
 
+    public void CreateFemModel(int modelId, string fileName)
+    {
+        St7.St7NewFile(modelId, fileName, _connectionService.GetScratchLocation()).ThrowIfFails();
+    }
 
+    public void SaveAndCloseFile(int modelId)
+    {
+        St7.St7SaveFile(modelId).ThrowIfFails();
+        St7.St7CloseFile(modelId).ThrowIfFails();
+    }
 }

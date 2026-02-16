@@ -25,10 +25,6 @@
             <!--  InputGestureText="Ctrl+E"  -->
         </MenuItem>
         <MenuItem Padding="16,-4,16,0" Header="_Tools">
-            <!--
-                You can set the highlighted color with:
-                materialDesign:MenuItemAssist.HighlightedBackground="Fuchsia"
-            -->
             <MenuItem
                 Command="{Binding BeamWindLoadCommand}"
                 Header="Beam wind loading"
@@ -38,6 +34,11 @@
                 Command="{Binding BucklingAnalysisCommand}"
                 Header="Buckling Analysis"
                 Icon="{materialDesign:PackIcon Kind=Pillar}"
+                IsEnabled="{Binding FemModel.FileExists}" />
+            <MenuItem
+                Command="{Binding TankDesignCommand}"
+                Header="Tank Design"
+                Icon="{materialDesign:PackIcon Kind=Cylinder}"
                 IsEnabled="{Binding FemModel.FileExists}" />
             <!--  Command="{Binding BeamSansWindLoadCommand}"  -->
 

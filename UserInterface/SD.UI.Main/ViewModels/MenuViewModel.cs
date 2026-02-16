@@ -75,6 +75,17 @@ public partial class MenuViewModel : FemViewModelBase
         ViewManagementModel.IsRightDrawerOpen = true;
     }
 
+    [RelayCommand]
+    public async Task TankDesign()
+    {
+        ViewManagementModel.IsDrawerOpen = true;
+
+        _generalToolsViewChangedEvent.Publish(GeneralToolsView.TankDesign);
+        await Task.Delay(150);
+
+        ViewManagementModel.IsRightDrawerOpen = true;
+    }
+
     private void FileClosed()
     {
         _strandApiService.CloseAllFemFiles(FemModels.ModelId);

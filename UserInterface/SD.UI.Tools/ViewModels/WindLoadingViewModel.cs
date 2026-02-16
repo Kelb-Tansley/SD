@@ -10,7 +10,7 @@ using SD.UI.Events;
 using SD.UI.ViewModel;
 using System.Collections.ObjectModel;
 
-namespace SD.UI.Loading.ViewModels;
+namespace SD.UI.Tools.ViewModels;
 
 public partial class WindLoadingViewModel : FemViewModelBase
 {

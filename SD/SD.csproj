@@ -57,7 +57,6 @@
 		<ProjectReference Include="..\Domain\SD.Element.Design\SD.Element.Design.csproj" />
 		<ProjectReference Include="..\Domain\SD.Fem.Strand7\SD.Fem.Strand7.csproj" />
 		<ProjectReference Include="..\Domain\SD.MathcadPrime\SD.MathcadPrime.csproj" />
-		<ProjectReference Include="..\UserInterface\SD.UI.Loading\SD.UI.Loading.csproj" />
 		<ProjectReference Include="..\UserInterface\SD.UI.Main\SD.UI.Main.csproj" />
 		<ProjectReference Include="..\UserInterface\SD.UI.Tools\SD.UI.Tools.csproj" />
 		<ProjectReference Include="..\UserInterface\SD.UI.UltimateLimitState\SD.UI.UltimateLimitState.csproj" />

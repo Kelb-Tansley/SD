@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MaterialDesignExtensions.Model;
 using SD.Core.Infrastructure.Interfaces;
-using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Entity;
 using SD.Core.Shared.Events;
@@ -13,13 +11,9 @@ using SD.Element.Design.Interfaces;
 using SD.UI.Constants;
 using SD.UI.Events;
 using SD.UI.Helpers;
-using SD.UI.Loading.Views;
 using SD.UI.Main.Views;
-using SD.UI.Singletons;
-using SD.UI.Tools.Views;
 using SD.UI.UltimateLimitState.Views;
 using SD.UI.ViewModel;
-using System.Windows.Documents;
 
 namespace SD.ViewModels;
 

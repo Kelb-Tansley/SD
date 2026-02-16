@@ -23,7 +23,7 @@
     Topmost="False"
     Visibility="{Binding ShowShell, Converter={StaticResource BooleanToVisibilityConverter}}"
     WindowStartupLocation="CenterOwner"
-    WindowState="Maximized"
+    WindowState="Minimized"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

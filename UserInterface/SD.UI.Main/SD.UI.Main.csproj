@@ -19,7 +19,6 @@
 		<ProjectReference Include="..\..\Core\SD.Core.Shared\SD.Core.Shared.csproj" />
 		<ProjectReference Include="..\..\Data\SD.Data\SD.Data.csproj" />
 		<ProjectReference Include="..\..\Domain\SD.Element.Design\SD.Element.Design.csproj" />
-		<ProjectReference Include="..\SD.UI.Loading\SD.UI.Loading.csproj" />
 		<ProjectReference Include="..\SD.UI.Serviceability\SD.UI.Serviceability.csproj" />
 		<ProjectReference Include="..\SD.UI.Tools\SD.UI.Tools.csproj" />
 		<ProjectReference Include="..\SD.UI.UltimateLimitState\SD.UI.UltimateLimitState.csproj" />

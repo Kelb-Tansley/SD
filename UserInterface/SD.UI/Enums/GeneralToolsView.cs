@@ -2,5 +2,6 @@
 public enum GeneralToolsView
 {
     WindLoading,
-    BucklingAnalysis
+    BucklingAnalysis,
+    TankDesign
 }

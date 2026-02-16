@@ -37,4 +37,6 @@ public interface IStrandApiService
     public void RunLinearBucklingAnalysis(int modelId);
     public void EnableFirstLoadFreedomCase(int modelId, string resultFilePath);
     public void SetLinearBucklingModes(int modelId, string fileName, string resultFilePath, int numModes, int variableCaseNum, int fixedCaseNum);
+    public void CreateFemModel(int modelId, string fileName);
+    public void SaveAndCloseFile(int modelId);
 }

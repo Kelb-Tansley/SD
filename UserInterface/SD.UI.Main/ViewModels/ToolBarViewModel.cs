@@ -1,11 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
-using SD.Element.Design.Interfaces;
-using SD.UI.Constants;
 using SD.UI.Events;
-using SD.UI.Loading.Views;
 using SD.UI.ViewModel;
 using System.Windows.Forms;
 using DialogResult = System.Windows.Forms.DialogResult;

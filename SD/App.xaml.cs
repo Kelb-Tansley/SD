@@ -110,6 +110,8 @@ public partial class App : PrismApplication
         containerRegistry.Register<IStrandResultsService, StrandResultsService>();
         containerRegistry.Register<IContourFileService, ContourFileService>();
         containerRegistry.Register<IFemModelDisplayService, FemModelDisplayService>();
+        containerRegistry.Register<ITankDesignService, TankDesignService>();
+        containerRegistry.Register<IStrandApiCreateService, StrandApiCreateService>(); 
 
         containerRegistry.Register<IDesignCodeAdapter, DesignCodeAdapter>();
         containerRegistry.Register<IBeamChainService, BeamChainService>();
@@ -118,6 +120,7 @@ public partial class App : PrismApplication
 
         containerRegistry.Register<ITokenCacheService, TokenCacheService>();
         containerRegistry.Register<IAuthenticationService, AuthenticationService>();
+
 
         // Code specific services
         containerRegistry.Register<IDeflectionService, SansDeflectionService>();

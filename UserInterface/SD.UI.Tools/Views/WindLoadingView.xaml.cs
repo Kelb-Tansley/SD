@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace SD.UI.Loading.Views;
+namespace SD.UI.Tools.Views;
 
 /// <summary>
 /// Interaction logic for WindLoadingView.xaml
