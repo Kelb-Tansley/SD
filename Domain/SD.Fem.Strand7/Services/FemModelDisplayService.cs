@@ -76,6 +76,10 @@ public class FemModelDisplayService(IStrandApiService strandApiService,
     {
         _strandApiService.CloseFemResultsFile(modelId);
     }
+    public void SaveFileAs(int modelId)
+    {
+        _strandApiService.CloseFemResultsFile(modelId);
+    }
 
     public Result LoadFemModelProperties(int modelId, DesignCode designCode, string fileName, bool closeFirst = false)
     {

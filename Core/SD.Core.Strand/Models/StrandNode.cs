@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace SD.Core.Strand.Models;
+﻿namespace SD.Core.Strand.Models;
 
 public class StrandNode
 {

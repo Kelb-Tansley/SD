@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Models;
@@ -11,6 +12,7 @@ using SD.UI.Singletons;
 using SD.UI.ViewModel;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 
 namespace SD.UI.Tools.ViewModels;
 
@@ -33,7 +35,13 @@ public partial class TankDesignViewModel(IViewManagementModel viewManagementMode
     public double _tankDiameter = 10000;
 
     [ObservableProperty]
-    public double _meshElementSize = 100;
+    public double _baseThickness = 20;
+
+    [ObservableProperty]
+    public double _roofThickness = 0;
+
+    [ObservableProperty]
+    public double _meshElementSize = 250;
 
     [ObservableProperty]
     public bool _isModelOpen = false;
@@ -49,25 +57,18 @@ public partial class TankDesignViewModel(IViewManagementModel viewManagementMode
     {
         try
         {
-            await _tankDesignService.BuildCircularTankModel(
-                FemModels.TankDesignModelId,
-                TankDiameter,
-                [.. Segments],
-               MeshElementSize,
-                 GetPlateNodeCount(),
-                20,
-                30,
-                FilePath);
+            await _tankDesignService.BuildCircularTankModel(FemModels.TankDesignModelId,
+                                                            TankDiameter,
+                                                            [.. Segments],
+                                                            MeshElementSize,
+                                                            GetPlateNodeCount(),
+                                                            RoofThickness,
+                                                            BaseThickness,
+                                                            FilePath);
 
             IsModelOpen = true;
 
             UpdateFemModelView();
-
-            //Process.Start(new ProcessStartInfo
-            //{
-            //    FileName = FilePath,
-            //    UseShellExecute = true
-            //});
         }
         catch (Exception ex)
         {
@@ -86,6 +87,28 @@ public partial class TankDesignViewModel(IViewManagementModel viewManagementMode
     {
         IsModelOpen = false;
         await CloseRightDrawer();
+    }
+
+    [RelayCommand]
+    public async Task Save()
+    {
+        var saveFileDialog = new SaveFileDialog
+        {
+            Filter = "Strand7 Files (*.st7)|*.st7",
+            FileName = STRAND_TANK_MODEL_FILE_NAME,
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        };
+
+        if (saveFileDialog.ShowDialog() == true)
+        {
+            File.Copy(FilePath, saveFileDialog.FileName, true);
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = saveFileDialog.FileName,
+                UseShellExecute = true
+            });
+        }
     }
 
     [RelayCommand]
