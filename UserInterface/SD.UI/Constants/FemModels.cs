@@ -31,4 +31,9 @@ public static class FemModels
     /// Represents the identifier for the tank design model.
     /// </summary>
     public const int TankDesignModelId = 6;
+
+    /// <summary>
+    /// Represents the identifier for the tank design display model.
+    /// </summary>
+    public const int TankDesignDisplayModelId = 7;
 }

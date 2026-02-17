@@ -12,11 +12,6 @@ namespace SD.UI.Serviceability.Views
             InitializeComponent();
         }
 
-        private void SlsFemModelPanel_BindingContextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void SlsFemModelPanel_SizeChanged(object sender, EventArgs e)
         {
             var vm = DataContext as SlsFemModelViewModel;

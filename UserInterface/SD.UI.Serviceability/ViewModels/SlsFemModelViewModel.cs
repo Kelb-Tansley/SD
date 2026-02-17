@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Prism.Events;
+﻿using CommunityToolkit.Mvvm.Input;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Models;

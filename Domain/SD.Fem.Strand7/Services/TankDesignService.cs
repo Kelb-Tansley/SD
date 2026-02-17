@@ -17,7 +17,7 @@ public class TankDesignService(IStrandApiCreateService strandApiCreateService,
 
         var allPlates = new List<StrandPlate>();
         // Take each height segment and create a cylinder for it, then combine them into a single model
-        foreach (var heightSegment in heightSegments)
+        foreach (var heightSegment in heightSegments.OrderBy(hs=>hs.Order))
         {
             // Calculate the number of plates needed for this height segment based on the mesh size
             var plateCount = (int)Math.Round(heightSegment.Height / meshSize, MidpointRounding.AwayFromZero);
@@ -29,11 +29,14 @@ public class TankDesignService(IStrandApiCreateService strandApiCreateService,
             if (plateNodeCount == 4)
             {
                 var startNode = nodeNumber;
-                var nodes = GenerateCylinderNodes(startPosition, diameter / 2, heightSegment.Height, meshSize, plateHeight, ref nodeNumber);
-                allPlates.AddRange(Build4NodePlates(nodes.Item1, nodes.Item2, rings: plateCount, thickness: heightSegment.Thickness, propertyNumber, startNode));
+                var nodes = GenerateCylinderNodes(startPosition, diameter / 2, heightSegment.Height, plateWidth, plateHeight, ref nodeNumber);
+
+                var segmentPlates = Build4NodePlates(nodes.Item1, nodes.Item2, rings: plateCount, thickness: heightSegment.Thickness, propertyNumber, startNode);
+                allPlates.AddRange(segmentPlates);
             }
 
             propertyNumber++;
+            startPosition[2] += heightSegment.Height;
         }
 
         _strandApiService.CreateFemModel(modelId, fileName);
@@ -154,7 +157,8 @@ public class TankDesignService(IStrandApiCreateService strandApiCreateService,
             for (int i = 1; i <= nodesPerRing; i++)
             {
                 // Four nodes of the quadrilateral plate
-                var n1 = nodes.First(n => n.NodeNumber == ringStart + i);       // bottom-left
+                // bottom-left
+                var n1 = nodes.First(n => n.NodeNumber == ringStart + i);       
 
                 // bottom-right
                 var secondNode = ringStart + i + 1;
@@ -162,14 +166,16 @@ public class TankDesignService(IStrandApiCreateService strandApiCreateService,
                     secondNode = ringStart + 1;
 
                 var n2 = nodes.First(n => n.NodeNumber == secondNode);
-                var n3 = nodes.First(n => n.NodeNumber == nextRingStart + i);   // top-left
 
                 // top-right
                 var fourthNode = nextRingStart + i + 1;
                 if (i == nodesPerRing)
                     fourthNode = nextRingStart + 1;
 
-                var n4 = nodes.First(n => n.NodeNumber == fourthNode);
+                var n3 = nodes.First(n => n.NodeNumber == fourthNode);
+
+                // top-left
+                var n4 = nodes.First(n => n.NodeNumber == nextRingStart + i);   
 
                 plates.Add(new StrandPlate(property, nodes: [n1, n2, n3, n4]));
             }

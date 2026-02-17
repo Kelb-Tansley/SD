@@ -2,7 +2,7 @@
 
 public class HeightSegment(double height, double thickness, int order)
 {
-    public double Height { get; private set; } = height;
-    public double Thickness { get; private set; } = thickness;
-    public int Order { get; private set; } = order;  
+    public double Height { get; set; } = height;
+    public double Thickness { get; set; } = thickness;
+    public int Order { get; set; } = order;  
 }

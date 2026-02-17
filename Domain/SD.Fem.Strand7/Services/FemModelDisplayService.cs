@@ -1,4 +1,7 @@
-﻿namespace SD.Fem.Strand7.Services;
+﻿using System.Reflection.Metadata;
+
+namespace SD.Fem.Strand7.Services;
+
 public class FemModelDisplayService(IStrandApiService strandApiService,
     IDesignModel designModel,
     IFemModelParameters femModelParameters) : IFemModelDisplayService
@@ -28,9 +31,11 @@ public class FemModelDisplayService(IStrandApiService strandApiService,
     {
         return _strandApiService.OpenFemFile(modelId, fileName, closeFirst);
     }
-    public void ClearFemDisplayModel(int modelId)
+    public void DisplayFemModel(int modelId, nint handle, bool clearFirst = true)
     {
-        _strandApiService.ClearFemDisplayModel(modelId);
+        if (clearFirst)
+            _strandApiService.ClearFemDisplayModel(modelId);
+        _strandApiService.DisplayFemFile(modelId, handle);
     }
     public void ReloadFemDisplayModel(int modelId, string fileName, bool closeFirst = true)
     {
