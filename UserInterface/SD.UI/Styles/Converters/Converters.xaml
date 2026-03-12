@@ -7,6 +7,9 @@
         x:Key="InverseDelayedBooleanToVisibilityConverter"
         FalseValue="Visible"
         TrueValue="Hidden" />
+    <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converter:BooleanToWindowStateConverter x:Key="BooleanToWindowStateConverter" />
+    <converter:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
     <converter:IconToImageSourceConverter x:Key="IconToImageSourceConverter" />
     <converter:DoubleTwoDecimalsConverter x:Key="DoubleTwoDecimalsConverter" />
     <converter:GreaterThanConverter x:Key="GreaterThanConverter" />
@@ -18,4 +21,6 @@
     <converter:DesignCodeToVisibilityConverter x:Key="DesignCodeToVisibilityConverter" />
     <converter:ObjectNullToVisibilityConverter x:Key="ObjectNullToVisibilityConverter" />
     <converter:InvertedObjectNullToVisibilityConverter x:Key="InvertedObjectNullToVisibilityConverter" />
+    <converter:ListToCountConverter x:Key="ListToCountConverter" />
+    <converter:ListCountToVisibilityConverter x:Key="ListCountToVisibilityConverter" />
 </ResourceDictionary>

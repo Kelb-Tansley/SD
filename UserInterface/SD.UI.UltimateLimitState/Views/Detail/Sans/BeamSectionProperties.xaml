@@ -49,8 +49,9 @@
         <StackPanel Grid.ColumnSpan="3" Margin="0,8">
             <Label
                 VerticalAlignment="Top"
-                Content="Section:"
-                FontWeight="Bold" />
+                Content="Property Name:"
+                FontWeight="Bold"
+                Foreground="{StaticResource PrimaryLight1}" />
             <TextBlock
                 MaxWidth="250"
                 HorizontalAlignment="Left"
@@ -66,7 +67,10 @@
             <Label Content="J" />
             <Label Content="Cw" />
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="1">
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="0,0,8,0">
             <Label Content="{Binding Beam.Section.Agr, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Beam.Section.SectionMass, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Beam.Section.J, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
@@ -85,7 +89,8 @@
             Grid.Row="2"
             VerticalAlignment="Bottom"
             Content="Major Axis:"
-            FontWeight="Bold" />
+            FontWeight="Bold"
+            Foreground="{StaticResource PrimaryLight1}" />
 
         <StackPanel Grid.Row="3">
             <Label Content="I" />
@@ -113,7 +118,8 @@
             Grid.Row="4"
             VerticalAlignment="Bottom"
             Content="Minor Axis:"
-            FontWeight="Bold" />
+            FontWeight="Bold"
+            Foreground="{StaticResource PrimaryLight1}" />
         <StackPanel Grid.Row="5">
             <Label Content="I" />
             <Label Content="Ze" />

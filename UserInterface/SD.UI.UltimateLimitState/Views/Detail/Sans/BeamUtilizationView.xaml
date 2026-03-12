@@ -44,7 +44,7 @@
             <Label Content="Slenderness(Minor)" />
         </StackPanel>
 
-        <StackPanel Grid.Column="1" Margin="0,0,12,0">
+        <StackPanel Grid.Column="1" Margin="0,0,8,0">
             <Label Content="{Binding Utilization.Tension, Converter={StaticResource DoubleToPercentageConverter}}" />
             <Label Content="{Binding Utilization.Compression, Converter={StaticResource DoubleToPercentageConverter}}" />
             <Label Content="{Binding Utilization.BendingMajor, Converter={StaticResource DoubleToPercentageConverter}}" />
@@ -82,7 +82,7 @@
             <Label />
         </StackPanel>
 
-        <StackPanel
+        <!--<StackPanel
             Grid.Row="1"
             Grid.ColumnSpan="5"
             Margin="0,4,0,0">
@@ -100,6 +100,6 @@
                     FontWeight="Bold" />
                 <Label Content="{Binding Utilization.MaxUtilizationDescription}" />
             </StackPanel>
-        </StackPanel>
+        </StackPanel>-->
     </Grid>
 </UserControl>

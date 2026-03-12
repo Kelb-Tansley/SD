@@ -16,7 +16,7 @@ public interface IStrandApiService
     public void CloseAllFemFiles(int modelId);
     public void GetFemModelParameters(IFemModelParameters femModelParameters, DesignCode designCode, int modelId, SolverType solverType, StrandResultFile strandResultFile);
     public List<LoadCaseCombination> GetFemModelLoadCaseCombinations(int modelId, SolverType solverType, StrandResultFile strandResultFile);
-    public List<Section> GetFemBeamSections(int modelId, UnitFactor unitFactor, DesignCode designCode);
+    public (List<Section> Designable, List<Section> NonDesignable) GetFemBeamSections(int modelId, UnitFactor unitFactor, DesignCode designCode);
     public Task DisplayFemDesignResults(int modelId, IEnumerable<UlsResultPeak> results);
     public Task DisplayDesignLengths(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor);
     public Task DisplayDesignSlenderness(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor);

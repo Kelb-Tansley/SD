@@ -10,6 +10,7 @@
     xmlns:ui="clr-namespace:SD.UI.Constants;assembly=SD.UI"
     xmlns:viewmodels="clr-namespace:SD.UI.UltimateLimitState.ViewModels"
     xmlns:views="clr-namespace:SD.UI.UltimateLimitState.Views"
+    x:Name="BeamDesignViewUserControl"
     d:DataContext="{d:DesignInstance Type=viewmodels:BeamDesignViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -19,6 +20,91 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="DesignLengthPopupTemplate">
+                <StackPanel Margin="0,-8" DataContext="{Binding DataContext, ElementName=BeamDesignViewUserControl}">
+                    <RadioButton
+                        Margin="12"
+                        Command="{Binding AllBeamsChangedCommand}"
+                        IsChecked="{Binding AllBeamsChecked}"
+                        ToolTip="Display all beams.">
+                        <TextBlock
+                            Margin="4,0"
+                            VerticalAlignment="Center"
+                            Text="All Beams" />
+                    </RadioButton>
+                    <RadioButton
+                        Margin="12"
+                        Command="{Binding DisplayedGroupChangedCommand}"
+                        IsChecked="{Binding DisplayedGroupChecked}"
+                        ToolTip="Show displayed groups.">
+                        <TextBlock
+                            Margin="4,0"
+                            VerticalAlignment="Center"
+                            Text="Displayed Group" />
+                    </RadioButton>
+                    <RadioButton
+                        Margin="12"
+                        Command="{Binding SelectedBeamsChangedCommand}"
+                        IsChecked="{Binding SelectedBeamsChecked}"
+                        IsEnabled="{Binding HasSelectedBeams}"
+                        ToolTip="Display selected beams in primary model.">
+                        <TextBlock
+                            Margin="4,0"
+                            VerticalAlignment="Center"
+                            Text="Selected Beams" />
+                    </RadioButton>
+                    <RadioButton
+                        Margin="12"
+                        Command="{Binding FailedBeamsChangedCommand}"
+                        IsChecked="{Binding FailedBeamsChecked}"
+                        ToolTip="Display failed beams only. Based on the allowable ULS design capacity.">
+                        <TextBlock
+                            Margin="4,0"
+                            VerticalAlignment="Center"
+                            Text="Failed Beams" />
+                    </RadioButton>
+                    <Grid MinWidth="150" Margin="12">
+                        <TextBox
+                            Margin="8,0"
+                            VerticalAlignment="Center"
+                            materialDesign:HintAssist.Hint="ULS Design Capacity"
+                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                            Text="{Binding AllowableUlsDesignCapacity}" />
+                        <Button
+                            Width="16"
+                            Height="16"
+                            Margin="8,0"
+                            HorizontalAlignment="Right"
+                            Command="{Binding FailedBeamsChangedCommand}"
+                            Style="{StaticResource MaterialDesignIconButton}">
+                            <materialDesign:PackIcon
+                                Width="12"
+                                Height="12"
+                                Kind="Magnify" />
+                        </Button>
+                    </Grid>
+                    <Grid MinWidth="155" Margin="12">
+                        <TextBox
+                            Margin="8,0"
+                            VerticalAlignment="Center"
+                            materialDesign:HintAssist.Hint="Filter by beam number."
+                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                            Text="{Binding BeamNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button
+                            Width="16"
+                            Height="16"
+                            Margin="8,0"
+                            HorizontalAlignment="Right"
+                            Command="{Binding SetBeamNumberCommand}"
+                            Style="{StaticResource MaterialDesignIconButton}">
+                            <materialDesign:PackIcon
+                                Width="12"
+                                Height="12"
+                                Kind="Magnify" />
+                        </Button>
+                    </Grid>
+                </StackPanel>
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
     <i:Interaction.Triggers>
@@ -29,133 +115,43 @@
     <Grid>
         <Grid ScrollViewer.CanContentScroll="True" Visibility="{Binding HasSelectedLoadCaseCombination, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="435" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="450" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" MinWidth="300" />
             </Grid.ColumnDefinitions>
             <Grid Margin="8,0,0,0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <GroupBox Header="Beam Selection">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <StackPanel
-                                Margin="0,8"
-                                Orientation="Horizontal"
-                                ToolTip="Display Failed Beams">
-                                <RadioButton
-                                    Margin="8,0"
-                                    Command="{Binding FailedBeamsChangedCommand}"
-                                    IsChecked="{Binding FailedBeamsChecked}" />
-                                <TextBlock
-                                    Margin="4,0"
-                                    VerticalAlignment="Center"
-                                    Text="Failed Beams" />
-                            </StackPanel>
-                            <Grid>
-                                <TextBox
-                                    Margin="8,0"
-                                    VerticalAlignment="Center"
-                                    materialDesign:HintAssist.Hint="ULS Design Capacity"
-                                    Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                    Text="{Binding AllowableUlsDesignCapacity}" />
-                                <Button
-                                    Width="16"
-                                    Height="16"
-                                    Margin="8,0"
-                                    HorizontalAlignment="Right"
-                                    Command="{Binding FailedBeamsChangedCommand}"
-                                    Style="{StaticResource MaterialDesignIconButton}">
-                                    <materialDesign:PackIcon
-                                        Width="12"
-                                        Height="12"
-                                        Kind="Magnify" />
-                                </Button>
-                            </Grid>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1">
-                            <StackPanel
-                                Margin="0,8"
-                                Orientation="Horizontal"
-                                ToolTip="Display All Beams">
-                                <RadioButton
-                                    Margin="8,0"
-                                    Command="{Binding AllBeamsChangedCommand}"
-                                    IsChecked="{Binding AllBeamsChecked}" />
-                                <TextBlock
-                                    Margin="4,0"
-                                    VerticalAlignment="Center"
-                                    Text="All Beams" />
-                            </StackPanel>
-                            <StackPanel
-                                Margin="0,8"
-                                Orientation="Horizontal"
-                                ToolTip="Display Selected Beams (If Any)">
-                                <RadioButton
-                                    Margin="8,0"
-                                    Command="{Binding SelectedBeamsChangedCommand}"
-                                    IsChecked="{Binding SelectedBeamsChecked}"
-                                    IsEnabled="{Binding HasSelectedBeams}" />
-                                <TextBlock
-                                    Margin="4,0"
-                                    VerticalAlignment="Center"
-                                    Text="Selected Beams" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2">
-                            <StackPanel
-                                Margin="0,8"
-                                Orientation="Horizontal"
-                                ToolTip="Show Displayed Group">
-                                <RadioButton
-                                    Margin="8,0"
-                                    Command="{Binding DisplayedGroupChangedCommand}"
-                                    IsChecked="{Binding DisplayedGroupChecked}" />
-                                <TextBlock
-                                    Margin="4,0"
-                                    VerticalAlignment="Center"
-                                    Text="Displayed Group" />
-                            </StackPanel>
-                            <!--  Excluded from MVP  -->
-                            <!--<TextBox
-                                Margin="8,0"
-                                VerticalAlignment="Center"
-                                materialDesign:TextFieldAssist.HasClearButton="True"
-                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                Text="{Binding BeamNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <materialDesign:HintAssist.Hint>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Beam number" />
-                                    </StackPanel>
-                                </materialDesign:HintAssist.Hint>
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="KeyUp">
-                                        <i:InvokeCommandAction Command="{Binding SetBeamNumberCommand}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>-->
-                        </StackPanel>
-                    </Grid>
-                </GroupBox>
+                <Border
+                    Margin="0,0,-6,0"
+                    Padding="8,6"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Panel.ZIndex="1"
+                    Background="{StaticResource MaterialDesignLightBackground}">
+                    <materialDesign:PopupBox
+                        IsEnabled="{Binding ProcessModel.IsFemModelLoaded}"
+                        PlacementMode="RightAndAlignTopEdges"
+                        PopupContentTemplate="{StaticResource DesignLengthPopupTemplate}"
+                        StaysOpen="True"
+                        ToolTip="Select a design length, for the beam element contour.">
+                        <materialDesign:PopupBox.ToggleContent>
+                            <materialDesign:PackIcon
+                                Width="{StaticResource IconSize}"
+                                Height="{StaticResource IconSize}"
+                                Foreground="{StaticResource PrimaryColor}"
+                                Kind="Filter" />
+                        </materialDesign:PopupBox.ToggleContent>
+                    </materialDesign:PopupBox>
+                </Border>
                 <DataGrid
-                    Grid.Row="1"
-                    Margin="0,8,0,8"
+                    Margin="-8,0,-4,0"
                     AutoGenerateColumns="False"
-                    BorderBrush="{DynamicResource PrimaryHueLightBrush}"
-                    BorderThickness="1"
                     CanUserAddRows="false"
+                    ColumnHeaderHeight="38"
                     ColumnWidth="Auto"
                     ItemsSource="{Binding DisplayedResults}"
+                    RowHeight="34.5"
                     SelectedItem="{Binding SelectedBeamResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionMode="Single"
                     Style="{StaticResource MaterialDesignDataGrid}">
@@ -171,25 +167,25 @@
                             Header="Beam"
                             IsReadOnly="True" />
                         <DataGridTextColumn
-                            MinWidth="75"
+                            MinWidth="58"
                             Binding="{Binding LoadCaseNumber}"
-                            Header="Load Case"
+                            Header="LCC"
                             IsReadOnly="True" />
                         <DataGridTextColumn
-                            Width="72"
+                            Width="115"
                             Binding="{Binding Utilization.MaxUtilizationPercentage, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                            Header="ULS"
+                            Header="Utilisation"
                             IsReadOnly="True" />
-                        <DataGridTextColumn
+                        <!--<DataGridTextColumn
                             Width="60"
                             Binding="{Binding Beam.Section.TypeDisplay}"
                             Header="Type"
-                            IsReadOnly="True" />
-                        <DataGridTextColumn
+                            IsReadOnly="True" />-->
+                        <!--<DataGridTextColumn
                             MinWidth="110"
                             Binding="{Binding Beam.Section.DisplayName}"
                             Header="Property"
-                            IsReadOnly="True" />
+                            IsReadOnly="True" />-->
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
@@ -197,7 +193,7 @@
             <GridSplitter
                 Grid.Column="1"
                 Width="4"
-                Margin="4,0,0,8"
+                Margin="4,0,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Stretch"
                 Focusable="False"
@@ -206,26 +202,28 @@
             <Border
                 Grid.Column="2"
                 MinHeight="250"
-                Margin="4,0,4,0"
-                BorderBrush="{DynamicResource PrimaryHueLightBrush}"
-                BorderThickness="1">
+                Margin="0,0,0,0"
+                BorderBrush="{DynamicResource SecondaryLight5}"
+                BorderThickness="0,0,0,0">
                 <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.BeamFemModelRegion}" />
             </Border>
 
             <GridSplitter
                 Grid.Column="3"
                 Width="4"
-                Margin="4,0,0,8"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Stretch" />
+                VerticalAlignment="Stretch"
+                Focusable="False"
+                IsEnabled="False" />
 
             <views:SelectedBeamDetailsView Grid.Column="4" />
 
             <StackPanel
                 Grid.Column="4"
-                Margin="24,24"
+                Margin="48,68"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Bottom">
+                VerticalAlignment="Top"
+                Orientation="Horizontal">
                 <Button
                     Margin="8"
                     Command="{Binding ReCalculateCommand}"
@@ -248,7 +246,7 @@
                         Height="24"
                         Kind="MicrosoftExcel" />
                 </Button>
-                <Button
+                <!--<Button
                     Margin="8"
                     Command="{Binding MathcadExportCommand}"
                     IsEnabled="{Binding SelectedBeamResult, Converter={StaticResource BeamTypeConverter}, FallbackValue=False}"
@@ -259,7 +257,7 @@
                         Height="24"
                         Margin="4,0,0,0"
                         Kind="Export" />
-                </Button>
+                </Button>-->
 
             </StackPanel>
         </Grid>

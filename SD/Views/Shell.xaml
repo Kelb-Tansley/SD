@@ -15,15 +15,13 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="{DynamicResource MaterialDesignToolBarBackground}"
-    FontFamily="{DynamicResource MaterialDesignFont}"
-    IsEnabled="{Binding ShowShell}"
+    FontFamily="{StaticResource PrimaryFont}"
+    ShowInTaskbar="{Binding ShowShell}"
     Style="{StaticResource MainWindowStyle}"
     TextOptions.TextFormattingMode="Ideal"
     TextOptions.TextRenderingMode="Auto"
-    Topmost="False"
     Visibility="{Binding ShowShell, Converter={StaticResource BooleanToVisibilityConverter}}"
-    WindowStartupLocation="CenterOwner"
-    WindowState="Minimized"
+    WindowState="{Binding IsWindowMaximized, Converter={StaticResource BooleanToWindowStateConverter}}"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -50,7 +48,7 @@
             x:Name="DrawerHost"
             Padding="16"
             BorderBrush="{DynamicResource MaterialDesignDivider}"
-            IsBottomDrawerOpen="True"
+            IsBottomDrawerOpen="{Binding IsBottomDrawerOpen, Mode=TwoWay}"
             IsRightDrawerOpen="{Binding ViewManagementModel.IsRightDrawerOpen}"
             RightDrawerBackground="Transparent"
             RightDrawerCornerRadius="20 20 0 0">
@@ -76,20 +74,31 @@
                         Padding="32"
                         Background="{DynamicResource MaterialDesignLightBackground}"
                         CornerRadius="16">
-                        <TextBlock TextWrapping="Wrap">
-                            <Run FontWeight="Bold">Disclaimer</Run>
-                            <LineBreak />
-                            The software provided herein is intended to assist in the design of structural steelwork in the mining and industrial sectors. While every effort has been made to ensure the accuracy and reliability of the software, it is provided "as is" without warranty of any kind, either express or implied.<LineBreak />
-                            <LineBreak />
-                            <Run FontWeight="Bold">Liability Disclaimer</Run>
-                            <LineBreak />
-                            The developers of this software shall not be held liable for any direct, indirect, incidental, or consequential damages or losses arising out of the use or inability to use the software, including but not limited to structural failure, property damage, personal injury, or death.<LineBreak />
-                            <LineBreak />
-                            <Run FontWeight="Bold">User Responsibility</Run>
-                            <LineBreak />
-                            It is the sole responsibility of the user to ensure the accuracy, completeness, and suitability of the software for their specific application. Users must conduct their own independent verification and validation of the software's output and ensure that all designs comply with relevant codes, standards, and regulations. The use of this software does not replace the need for professional engineering judgment and expertise.<LineBreak />
-                            <LineBreak />
-                            By using this software, you acknowledge that you have read, understood, and agreed to this disclaimer.</TextBlock>
+                        <StackPanel>
+                            <TextBlock TextWrapping="Wrap">
+                                <Run FontWeight="Bold">Disclaimer</Run>
+                                <LineBreak />
+                                The software provided herein is intended to assist in the design of structural steelwork in the mining and industrial sectors. While every effort has been made to ensure the accuracy and reliability of the software, it is provided "as is" without warranty of any kind, either express or implied.<LineBreak />
+                                <LineBreak />
+                                <Run FontWeight="Bold">Liability Disclaimer</Run>
+                                <LineBreak />
+                                The developers of this software shall not be held liable for any direct, indirect, incidental, or consequential damages or losses arising out of the use or inability to use the software, including but not limited to structural failure, property damage, personal injury, or death.<LineBreak />
+                                <LineBreak />
+                                <Run FontWeight="Bold">User Responsibility</Run>
+                                <LineBreak />
+                                It is the sole responsibility of the user to ensure the accuracy, completeness, and suitability of the software for their specific application. Users must conduct their own independent verification and validation of the software's output and ensure that all designs comply with relevant codes, standards, and regulations. The use of this software does not replace the need for professional engineering judgment and expertise.<LineBreak />
+                                <LineBreak />
+                                By using this software, you acknowledge that you have read, understood, and agreed to this disclaimer.</TextBlock>
+                            <StackPanel
+                                Margin="0,16,0,0"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <Button
+                                    Command="{Binding AcknowledgeDisclaimerCommand}"
+                                    Content="Acknowledge"
+                                    Style="{StaticResource MaterialDesignFlatButton}" />
+                            </StackPanel>
+                        </StackPanel>
                     </Border>
                 </Grid>
             </materialDesign:DrawerHost.BottomDrawerContent>

@@ -14,7 +14,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <DataTemplate x:Key="WindLoadingView">
                 <toolsViews:WindLoadingView Margin="8" />
             </DataTemplate>
@@ -22,7 +22,7 @@
             <DataTemplate x:Key="BucklingAnalysisView">
                 <toolsViews:BucklingAnalysisView Margin="8" />
             </DataTemplate>
-            
+
             <DataTemplate x:Key="TankDesignView">
                 <toolsViews:TankDesignView Margin="8" />
             </DataTemplate>
@@ -30,8 +30,8 @@
             <selectors:GeneralToolsViewSelector
                 x:Key="GeneralToolsViewSelector"
                 BucklingAnalysisDataTemplate="{StaticResource BucklingAnalysisView}"
-                WindLoadingDataTemplate="{StaticResource WindLoadingView}"
-                TankDesignDataTemplate="{StaticResource TankDesignView}" />
+                TankDesignDataTemplate="{StaticResource TankDesignView}"
+                WindLoadingDataTemplate="{StaticResource WindLoadingView}" />
         </ResourceDictionary>
     </UserControl.Resources>
 

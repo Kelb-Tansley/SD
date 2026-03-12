@@ -2,11 +2,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SD.Core.Shared.Contracts;
 using SD.UI.Events;
+using SD.UI.Models;
 using SD.UI.ViewModel;
 using System.Windows.Forms;
 using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace SD.UI.Main.ViewModels;
+
 public partial class ToolBarViewModel : ViewModelBase
 {
     private readonly IRegionManager _regionManager;
@@ -19,6 +21,8 @@ public partial class ToolBarViewModel : ViewModelBase
     private readonly FileOpenedEvent _fileOpenedEvent;
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
+    private readonly DesignContourChangedEvent _designContourChangedEvent;
+    private readonly CalculateEvent _calculateEvent;
     private readonly RefreshEvent _refreshEvent;
 
     [ObservableProperty]
@@ -31,7 +35,13 @@ public partial class ToolBarViewModel : ViewModelBase
     public bool _femModelOpened;
 
     [ObservableProperty]
+    public int _nonDesignableSectionsCount;
+
+    [ObservableProperty]
     public bool _useEnvelopeLoadCase;
+
+    [ObservableProperty]
+    public BeamAxisDisplay _beamAxisDisplay;
 
     public ToolBarViewModel(IRegionManager regionManager,
                             IViewManagementModel viewManagementModel,
@@ -55,6 +65,10 @@ public partial class ToolBarViewModel : ViewModelBase
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _refreshEvent = _eventAggregator.GetEvent<RefreshEvent>();
         _designCodeChangedEvent = _eventAggregator.GetEvent<DesignCodeChangedEvent>();
+        _designContourChangedEvent = _eventAggregator.GetEvent<DesignContourChangedEvent>();
+        _calculateEvent = _eventAggregator.GetEvent<CalculateEvent>();
+
+        BeamAxisDisplay = new(DesignModel.DesignCode);
     }
 
     [RelayCommand]
@@ -89,9 +103,23 @@ public partial class ToolBarViewModel : ViewModelBase
     [RelayCommand]
     private void DesignCodeChanged()
     {
+        BeamAxisDisplay = new(DesignModel.DesignCode);
+
         _designCodeChangedEvent?.Publish();
 
         Refresh();
+    }
+
+    [RelayCommand]
+    private void DesignContourChanged()
+    {
+        _designContourChangedEvent?.Publish(BeamAxisDisplay);
+    }
+
+    [RelayCommand]
+    private void Calculate()
+    {
+        _calculateEvent?.Publish();
     }
 
     [RelayCommand]
@@ -115,6 +143,12 @@ public partial class ToolBarViewModel : ViewModelBase
     {
         _fileOpeningEvent.Subscribe(FolderBrowse);
         _fileClosedEvent.Subscribe(FileClosed);
+        _designCodeChangedEvent.Subscribe(DesignCodeChanged);
+
+        //_femModelParameters.NonDesignableSections.CollectionChanged += (s, e) =>
+        //{
+        //    NonDesignableSectionsCount = _femModelParameters.NonDesignableSections.Count;
+        //};
     }
 
     [RelayCommand]

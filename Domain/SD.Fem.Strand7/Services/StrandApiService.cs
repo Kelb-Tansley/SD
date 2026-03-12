@@ -1,6 +1,7 @@
 ﻿using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.Loading;
 using SD.Element.Design.Services;
+using System.Collections.ObjectModel;
 
 namespace SD.Fem.Strand7.Services;
 
@@ -512,10 +513,11 @@ public class StrandApiService(
     public void GetFemModelParameters(IFemModelParameters femModelParameters, DesignCode designCode, int modelId, SolverType solverType, StrandResultFile strandResultFile)
     {
         var unitFactor = DetermineUnitFactors.GetModelUnitFactors(modelId);
-        var beamProperties = GetFemBeamSections(modelId, unitFactor, designCode);
+        var (beamProperties, nonDesignableProperties) = GetFemBeamSections(modelId, unitFactor, designCode);
 
         femModelParameters.IsInitialized = true;
         femModelParameters.BeamProperties.SetRange(beamProperties);
+        femModelParameters.SetNonDesignableSections(nonDesignableProperties);
         femModelParameters.LoadCaseCombinations.SetRange(GetFemModelLoadCaseCombinations(modelId, solverType, strandResultFile));
         femModelParameters.Beams.SetRange(GetBeamLengths(modelId, unitFactor, beamProperties));
         femModelParameters.UnitFactor = unitFactor;
@@ -526,7 +528,7 @@ public class StrandApiService(
     {
         return GetLoadCaseCombinations(modelId, solverType, strandResultFile.INumPrimary, strandResultFile.INumSecondary);
     }
-    public List<Section> GetFemBeamSections(int modelId, UnitFactor unitFactor, DesignCode designCode)
+    public (List<Section> Designable, List<Section> NonDesignable) GetFemBeamSections(int modelId, UnitFactor unitFactor, DesignCode designCode)
     {
         var lastProperty = new int[St7.kMaxEntityTotals];
         var numProperties = new int[St7.kMaxEntityTotals];
@@ -534,6 +536,7 @@ public class StrandApiService(
         St7.St7GetTotalProperties(modelId, numProperties, lastProperty).ThrowIfFails();
 
         var beamProperties = new List<Section>();
+        var nonDesignableProperties = new List<Section>();
 
         for (var i = 1; i <= numProperties[St7.ipBeamPropTotal]; i++)
         {
@@ -586,18 +589,22 @@ public class StrandApiService(
             //    double[] dubsd = new double[St7.kNumBeamSectionData];
             //    St7.St7GetLibraryBeamSectionPropertyDataBGL(modelId, propNum, St7.luMILLIMETRE, name, int.MaxValue, dubsd);
             //}
-            if (!sectionDesignable)
-                continue;
 
             var beamPropertyChecked = integers[St7.ipBeamPropBeamType] == St7.btBeam && integers[St7.ipBeamPropMirrorType] == St7.mtNone && !string.IsNullOrWhiteSpace(beamName?.ToString());
             var sectiontype = SectionTypeHelper.SectionTypeFromStrand(integers[St7.ipBeamPropSectionType]);
 
+            var section = _femDesignAdapter.GetBeamPropertiesService(designCode).GetBeamSection(beamName?.ToString(), sectiontype, beamPropertyChecked && sectionDesignable, materialData, sectionData, unitFactor, propNum);
 
-            var section = _femDesignAdapter.GetBeamPropertiesService(designCode).GetBeamSection(beamName?.ToString(), sectiontype, beamPropertyChecked, materialData, sectionData, unitFactor, propNum);
-
-            beamProperties.Add(section);
+            if (sectionDesignable)
+            {
+                beamProperties.Add(section);
+            }
+            else
+            {
+                nonDesignableProperties.Add(section);
+            }
         }
-        return beamProperties;
+        return (beamProperties, nonDesignableProperties);
     }
     private static List<LoadCaseCombination> GetLoadCaseCombinations(int modelId, SolverType solverType, int iNumPrimary, int iNumSecondary)
     {
@@ -644,6 +651,10 @@ public class StrandApiService(
             St7.St7GetElementConnection(modelId, St7.tyBEAM, i, beamNodes).ThrowIfFails();
 
             var nodeToNodeLength = Math.Round(beamLength * unitFactor.Length, 2); // TODO: Requires more work for AS Code Section 6.3.2 as L_e is effective length with Ke already factored in.
+
+            var beamProp = beamProperties.FirstOrDefault(bp => bp.Number == propNumber);
+            if (beamProp is null)
+                continue;
 
             beamLengths.Add(new Beam()
             {

@@ -26,18 +26,18 @@
                 </TabItem>
             </TabControl>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-              <Button
-                  Margin="4,4,24,16"
-                  Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                  Content="CLOSE"
-                  IsDefault="False"
-                  Style="{StaticResource MaterialDesignFlatButton}">
-                  <i:Interaction.Triggers>
-                      <i:EventTrigger EventName="Click">
-                          <i:InvokeCommandAction Command="{Binding SaveSettingsCommand}" />
-                      </i:EventTrigger>
-                  </i:Interaction.Triggers>
-              </Button>
+                <Button
+                    Margin="4,4,24,16"
+                    Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                    Content="CLOSE"
+                    IsDefault="False"
+                    Style="{StaticResource MaterialDesignFlatButton}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding SaveSettingsCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

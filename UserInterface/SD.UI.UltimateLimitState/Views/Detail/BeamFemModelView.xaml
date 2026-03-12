@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:SD.UI.UltimateLimitState.ViewModels"
     xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+    x:Name="BeamFemModelViewUserControl"
     d:DataContext="{d:DesignInstance Type=viewmodels:BeamFemModelViewModel}"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -15,6 +16,34 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="DesignResultsPopupTemplate">
+                <StackPanel Margin="8,0,16,0" DataContext="{Binding DataContext, ElementName=BeamFemModelViewUserControl}">
+                    <CheckBox
+                        Content="Shear Force (1/x)"
+                        IsChecked="{Binding DisplayComponent.ShearForceX}"
+                        Style="{StaticResource DisplayCheckbox}" />
+                    <CheckBox
+                        Content="Bending Moment (1/x)"
+                        IsChecked="{Binding DisplayComponent.BendingMomentX}"
+                        Style="{StaticResource DisplayCheckbox}" />
+                    <CheckBox
+                        Content="Shear Force (2/y)"
+                        IsChecked="{Binding DisplayComponent.ShearForceY}"
+                        Style="{StaticResource DisplayCheckbox}" />
+                    <CheckBox
+                        Content="Bending Moment (2/y)"
+                        IsChecked="{Binding DisplayComponent.BendingMomentY}"
+                        Style="{StaticResource DisplayCheckbox}" />
+                    <CheckBox
+                        Content="Axial Force"
+                        IsChecked="{Binding DisplayComponent.AxialForce}"
+                        Style="{StaticResource DisplayCheckbox}" />
+                    <CheckBox
+                        Content="Torque"
+                        IsChecked="{Binding DisplayComponent.Torque}"
+                        Style="{StaticResource DisplayCheckbox}" />
+                </StackPanel>
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
     <i:Interaction.Triggers>
@@ -48,36 +77,23 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <WrapPanel>
-                <CheckBox
-                    Content="Shear Force (1/x)"
-                    IsChecked="{Binding DisplayComponent.ShearForceX}"
-                    Style="{StaticResource DisplayCheckbox}" />
-                <CheckBox
-                    Content="Bending Moment (1/x)"
-                    IsChecked="{Binding DisplayComponent.BendingMomentX}"
-                    Style="{StaticResource DisplayCheckbox}" />
-                <CheckBox
-                    Content="Shear Force (2/y)"
-                    IsChecked="{Binding DisplayComponent.ShearForceY}"
-                    Style="{StaticResource DisplayCheckbox}" />
-                <CheckBox
-                    Content="Bending Moment (2/y)"
-                    IsChecked="{Binding DisplayComponent.BendingMomentY}"
-                    Style="{StaticResource DisplayCheckbox}" />
-                <CheckBox
-                    Content="Axial Force"
-                    IsChecked="{Binding DisplayComponent.AxialForce}"
-                    Style="{StaticResource DisplayCheckbox}" />
-                <CheckBox
-                    Content="Torque"
-                    IsChecked="{Binding DisplayComponent.Torque}"
-                    Style="{StaticResource DisplayCheckbox}" />
-            </WrapPanel>
+            <materialDesign:PopupBox
+                Margin="16,8"
+                Panel.ZIndex="1"
+                PlacementMode="LeftAndAlignBottomEdges"
+                PopupContentTemplate="{StaticResource DesignResultsPopupTemplate}"
+                StaysOpen="True">
+                <materialDesign:PopupBox.ToggleContent>
+                    <materialDesign:PackIcon
+                        Width="{StaticResource IconSize}"
+                        Height="{StaticResource IconSize}"
+                        Foreground="{StaticResource PrimaryColor}"
+                        Kind="PlaylistEdit" />
+                </materialDesign:PopupBox.ToggleContent>
+            </materialDesign:PopupBox>
             <Button
                 Grid.Column="1"
                 Margin="12,2,12,2"
-                HorizontalAlignment="Right"
                 Command="{Binding RefreshCommand}"
                 DockPanel.Dock="Right"
                 Style="{StaticResource MaterialDesignFlatButton}"
@@ -90,7 +106,6 @@
             <Button
                 Grid.Column="2"
                 Margin="0,2"
-                HorizontalAlignment="Right"
                 Command="{Binding ZoomOutCommand}"
                 DockPanel.Dock="Right"
                 Style="{StaticResource MaterialDesignFlatButton}"
@@ -103,7 +118,6 @@
             <Button
                 Grid.Column="3"
                 Margin="4,2"
-                HorizontalAlignment="Right"
                 Command="{Binding ZoomInCommand}"
                 DockPanel.Dock="Right"
                 Style="{StaticResource MaterialDesignFlatButton}"

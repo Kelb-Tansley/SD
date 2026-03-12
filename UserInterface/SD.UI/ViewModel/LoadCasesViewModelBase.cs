@@ -51,7 +51,7 @@ public abstract partial class LoadCasesViewModelBase(IProcessModel processModel)
         if (AutoCalculate)
             await SelectedLoadCombinationsChanged();
 
-        CanCalculate = LoadCaseCombinations.Any(slcc => slcc.Include) && !AutoCalculate ? true : false;
+        CanCalculate = LoadCaseCombinations.Any(slcc => slcc.Include) && !AutoCalculate;
     }
 
     [RelayCommand]

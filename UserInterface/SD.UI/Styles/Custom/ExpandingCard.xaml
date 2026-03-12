@@ -1,0 +1,72 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:SD.UI.Controls"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+
+    <Style TargetType="controls:ExpandingCard">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ExpandingCard">
+                    <!--  Use explicit fallback colors so control renders even if app resources are missing  -->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Height="28"
+                            Padding="0,4,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="{StaticResource ControlFontSize}"
+                            Foreground="{StaticResource PrimaryLight1}"
+                            Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ExpanderTitle, Mode=TwoWay}" />
+
+                        <!--  Collapse/expand handle for left navigation panel  -->
+                        <ToggleButton
+                            x:Name="PART_Toggle"
+                            Grid.Row="0"
+                            Width="28"
+                            Height="28"
+                            Margin="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Cursor="Hand"
+                            IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=TwoWay}"
+                            Style="{StaticResource MaterialDesignFlatToggleButton}"
+                            ToolTip="Expand/Collapse">
+                            <materialDesign:PackIcon
+                                Width="21"
+                                Height="21"
+                                Kind="UnfoldMoreHorizontal" />
+                        </ToggleButton>
+
+                        <ContentPresenter
+                            x:Name="PART_Content"
+                            Grid.Row="1"
+                            Margin="0,21,0,0"
+                            ContentSource="Content"
+                            Visibility="Collapsed">
+                            <ContentPresenter.RenderTransform>
+                                <TranslateTransform x:Name="contentTransform" Y="-10" />
+                            </ContentPresenter.RenderTransform>
+                        </ContentPresenter>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!--  Show content when toggle checked  -->
+                        <Trigger SourceName="PART_Toggle" Property="IsChecked" Value="True">
+                            <Setter TargetName="PART_Content" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <!--  Hide content when toggle unchecked  -->
+                        <Trigger SourceName="PART_Toggle" Property="IsChecked" Value="False">
+                            <Setter TargetName="PART_Content" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

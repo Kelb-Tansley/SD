@@ -27,6 +27,9 @@
 		<None Update="Styles\Images\Icos\app_icon.ico">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="Styles\Images\Icos\bridge_multi_res.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>

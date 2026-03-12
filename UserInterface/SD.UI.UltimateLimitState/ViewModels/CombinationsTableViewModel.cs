@@ -15,10 +15,12 @@ using SD.UI.Constants;
 using SD.UI.Enums;
 using SD.UI.Events;
 using SD.UI.Models;
+using SD.UI.Singletons;
 using SD.UI.ViewModel;
 
 namespace SD.UI.UltimateLimitState.ViewModels;
-public partial class UlsLoadCombinationsViewModel : LoadCasesViewModelBase
+
+public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 {
     private readonly IDesignCodeAdapter _femDesignAdapter;
     private readonly IFemModelDisplayService _femModelDisplayService;
@@ -35,10 +37,12 @@ public partial class UlsLoadCombinationsViewModel : LoadCasesViewModelBase
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly RunUlsSolverEvent _runUlsSolverEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
+    private readonly DesignContourChangedEvent _designContourChangedEvent;
+    private readonly CalculateEvent _calculateEvent;
     private LastEventEnum _lastEventEnum;
     private bool _isMainModelResultsOpen;
 
-    public UlsLoadCombinationsViewModel(IProcessModel processModel,
+    public CombinationsTableViewModel(IProcessModel processModel,
                                         IDesignModel designModel,
                                         IFemModel femModel,
                                         IDesignCodeAdapter femDesignAdapter,
@@ -68,21 +72,26 @@ public partial class UlsLoadCombinationsViewModel : LoadCasesViewModelBase
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _runUlsSolverEvent = _eventAggregator.GetEvent<RunUlsSolverEvent>();
         _designCodeChangedEvent = _eventAggregator.GetEvent<DesignCodeChangedEvent>();
+        _designContourChangedEvent = _eventAggregator.GetEvent<DesignContourChangedEvent>();
+        _calculateEvent = _eventAggregator.GetEvent<CalculateEvent>();
 
         _fileOpenedEvent.Subscribe(async () => await Strand7FileOpened());
         _refreshEvent.Subscribe(async () => await Refresh());
         _refreshCalculationEvent.Subscribe(async () => await RefreshCalculation());
         _runUlsSolverEvent.Subscribe(async () => await UpdateAndRunUlsSolver());
-        _designCodeChangedEvent.Subscribe(DesignCodeChanged);
+        _designContourChangedEvent.Subscribe(async (beamAxisDisplay) => await DesignContourChanged(beamAxisDisplay));
+        _calculateEvent.Subscribe(async () => await Calculate());
 
-        DesignCodeChanged();
+        _lastBeamAxisDisplay = new(_designModel.DesignCode);
     }
 
     [ObservableProperty]
     public required IFemModelParameters _femModelParameters;
 
-    [ObservableProperty]
-    public BeamAxisDisplay beamAxisDisplay;
+    private BeamAxisDisplay _lastBeamAxisDisplay;
+
+    //[ObservableProperty]
+    //public BeamAxisDisplay beamAxisDisplay;
 
     [RelayCommand]
     private async Task LoadCaseChanged()
@@ -109,7 +118,7 @@ public partial class UlsLoadCombinationsViewModel : LoadCasesViewModelBase
 
                     UpdateLoadCombinations(FemModelParameters.LoadCaseCombinations);
                     _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, _designModel.IsDesignLengthCalculated, FemModelParameters, _designModel.DesignSettings);
-                    await DesignContourChanged();
+                    await DesignContourChanged(_lastBeamAxisDisplay);
 
                     // Publish the event to notify the application that the FEM model has been loaded.
                     _eventAggregator.GetEvent<FemLoadedEvent>().Publish();
@@ -224,7 +233,7 @@ public partial class UlsLoadCombinationsViewModel : LoadCasesViewModelBase
                     _femModelDisplayService.ReloadFemDisplayModel(FemModels.ModelId, _femModel.FileName, true);
                     _isMainModelResultsOpen = false;
 
-                    await DesignContourChanged();
+                    await DesignContourChanged(_lastBeamAxisDisplay);
                     break;
                 }
             case LastEventEnum.LoadCaseChanged:
@@ -237,23 +246,27 @@ public partial class UlsLoadCombinationsViewModel : LoadCasesViewModelBase
         }
     }
 
-    [RelayCommand]
-    private async Task DesignContourChanged()
+    private async Task DesignContourChanged(BeamAxisDisplay? beamAxisDisplay)
     {
         try
         {
-            if (BeamAxisDisplay.SelectedDesignLength == null)
+            if (beamAxisDisplay is not null)
+                _lastBeamAxisDisplay = beamAxisDisplay;
+            if (_lastBeamAxisDisplay is null)
+                return;
+
+            if (_lastBeamAxisDisplay.SelectedDesignLength == null)
             {
-                BeamAxisDisplay.SelectedDesignLength = BeamAxisDisplay.DesignLengths.First();
+                _lastBeamAxisDisplay.SelectedDesignLength = _lastBeamAxisDisplay.DesignLengths.First();
             }
 
-            switch (BeamAxisDisplay.SelectedDesignLength?.ResultType)
+            switch (_lastBeamAxisDisplay.SelectedDesignLength?.ResultType)
             {
                 case ResultType.BeamLength:
-                    await _femModelDisplayService.DisplayDesignLengths(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, BeamAxisDisplay.SelectedDesignLength.BeamAxis);
+                    await _femModelDisplayService.DisplayDesignLengths(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _lastBeamAxisDisplay.SelectedDesignLength.BeamAxis);
                     break;
                 case ResultType.Slenderness:
-                    await _femModelDisplayService.DisplayDesignSlenderness(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, BeamAxisDisplay.SelectedDesignLength.BeamAxis);
+                    await _femModelDisplayService.DisplayDesignSlenderness(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _lastBeamAxisDisplay.SelectedDesignLength.BeamAxis);
                     break;
                 default:
                     break;
@@ -264,11 +277,6 @@ public partial class UlsLoadCombinationsViewModel : LoadCasesViewModelBase
         {
             _lastEventEnum = LastEventEnum.LengthChanged;
         }
-    }
-
-    private void DesignCodeChanged()
-    {
-        BeamAxisDisplay = new(_designModel.DesignCode);
     }
 
     private async Task UpdateAndRunUlsSolver()

@@ -5,7 +5,6 @@ using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Entity;
 using SD.Core.Shared.Events;
 using SD.Core.Shared.Models;
-using SD.Core.Shared.Models.BeamModels.Sections;
 using SD.Data.Services;
 using SD.Element.Design.Interfaces;
 using SD.UI.Constants;
@@ -26,23 +25,27 @@ public partial class ShellViewModel : FemViewModelBase
     private readonly IRuntimeAppSettings _runtimeAppSettings;
     private readonly IEventAggregator _eventAggregator;
     private readonly INotificationService _notificationService;
+    private readonly IUserPreferencesService _userPreferencesService;
+    private readonly IDataAccessService _dataAccessService;
 
     [ObservableProperty]
     public bool isFemLoaded = true;
     [ObservableProperty]
     public bool notificationDisplayed = false;
     [ObservableProperty]
+    public bool isBottomDrawerOpen = true;
+    [ObservableProperty]
     public bool isBrowserLoaded = true;
     [ObservableProperty]
-    public bool showShell;
+    public bool? showShell = false;
     [ObservableProperty]
     public WindowResizer? mainWindowResizer;
     [ObservableProperty]
     public IProcessModel _processModel;
     [ObservableProperty]
     public ISnackbarModel _snackbarModel;
-    private readonly IUserPreferencesService _userPreferencesService;
-    private readonly IDataAccessService _dataAccessService;
+    [ObservableProperty]
+    public bool isWindowMaximized = false;
 
     private FemLoadedEvent? _femLoadedEvent;
     private DialogOpenedEvent? _dialogOpenedEvent;
@@ -50,6 +53,7 @@ public partial class ShellViewModel : FemViewModelBase
     private ShellResizeEvent? _shellResizeResizeEvent;
     private AppShutdownEvent? _appShutdownEvent;
     private FileClosedEvent? _fileClosedEvent;
+    private UserPreferences? _userPreferences;
 
     public ShellViewModel(IViewManagementModel viewManagementModel,
                           IRegionManager regionManager,
@@ -116,7 +120,6 @@ public partial class ShellViewModel : FemViewModelBase
         //   _appShutdownEvent.Publish();
 
         _splashService.CloseSplash(false);
-        ShowShell = true;
 
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _fileClosedEvent.Subscribe(BrowserLoaded);
@@ -133,20 +136,25 @@ public partial class ShellViewModel : FemViewModelBase
         _shellResizeResizeEvent = _eventAggregator.GetEvent<ShellResizeEvent>();
 
         BrowserLoaded();
+
+        SetWindowState();
     }
 
     private async Task GetUserPreferences()
     {
-        var result = await _dataAccessService.SaveFemFileByName("FirstFile");
-        var file = await _dataAccessService.GetFemFileIdByName("FirstFile");
-
-        await _dataAccessService.SaveBeamSettings("someFile", new List<ChannelSection>());
-        await _userPreferencesService.SaveUserPreferences(new UserPreferences
+        _userPreferences = await _userPreferencesService.GetUserPreferences("DefaultUser");
+        if (_userPreferences == null)
         {
-            UserName = "DefaultUser",
-            WindowStates = new WindowStates() { HasModelViewDocked = true, HasResultsViewDocked = true }
-        });
-        await _userPreferencesService.GetUserPreferences("DefaultUser");
+            _userPreferences = new UserPreferences
+            {
+                UserName = "DefaultUser",
+                WindowStates = new WindowStates() { HasModelViewDocked = true, HasResultsViewDocked = true, IsBottomDrawerOpen = true }
+            };
+
+            await _userPreferencesService.SaveUserPreferences(_userPreferences);
+        }
+
+        IsBottomDrawerOpen = _userPreferences.WindowStates?.IsBottomDrawerOpen ?? true;
     }
 
     [RelayCommand]
@@ -166,6 +174,17 @@ public partial class ShellViewModel : FemViewModelBase
     {
         await Task.Delay(500);
         ViewManagementModel.IsDrawerOpen = false;
+    }
+
+    [RelayCommand]
+    public async Task AcknowledgeDisclaimer()
+    {
+        IsBottomDrawerOpen = false;
+        if (_userPreferences == null)
+            _userPreferences = new SD.Core.Shared.Entity.UserPreferences { UserName = "DefaultUser", WindowStates = new SD.Core.Shared.Entity.WindowStates() };
+
+        _userPreferences.WindowStates.IsBottomDrawerOpen = false;
+        await _userPreferencesService.SaveUserPreferences(_userPreferences);
     }
 
     private void DialogClosed()
@@ -190,6 +209,12 @@ public partial class ShellViewModel : FemViewModelBase
     {
         IsFemLoaded = false;
         IsBrowserLoaded = true;
+    }
+
+    private void SetWindowState()
+    {
+        ShowShell = true;
+        IsWindowMaximized = true;
     }
 
     [RelayCommand]

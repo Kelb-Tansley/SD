@@ -32,13 +32,13 @@ public partial class TankDesignViewModel(IViewManagementModel viewManagementMode
     private readonly INotificationService _notificationService = notificationService;
 
     [ObservableProperty]
-    public double _tankDiameter = 10000;
+    public double _tankDiameter = 12400;
 
     [ObservableProperty]
-    public double _baseThickness = 20;
+    public double _baseThickness = 12;
 
     [ObservableProperty]
-    public double _roofThickness = 0;
+    public double _roofThickness = 8;
 
     [ObservableProperty]
     public double _meshElementSize = 250;

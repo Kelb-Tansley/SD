@@ -3,6 +3,7 @@
         <ResourceDictionary Source="Constants\Constants.xaml" />
         <ResourceDictionary Source="Converters\Converters.xaml" />
         <ResourceDictionary Source="Fonts\Fonts.xaml" />
+        <ResourceDictionary Source="Colors\Colors.xaml" />
         <ResourceDictionary Source="Window\Windows.xaml" />
         <ResourceDictionary Source="Buttons\WindowButtons.xaml" />
         <ResourceDictionary Source="Buttons\Buttons.xaml" />
@@ -12,5 +13,7 @@
         <ResourceDictionary Source="Images\Icons\Icons.xaml" />
         <ResourceDictionary Source="Images\Images.xaml" />
         <ResourceDictionary Source="Label\Label.xaml" />
+        <ResourceDictionary Source="Custom\ExpandingCard.xaml" />
+        <ResourceDictionary Source="ScrollBar\ScrollBar.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

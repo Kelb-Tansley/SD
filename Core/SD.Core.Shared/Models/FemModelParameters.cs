@@ -12,6 +12,9 @@ public partial class FemModelParameters : ObservableObject, IFemModelParameters
     public ObservableCollection<Section> beamProperties = [];
 
     [ObservableProperty]
+    public ObservableCollection<Section> nonDesignableSections = [];
+
+    [ObservableProperty]
     public required ObservableCollection<Beam> beams = [];
     public required UnitFactor UnitFactor { get; set; }
 
@@ -22,6 +25,7 @@ public partial class FemModelParameters : ObservableObject, IFemModelParameters
     {
         IsInitialized = false;
         BeamProperties.Clear();
+        NonDesignableSections.Clear();
         Beams.Clear();
         UnitFactor = new UnitFactor();
         LoadCaseCombinations.Clear();

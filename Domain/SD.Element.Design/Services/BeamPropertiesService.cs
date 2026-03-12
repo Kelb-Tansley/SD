@@ -8,10 +8,10 @@ using SD.Element.Design.Interfaces;
 namespace SD.Element.Design.Services;
 public abstract class BeamPropertiesService : IBeamPropertiesService
 {
-    public Section GetBeamSection(string? name, SectionType sectionType, bool beamPropertyChecked, double[] materialData, double[] sectionData, UnitFactor unitFactor, int i)
+    public Section GetBeamSection(string? name, SectionType sectionType, bool canDesign, double[] materialData, double[] sectionData, UnitFactor unitFactor, int i)
     {
         var structural = GetStructuralProperties(sectionType, unitFactor, sectionData, materialData, string.Empty);
-        structural.CanDesign = beamPropertyChecked;
+        structural.CanDesign = canDesign;
         structural.Number = i;
         structural.Name = name ?? "NoDesign property name";
 
@@ -31,7 +31,7 @@ public abstract class BeamPropertiesService : IBeamPropertiesService
             SectionType.CircularHollow => GetCircularStrand7Section(unitFactor, sectionData, materialData, steelGrade),
             SectionType.RectangularHollow => GetRectangularStrand7Section(unitFactor, sectionData, materialData, steelGrade),
             SectionType.T => GetTStrand7Section(unitFactor, sectionData, materialData, steelGrade),
-            _ => throw new NotImplementedException(),
+            _ => new UnknownSection(sectionType, new Material(0,0,0)),
         };
     }
     private IorHSection GetIorHStrand7Section(UnitFactor unitFactor, double[] sectionData, double[] materialData, string steelGrade)

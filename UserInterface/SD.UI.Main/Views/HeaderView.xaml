@@ -32,20 +32,17 @@
             </Grid.ColumnDefinitions>
 
             <!--  Icon  -->
-            <Border>
-                <Button Margin="6" Style="{StaticResource SystemIconButton}">
+            <Border Margin="16,-20,0,0" Panel.ZIndex="10">
+                <Button
+                    Width="72"
+                    Height="72"
+                    Margin="6"
+                    Style="{StaticResource SystemIconButton}">
                     <Image Source="{Binding Source=bridge_multi_res.ico, Converter={StaticResource IconToImageSourceConverter}}" />
                 </Button>
             </Border>
 
-            <!--<TextBlock
-                Grid.Column="1"
-                Margin="8"
-                VerticalAlignment="Center"
-                Style="{StaticResource MaterialDesignBody2TextBlock}">
-                Structural Design
-            </TextBlock>-->
-
+            <!--  Menu's  -->
             <ContentControl
                 Grid.Column="1"
                 Panel.ZIndex="1"
@@ -53,11 +50,11 @@
                 FocusVisualStyle="{x:Null}"
                 WindowChrome.IsHitTestVisibleInChrome="True" />
 
+            <!--  TitleBar  -->
             <Border
                 Grid.Column="3"
                 Margin="0,0,0,0"
                 Panel.ZIndex="1">
-                <!--  TitleBar  -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

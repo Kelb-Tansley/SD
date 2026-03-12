@@ -2,15 +2,65 @@
     x:Class="SD.UI.Main.Views.NavigationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:SD.UI.Behaviors;assembly=SD.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="clr-namespace:SD.UI.Constants;assembly=SD.UI"
+    xmlns:viewmodels="clr-namespace:SD.UI.Main.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodels:NavigationViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <materialDesign:Card>
-        <TabControl Style="{StaticResource MaterialDesignNavigationRailTabControl}" TabStripPlacement="Right">
+    <Grid x:Name="RootGrid">
+        <i:Interaction.Behaviors>
+            <behaviors:NavigationPanelToggleBehavior
+                MinWidth="50"
+                IsCollapsed="{Binding IsNavigationPanelCollapsed, Mode=TwoWay}"
+                ToggleButtonName="NavToggleButton"
+                ToggleIconName="NavToggleIcon" />
+        </i:Interaction.Behaviors>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MaxWidth="500" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Navigation Left Panel Region  -->
+        <ContentControl
+            Margin="16,0,0,0"
+            prism:RegionManager.RegionName="{x:Static ui:RegionNames.NavigationLeftPanelRegion}"
+            Visibility="{Binding IsNavigationPanelCollapsed, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+
+        <!--  Collapse/expand handle for left navigation panel  -->
+        <Button
+            x:Name="NavToggleButton"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Width="28"
+            Height="28"
+            Margin="8,4,8,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Panel.ZIndex="200"
+            Style="{StaticResource MaterialDesignIconButton}">
+            <materialDesign:PackIcon x:Name="NavToggleIcon" Kind="ChevronLeft" />
+        </Button>
+
+        <GridSplitter
+            Grid.Column="1"
+            Width="4"
+            Margin="8,0,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Background="{DynamicResource MaterialDesignDivider}"
+            Visibility="{Binding IsNavigationPanelCollapsed, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+
+        <TabControl
+            Grid.Column="2"
+            Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+            TabStripPlacement="Right">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel Width="auto" Height="auto">
@@ -52,5 +102,5 @@
                 <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.ServiceabilityDesignRegionTabbed}" />
             </TabItem>-->
         </TabControl>
-    </materialDesign:Card>
+    </Grid>
 </UserControl>

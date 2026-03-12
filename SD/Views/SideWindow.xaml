@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="SD.Views.Design"
+    x:Class="SD.Views.SideWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behavior="clr-namespace:SD.UI.Behaviors;assembly=SD.UI"
@@ -26,7 +26,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.HeaderRegion}" />
-        <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ui:RegionNames.DesignRegion}" />
+        <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.SideWindowHeaderRegion}" />
+        <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ui:RegionNames.SideWindowDesignRegion}" />
     </Grid>
 </Window>

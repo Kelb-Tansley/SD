@@ -4,5 +4,6 @@
     {
         public bool HasModelViewDocked { get; set; } = true;
         public bool HasResultsViewDocked { get; set; } = true;
+        public bool IsBottomDrawerOpen { get; set; } = true;
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 
 namespace SD.Views;
-public partial class Design : Window
+public partial class SideWindow : Window
 {
-    public Design()
+    public SideWindow()
     {
         InitializeComponent();
     }
