@@ -10,7 +10,7 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="clr-namespace:SD.UI.Constants;assembly=SD.UI"
     xmlns:viewmodels="clr-namespace:SD.ViewModels"
-    Title="Structural Design"
+    Title="Aurestruct"
     behavior:MainWindowBehavior.WindowResizer="MainWindowResizer"
     d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"

@@ -6,7 +6,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    Title="Splash"
+    Title="Aurestruct"
     Width="470"
     Height="270"
     prism:ViewModelLocator.AutoWireViewModel="True"

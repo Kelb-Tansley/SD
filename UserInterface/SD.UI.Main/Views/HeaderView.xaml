@@ -32,13 +32,12 @@
             </Grid.ColumnDefinitions>
 
             <!--  Icon  -->
-            <Button
-                Width="32"
-                Height="32"
-                Margin="8,4,0,0"
-                Style="{StaticResource SystemIconButton}">
-                <Image Source="{StaticResource AppIconSvg}" Stretch="UniformToFill" />
-            </Button>
+            <Image
+                MaxWidth="32"
+                MaxHeight="32"
+                Margin="6,2,0,0"
+                Source="{StaticResource AppIconSvg}"
+                Stretch="Fill" />
 
             <!--  Menu's  -->
             <ContentControl

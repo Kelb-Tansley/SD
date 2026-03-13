@@ -1,4 +1,4 @@
-# Structural Design Tools #
+# Aurestruct Structural Design Tools #
 
 
 ## Upcoming Features ##
