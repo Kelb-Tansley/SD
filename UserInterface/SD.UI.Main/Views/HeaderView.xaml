@@ -16,7 +16,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MaterialDesignToolBarBackground}">
+    <Grid Background="{StaticResource MaterialDesignLightBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -32,15 +32,13 @@
             </Grid.ColumnDefinitions>
 
             <!--  Icon  -->
-            <Border Margin="16,-20,0,0" Panel.ZIndex="10">
-                <Button
-                    Width="72"
-                    Height="72"
-                    Margin="6"
-                    Style="{StaticResource SystemIconButton}">
-                    <Image Source="{Binding Source=bridge_multi_res.ico, Converter={StaticResource IconToImageSourceConverter}}" />
-                </Button>
-            </Border>
+            <Button
+                Width="32"
+                Height="32"
+                Margin="8,4,0,0"
+                Style="{StaticResource SystemIconButton}">
+                <Image Source="{StaticResource AppIconSvg}" Stretch="UniformToFill" />
+            </Button>
 
             <!--  Menu's  -->
             <ContentControl

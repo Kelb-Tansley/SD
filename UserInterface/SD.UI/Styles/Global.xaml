@@ -11,7 +11,7 @@
         <ResourceDictionary Source="Border\DropShadows.xaml" />
         <ResourceDictionary Source="Images\Canvas\Canvas.xaml" />
         <ResourceDictionary Source="Images\Icons\Icons.xaml" />
-        <ResourceDictionary Source="Images\Images.xaml" />
+        <ResourceDictionary Source="Images\svgs\svg.xaml" />
         <ResourceDictionary Source="Label\Label.xaml" />
         <ResourceDictionary Source="Custom\ExpandingCard.xaml" />
         <ResourceDictionary Source="ScrollBar\ScrollBar.xaml" />

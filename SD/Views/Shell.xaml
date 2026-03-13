@@ -110,7 +110,7 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
 
-                    <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.HeaderRegion}" />
+                    <ContentControl Panel.ZIndex="10" prism:RegionManager.RegionName="{x:Static ui:RegionNames.HeaderRegion}" />
 
                     <ContentControl
                         Grid.Row="1"

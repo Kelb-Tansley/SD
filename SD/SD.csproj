@@ -7,32 +7,23 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<ApplicationIcon>bridge_multi_res.ico</ApplicationIcon>
-		<PackageIcon>bridge_multi_res_128.png</PackageIcon>
+		<ApplicationIcon>Assets\Icons\appicon.ico</ApplicationIcon>
+		<PackageIcon>Assets\Icons\appicon.png</PackageIcon>
 		<AssemblyVersion>1.0.0.3</AssemblyVersion>
 		<FileVersion>1.0.0.3</FileVersion>
 		<AnalysisLevel>latest</AnalysisLevel>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="bridge_multi_res.ico">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Include="..\..\..\..\Users\Kelby.Tansley\Downloads\bridge_multi_res_128.png">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
+		<None Include=".github\copilot-instructions.md" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 		<PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		  <PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0" />
@@ -67,9 +58,11 @@
 		<None Update="appSettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="Icons\app_icon-4.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
+		<None Update="Assets\Icons\appicon.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Assets\Icons\appicon.png">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="Logger.config">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
