@@ -26,49 +26,129 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <UserControl.Resources>
-        <converters:ComboBoxValueToStringConverter x:Key="ComboBoxValueToStringConverter" />
-        <converters:ComboBoxValueToBoolConverter x:Key="ComboBoxValueToBoolConverter" />
-        <converters:ComboBoxValueToLoadCaseConverter x:Key="ComboBoxValueToLoadCaseConverter" />
-        <Storyboard x:Key="FlickerAnimation" RepeatBehavior="0:0:5">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
-                <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="1" />
-                <LinearDoubleKeyFrame KeyTime="0:0:0.15" Value="0.3" />
-                <LinearDoubleKeyFrame KeyTime="0:0:0.3" Value="1" />
-                <LinearDoubleKeyFrame KeyTime="0:0:0.45" Value="0.3" />
-                <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="1" />
-                <LinearDoubleKeyFrame KeyTime="0:0:0.75" Value="0.3" />
-                <LinearDoubleKeyFrame KeyTime="0:0:1.0" Value="1" />
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-        <DataTemplate x:Key="DesignLengthPopupTemplate">
-            <Grid>
-                <ListBox
-                    Margin="0,-16"
-                    materialDesign:ListBoxAssist.IsToggle="False"
-                    materialDesign:ListBoxItemAssist.ShowSelection="False"
-                    DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
-                    DisplayMemberPath="DisplayName"
-                    ItemsSource="{Binding BeamAxisDisplay.DesignLengths}"
-                    SelectedItem="{Binding BeamAxisDisplay.SelectedDesignLength}"
-                    Style="{StaticResource MaterialDesignListBox}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding DesignContourChangedCommand}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </ListBox>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="NonDesignablePropertiesPopupTemplate">
-            <Grid>
-                <ListBox
-                    Margin="0,-16"
-                    DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
-                    DisplayMemberPath="Name"
-                    ItemsSource="{Binding FemModelParameters.NonDesignableSections}"
-                    Style="{StaticResource MaterialDesignListBox}" />
-            </Grid>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <converters:ComboBoxValueToStringConverter x:Key="ComboBoxValueToStringConverter" />
+            <converters:ComboBoxValueToBoolConverter x:Key="ComboBoxValueToBoolConverter" />
+            <converters:ComboBoxValueToLoadCaseConverter x:Key="ComboBoxValueToLoadCaseConverter" />
+            <Storyboard x:Key="FlickerAnimation" RepeatBehavior="0:0:5">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.0" Value="1" />
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.15" Value="0.3" />
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.3" Value="1" />
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.45" Value="0.3" />
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.6" Value="1" />
+                    <LinearDoubleKeyFrame KeyTime="0:0:0.75" Value="0.3" />
+                    <LinearDoubleKeyFrame KeyTime="0:0:1.0" Value="1" />
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+            <DataTemplate x:Key="DesignLengthPopupTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="160" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,0,16">
+                        <TextBlock
+                            Margin="8,0,8,20"
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource DarkSage}"
+                            Text="Beam ULS Utilization:" />
+                        <ListBox
+                            Margin="0,-16"
+                            materialDesign:ListBoxAssist.IsToggle="False"
+                            materialDesign:ListBoxItemAssist.ShowSelection="True"
+                            DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
+                            DisplayMemberPath="DisplayName"
+                            ItemsSource="{Binding BeamAxisDisplay.UlsUtilizationTypes}"
+                            SelectedItem="{Binding BeamAxisDisplay.SelectedUlsUtilizationType}"
+                            Style="{StaticResource MaterialDesignListBox}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding BeamAxisDisplay.SelectedUlsUtilizationTypeChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock
+                            Margin="8,0,8,20"
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource DarkSage}"
+                            Text="Beam Length:" />
+                        <ListBox
+                            Margin="0,-16"
+                            materialDesign:ListBoxAssist.IsToggle="False"
+                            materialDesign:ListBoxItemAssist.ShowSelection="True"
+                            DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
+                            DisplayMemberPath="DisplayName"
+                            ItemsSource="{Binding BeamAxisDisplay.DesignLengths}"
+                            SelectedItem="{Binding BeamAxisDisplay.SelectedDesignLength}"
+                            Style="{StaticResource MaterialDesignListBox}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding BeamAxisDisplay.SelectedDesignLengthChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListBox>
+                        <Separator Margin="0,8,0,0" />
+                        <TextBlock
+                            Margin="8,0,8,20"
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource DarkSage}"
+                            Text="Beam K Factor:" />
+                        <ListBox
+                            Margin="0,-16"
+                            materialDesign:ListBoxAssist.IsToggle="False"
+                            materialDesign:ListBoxItemAssist.ShowSelection="True"
+                            DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
+                            DisplayMemberPath="DisplayName"
+                            ItemsSource="{Binding BeamAxisDisplay.KFactors}"
+                            SelectedItem="{Binding BeamAxisDisplay.SelectedKFactor}"
+                            Style="{StaticResource MaterialDesignListBox}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding BeamAxisDisplay.SelectedKFactorChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListBox>
+                        <Separator Margin="0,8,0,0" />
+                        <TextBlock
+                            Margin="8,0,8,20"
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource DarkSage}"
+                            Text="Beam slenderness ratio:" />
+                        <ListBox
+                            Margin="0,-16"
+                            materialDesign:ListBoxAssist.IsToggle="False"
+                            materialDesign:ListBoxItemAssist.ShowSelection="True"
+                            DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
+                            DisplayMemberPath="DisplayName"
+                            ItemsSource="{Binding BeamAxisDisplay.SlendernessOrientations}"
+                            SelectedItem="{Binding BeamAxisDisplay.SelectedSlendernessOrientation}"
+                            Style="{StaticResource MaterialDesignListBox}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding BeamAxisDisplay.SelectedSlendernessOrientationChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListBox>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="NonDesignablePropertiesPopupTemplate">
+                <Grid>
+                    <ListBox
+                        Margin="0,-16"
+                        DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
+                        DisplayMemberPath="Name"
+                        ItemsSource="{Binding FemModelParameters.NonDesignableSections}"
+                        Style="{StaticResource MaterialDesignListBox}" />
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
     </UserControl.Resources>
     <ToolBarTray HorizontalAlignment="Stretch">
         <ToolBar Style="{StaticResource MaterialDesignToolBar}">
@@ -97,7 +177,7 @@
             <materialDesign:PopupBox
                 Margin="16,10"
                 IsEnabled="{Binding ProcessModel.IsFemModelLoaded}"
-                PlacementMode="LeftAndAlignTopEdges"
+                PlacementMode="RightAndAlignTopEdges"
                 PopupContentTemplate="{StaticResource DesignLengthPopupTemplate}"
                 StaysOpen="False"
                 ToolTip="Select a design length, for the beam element contour.">
@@ -172,7 +252,6 @@
                         <TextBlock
                             Margin="-6,0,0,8"
                             VerticalAlignment="Center"
-                            FontSize="12"
                             Foreground="Red"
                             Text="{Binding FemModelParameters.NonDesignableSections, Converter={StaticResource ListToCountConverter}}" />
                     </StackPanel>

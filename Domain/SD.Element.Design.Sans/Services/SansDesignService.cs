@@ -16,11 +16,10 @@ public class SansDesignService : SansService, IElementDesignService
     private readonly IStrandApiService _strandApiService;
     private readonly IFemModelParameters _femModelParameters;
 
-    public SansDesignService(
-        IDesignModel designModel,
-        IUlsDesignResults ulsDesignResults,
-        IStrandApiService strandApiService,
-        IFemModelParameters femModelParameters)
+    public SansDesignService(IDesignModel designModel,
+                             IUlsDesignResults ulsDesignResults,
+                             IStrandApiService strandApiService,
+                             IFemModelParameters femModelParameters)
     {
         _designModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));

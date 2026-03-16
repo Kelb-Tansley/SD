@@ -1,5 +1,3 @@
-﻿using SD.UI.Models;
+﻿namespace SD.UI.Events;
 
-namespace SD.UI.Events;
-
-public class DesignContourChangedEvent : PubSubEvent<BeamAxisDisplay> { }
+public class DesignContourChangedEvent : PubSubEvent { }

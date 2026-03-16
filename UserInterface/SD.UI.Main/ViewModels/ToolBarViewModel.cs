@@ -21,7 +21,6 @@ public partial class ToolBarViewModel : ViewModelBase
     private readonly FileOpenedEvent _fileOpenedEvent;
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
-    private readonly DesignContourChangedEvent _designContourChangedEvent;
     private readonly CalculateEvent _calculateEvent;
     private readonly RefreshEvent _refreshEvent;
 
@@ -32,6 +31,9 @@ public partial class ToolBarViewModel : ViewModelBase
     public required IFemModelParameters _femModelParameters;
 
     [ObservableProperty]
+    public required IBeamAxisDisplay _beamAxisDisplay;
+
+    [ObservableProperty]
     public bool _femModelOpened;
 
     [ObservableProperty]
@@ -40,8 +42,6 @@ public partial class ToolBarViewModel : ViewModelBase
     [ObservableProperty]
     public bool _useEnvelopeLoadCase;
 
-    [ObservableProperty]
-    public BeamAxisDisplay _beamAxisDisplay;
 
     public ToolBarViewModel(IRegionManager regionManager,
                             IViewManagementModel viewManagementModel,
@@ -50,7 +50,8 @@ public partial class ToolBarViewModel : ViewModelBase
                             IProcessModel processModel,
                             IUlsDesignResults ulsDesignResults,
                             IFemModelParameters femModelParameters,
-                            IEventAggregator eventAggregator) : base(processModel)
+                            IEventAggregator eventAggregator,
+                            IBeamAxisDisplay beamAxisDisplay) : base(processModel)
     {
         _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _viewManagementModel = viewManagementModel ?? throw new ArgumentNullException(nameof(viewManagementModel));
@@ -59,16 +60,14 @@ public partial class ToolBarViewModel : ViewModelBase
         _femModelParameters = femModelParameters ?? throw new ArgumentNullException(nameof(femModelParameters));
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
+        _beamAxisDisplay = beamAxisDisplay ?? throw new ArgumentNullException(nameof(beamAxisDisplay));
 
         _fileOpeningEvent = _eventAggregator.GetEvent<FileOpeningEvent>();
         _fileOpenedEvent = _eventAggregator.GetEvent<FileOpenedEvent>();
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _refreshEvent = _eventAggregator.GetEvent<RefreshEvent>();
         _designCodeChangedEvent = _eventAggregator.GetEvent<DesignCodeChangedEvent>();
-        _designContourChangedEvent = _eventAggregator.GetEvent<DesignContourChangedEvent>();
         _calculateEvent = _eventAggregator.GetEvent<CalculateEvent>();
-
-        BeamAxisDisplay = new(DesignModel.DesignCode);
     }
 
     [RelayCommand]
@@ -103,17 +102,9 @@ public partial class ToolBarViewModel : ViewModelBase
     [RelayCommand]
     private void DesignCodeChanged()
     {
-        BeamAxisDisplay = new(DesignModel.DesignCode);
-
         _designCodeChangedEvent?.Publish();
 
         Refresh();
-    }
-
-    [RelayCommand]
-    private void DesignContourChanged()
-    {
-        _designContourChangedEvent?.Publish(BeamAxisDisplay);
     }
 
     [RelayCommand]
@@ -144,11 +135,6 @@ public partial class ToolBarViewModel : ViewModelBase
         _fileOpeningEvent.Subscribe(FolderBrowse);
         _fileClosedEvent.Subscribe(FileClosed);
         _designCodeChangedEvent.Subscribe(DesignCodeChanged);
-
-        //_femModelParameters.NonDesignableSections.CollectionChanged += (s, e) =>
-        //{
-        //    NonDesignableSectionsCount = _femModelParameters.NonDesignableSections.Count;
-        //};
     }
 
     [RelayCommand]

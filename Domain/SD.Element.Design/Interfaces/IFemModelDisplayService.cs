@@ -1,6 +1,7 @@
 ﻿using SD.Core.Shared.Enum;
 using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.BeamModels;
+using SD.Core.Shared.Models.Sans;
 using SD.Core.Shared.Models.UI;
 using SD.Core.Strand.Models;
 
@@ -8,8 +9,9 @@ namespace SD.Element.Design.Interfaces;
 
 public interface IFemModelDisplayService
 {
-    public Task DisplayDesignResults(int modelId, string fileName, nint handle, IEnumerable<UlsResultPeak> results);
+    public Task DisplaySansDesignResults(int modelId, string fileName, nint handle, IEnumerable<SansUlsResult> results, SansUtilizationType sansUtilizationType);
     public Task DisplayDesignLengths(int modelId, string fileName, nint handle, BeamAxis beamAxisEnum);
+    public Task DisplayDesignKFactors(int displayModelId, string fileName, nint modelHandle, BeamAxis beamAxis);
     public Task DisplayDesignSlenderness(int modelId, string fileName, nint handle, BeamAxis beamAxisEnum);
     public void UpdateFemModel(int modelId, nint handle);
     public void UpdateBeamFemModel(int modelId, nint handle, int loadCase, ref int childId, bool isInitialized, ZoomLevel zoomLevel, Beam beam, BeamDisplayComponent beamDisplayComponent);

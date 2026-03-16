@@ -19,8 +19,8 @@ public sealed class AppliedLoadStepDefinitions
     private readonly IEffectiveLengthService _effectiveLengthService;
 
     private int _modelId = 1;
-    private double _accuracy = 0.00001;
-    private bool _designLengthCalculated = false;
+    private readonly double _accuracy = 0.0001;
+    private readonly bool _designLengthCalculated = false;
 
     public AppliedLoadStepDefinitions(
         IConnectionService connectionService,

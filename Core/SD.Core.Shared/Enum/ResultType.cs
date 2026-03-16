@@ -4,5 +4,7 @@ public enum ResultType
     Force,
     Deflection,
     BeamLength,
-    Slenderness
+    Slenderness,
+    KFactor,
+    UlsUtilizationType
 }

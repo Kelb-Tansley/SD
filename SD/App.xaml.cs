@@ -22,6 +22,7 @@ using SD.Fem.Strand7.Services;
 using SD.MathcadPrime.Interfaces;
 using SD.MathcadPrime.Services;
 using SD.Services;
+using SD.UI.Models;
 using SD.UI.Services;
 using SD.UI.Singletons;
 using SD.Views;
@@ -143,6 +144,7 @@ public partial class App : PrismApplication
         containerRegistry.RegisterSingleton<IFemModelParameters, FemModelParameters>();
         containerRegistry.RegisterSingleton<IViewManagementModel, ViewManagementModel>();
         containerRegistry.RegisterSingleton<ISnackbarModel, SnackbarModel>();
+        containerRegistry.RegisterSingleton<IBeamAxisDisplay, BeamAxisDisplay>();
 
         RegisterLogger(containerRegistry);
         RegisterRepositories(containerRegistry);

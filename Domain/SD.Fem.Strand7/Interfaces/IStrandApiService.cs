@@ -1,7 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SD.Core.Shared.Models.Loading;
+﻿using SD.Core.Shared.Models.Loading;
+using SD.Core.Shared.Models.Sans;
 
 namespace SD.Fem.Strand7.Interfaces;
+
 public interface IStrandApiService
 {
     public bool OpenFemFile(int modelId, string fileName, bool closeFirst = true, bool openReadOnly = true);
@@ -17,8 +18,9 @@ public interface IStrandApiService
     public void GetFemModelParameters(IFemModelParameters femModelParameters, DesignCode designCode, int modelId, SolverType solverType, StrandResultFile strandResultFile);
     public List<LoadCaseCombination> GetFemModelLoadCaseCombinations(int modelId, SolverType solverType, StrandResultFile strandResultFile);
     public (List<Section> Designable, List<Section> NonDesignable) GetFemBeamSections(int modelId, UnitFactor unitFactor, DesignCode designCode);
-    public Task DisplayFemDesignResults(int modelId, IEnumerable<UlsResultPeak> results);
+    public Task DisplaySansFemDesignResults(int modelId, IEnumerable<SansUlsResult> results, SansUtilizationType sansUtilizationType);
     public Task DisplayDesignLengths(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor);
+    public Task DisplayDesignKFactors(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams);
     public Task DisplayDesignSlenderness(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor);
     public void ClearFemDisplayModel(int modelId);
     public IEnumerable<Beam> GetDisplayedByGroupBeams(int modelId, IEnumerable<Beam> beams);

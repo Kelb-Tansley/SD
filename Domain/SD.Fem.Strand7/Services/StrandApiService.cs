@@ -1,5 +1,6 @@
 ﻿using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.Loading;
+using SD.Core.Shared.Models.Sans;
 using SD.Element.Design.Services;
 using System.Collections.ObjectModel;
 
@@ -392,10 +393,10 @@ public class StrandApiService(
 
         return selectionChanged;
     }
-    public async Task DisplayFemDesignResults(int modelId, IEnumerable<UlsResultPeak> results)
+    public async Task DisplaySansFemDesignResults(int modelId, IEnumerable<SansUlsResult> results, SansUtilizationType sansUtilizationType)
     {
         var visibleResults = new List<UlsResultPeak>();
-        var maxResults = GetMaxForEachBeamId(results);
+        var maxResults = GetMaxForEachBeamId(results, sansUtilizationType);
         foreach (var result in maxResults)
         {
             byte visible = St7.btFalse;
@@ -404,7 +405,271 @@ public class StrandApiService(
                 visibleResults.Add(result);
         }
 
+        if (visibleResults.Count == 0)
+            return;
+
         DisplayContour(modelId, await _contourFileService.GenerateResultsContourFile(visibleResults));
+    }
+
+    private static List<UlsResultPeak> GetMaxForEachBeamId(IEnumerable<SansUlsResult> results, SansUtilizationType sansUtilizationType)
+    {
+        var grouped = results.GroupBy(x => x.Beam.Number).ToList();
+        var maxResults = new List<UlsResultPeak>();
+        foreach (var group in grouped)
+        {
+            var matched = GetMaxByUtilizationType(sansUtilizationType, group);
+            if (matched != null)
+                maxResults.Add(matched);
+        }
+
+        return [.. maxResults.Distinct()];
+    }
+
+    private static UlsResultPeak? GetMaxByUtilizationType(SansUtilizationType sansUtilizationType, IGrouping<int, SansUlsResult> group)
+    {
+        switch (sansUtilizationType)
+        {
+            case SansUtilizationType.Tension:
+                {
+                    var max = group.Max(x => x.Utilization.Tension);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.Tension == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.Tension,
+                            PeakType = "Tension"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.Compression:
+                {
+                    var max = group.Max(x => x.Utilization.Compression);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.Compression == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.Compression,
+                            PeakType = "Compression"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.BendingMajor:
+                {
+                    var max = group.Max(x => x.Utilization.BendingMajor);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.BendingMajor == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.BendingMajor,
+                            PeakType = "Bending Major"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.BendingMinor:
+                {
+                    var max = group.Max(x => x.Utilization.BendingMinor);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.BendingMinor == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.BendingMinor,
+                            PeakType = "Bending Minor"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.BiAxialBending:
+                {
+                    var max = group.Max(x => x.Utilization.BiAxialBending);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.BiAxialBending == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.BiAxialBending,
+                            PeakType = "Bi-Axial Bending"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.CompressionAndBendingSectionStrength:
+                {
+                    var max = group.Max(x => x.Utilization.CompressionAndBendingSectionStrength);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.CompressionAndBendingSectionStrength == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.CompressionAndBendingSectionStrength,
+                            PeakType = "Compression and Bending section strength - 13.8 a)"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.CompressionAndBendingMemberStrength:
+                {
+                    var max = group.Max(x => x.Utilization.CompressionAndBendingMemberStrength);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.CompressionAndBendingMemberStrength == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.CompressionAndBendingMemberStrength,
+                            PeakType = "Compression and bending member strength - 13.8 b)"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.CompressionAndBendingBucklingStrength:
+                {
+                    var max = group.Max(x => x.Utilization.CompressionAndBendingBucklingStrength);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.CompressionAndBendingBucklingStrength == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.CompressionAndBendingBucklingStrength,
+                            PeakType = "Compression and bending buckling strength - 13.8 c)"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.ShearMajor:
+                {
+                    var max = group.Max(x => x.Utilization.ShearMajor);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.ShearMajor == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.ShearMajor,
+                            PeakType = "Shear Major"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.ShearMinor:
+                {
+                    var max = group.Max(x => x.Utilization.ShearMinor);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.ShearMinor == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.ShearMinor,
+                            PeakType = "Shear Minor"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.ShearAndBendingMajor:
+                {
+                    var max = group.Max(x => x.Utilization.ShearAndBendingMajor);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.ShearAndBendingMajor == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.ShearAndBendingMajor,
+                            PeakType = "Shear and Bending Major"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.ShearAndBendingMinor:
+                {
+                    var max = group.Max(x => x.Utilization.ShearAndBendingMinor);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.ShearAndBendingMinor == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.ShearAndBendingMinor,
+                            PeakType = "Shear and Bending Minor"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.TensionAndBending:
+                {
+                    var max = group.Max(x => x.Utilization.TensionAndBending);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.TensionAndBending == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.TensionAndBending,
+                            PeakType = "Tension and Bending"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.AllowableStress:
+                {
+                    var max = group.Max(x => x.Utilization.AllowableStress);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.AllowableStress == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.AllowableStress,
+                            PeakType = "Allowable Stress"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.SlendernessMajor:
+                {
+                    var max = group.Max(x => x.Utilization.SlendernessMajor);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.SlendernessMajor == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.SlendernessMajor,
+                            PeakType = "Slenderness Major"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.SlendernessMinor:
+                {
+                    var max = group.Max(x => x.Utilization.SlendernessMinor);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.SlendernessMinor == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.SlendernessMinor,
+                            PeakType = "Slenderness Minor"
+                        };
+                    else return null;
+                }
+            case SansUtilizationType.All:
+                {
+                    var max = group.Max(x => x.Utilization.MaxUtilization);
+                    var peak = group.FirstOrDefault(gr => gr.Utilization.MaxUtilization == max);
+                    if (peak != null)
+                        return new UlsResultPeak
+                        {
+                            BeamId = peak.Beam.Number,
+                            LoadCaseId = peak.LoadCaseNumber,
+                            Utilization = peak.Utilization.MaxUtilization,
+                            PeakType = "Max Utilization"
+                        };
+                    else return null;
+                }
+            default:
+                return null;
+        }
     }
 
     public async Task DisplayDeflectionContours(int modelId, double minDeflectionRatio, DeflectionAxis deflectionAxis, IEnumerable<DeflectionResult>? results)
@@ -418,20 +683,6 @@ public class StrandApiService(
         integers[St7.ipSetMinLimit] = St7.btTrue;
         integers[St7.ipSetMaxLimit] = St7.btFalse;
         St7.St7SetEntityContourSettingsLimits(modelId, St7.tyBEAM, integers, limits).ThrowIfFails();
-    }
-    private static List<UlsResultPeak> GetMaxForEachBeamId(IEnumerable<UlsResultPeak> results)
-    {
-        var grouped = results.GroupBy(x => x.BeamId).ToList();
-        var maxResults = new List<UlsResultPeak>();
-        foreach (var group in grouped)
-        {
-            var max = group.Max(x => x.Utilization);
-            var matched = group.FirstOrDefault(gr => gr.Utilization == max);
-            if (matched != null)
-                maxResults.Add(matched);
-        }
-
-        return maxResults;
     }
 
     public StrandResultFile OpenFemResultsFile(int modelId, string fileName, SolverType solverType, bool closeFirst = false)
@@ -674,14 +925,7 @@ public class StrandApiService(
 
     public async Task DisplayDesignLengths(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor)
     {
-        var visibleBeams = new List<Beam>();
-        foreach (var beam in beams)
-        {
-            byte visible = 1;
-            St7.St7GetEntityNumVisibility(modelId, St7.tyBEAM, beam.Number, ref visible).ThrowIfFails();
-            if (visible != 0)
-                visibleBeams.Add(beam);
-        }
+        var visibleBeams = GetVisibleBeams(modelId, beams);
 
         switch (beamAxisEnum)
         {
@@ -707,6 +951,33 @@ public class StrandApiService(
         HideNonBeamEntities(modelId);
     }
 
+    public async Task DisplayDesignKFactors(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams)
+    {
+        var visibleBeams = GetVisibleBeams(modelId, beams);
+
+        switch (beamAxisEnum)
+        {
+            case BeamAxis.Principal1:
+                DisplayContour(modelId, await _contourFileService.GenerateK1ContourFile(visibleBeams));
+                break;
+            case BeamAxis.Principal2:
+                DisplayContour(modelId, await _contourFileService.GenerateK2ContourFile(visibleBeams));
+                break;
+            case BeamAxis.PrincipalZ:
+                DisplayContour(modelId, await _contourFileService.GenerateKzContourFile(visibleBeams));
+                break;
+            case BeamAxis.PrincipalETop:
+                DisplayContour(modelId, await _contourFileService.GenerateKeTopContourFile(visibleBeams));
+                break;
+            case BeamAxis.PrincipalEBottom:
+                DisplayContour(modelId, await _contourFileService.GenerateKeBottomContourFile(visibleBeams));
+                break;
+            case BeamAxis.All:
+                break;
+        }
+
+        HideNonBeamEntities(modelId);
+    }
     public async Task DisplayDesignSlenderness(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor)
     {
         var visibleBeams = new List<Beam>();
@@ -829,5 +1100,19 @@ public class StrandApiService(
     {
         St7.St7SaveFile(modelId).ThrowIfFails();
         St7.St7CloseFile(modelId).ThrowIfFails();
+    }
+
+    private static List<Beam> GetVisibleBeams(int modelId, IEnumerable<Beam> beams)
+    {
+        var visibleBeams = new List<Beam>();
+        foreach (var beam in beams)
+        {
+            byte visible = 1;
+            St7.St7GetEntityNumVisibility(modelId, St7.tyBEAM, beam.Number, ref visible).ThrowIfFails();
+            if (visible != 0)
+                visibleBeams.Add(beam);
+        }
+
+        return visibleBeams;
     }
 }

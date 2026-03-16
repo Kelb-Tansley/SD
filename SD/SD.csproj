@@ -69,4 +69,8 @@
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Core\SD.Core.Shared\Models\" />
+	</ItemGroup>
+
 </Project>

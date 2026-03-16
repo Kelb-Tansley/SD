@@ -3,19 +3,13 @@ using CommunityToolkit.Mvvm.Input;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
-using SD.Core.Shared.Enum;
 using SD.Core.Shared.Models;
-using SD.Core.Strand.Models;
 using SD.Data.Interfaces;
-using SD.Element.Design.AS.Enums;
 using SD.Element.Design.Interfaces;
 using SD.Fem.Strand7.Interfaces;
-using SD.Fem.Strand7.Services;
 using SD.UI.Constants;
 using SD.UI.Enums;
 using SD.UI.Events;
-using SD.UI.Models;
-using SD.UI.Singletons;
 using SD.UI.ViewModel;
 
 namespace SD.UI.UltimateLimitState.ViewModels;
@@ -27,37 +21,41 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     private readonly IDesignModel _designModel;
     private readonly IFemModel _femModel;
     private readonly IEventAggregator _eventAggregator;
+    private readonly IBeamAxisDisplay _beamAxisDisplay;
     private readonly INotificationService _notificationService;
     private readonly IFemFilePathService _femFilePathService;
     private readonly IEffectiveLengthService _effectiveLengthService;
     private readonly IStrandApiService _strandApiService;
+    private readonly IUlsDesignResults _ulsDesignResults;
     private readonly RefreshEvent _refreshEvent;
     private readonly RefreshCalculationEvent _refreshCalculationEvent;
     private readonly FileOpenedEvent _fileOpenedEvent;
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly RunUlsSolverEvent _runUlsSolverEvent;
-    private readonly DesignCodeChangedEvent _designCodeChangedEvent;
     private readonly DesignContourChangedEvent _designContourChangedEvent;
     private readonly CalculateEvent _calculateEvent;
     private LastEventEnum _lastEventEnum;
     private bool _isMainModelResultsOpen;
 
     public CombinationsTableViewModel(IProcessModel processModel,
-                                        IDesignModel designModel,
-                                        IFemModel femModel,
-                                        IDesignCodeAdapter femDesignAdapter,
-                                        IEventAggregator eventAggregator,
-                                        IFemFilePathService femFilePathService,
-                                        IFemModelDisplayService femModelDisplayService,
-                                        IFemModelParameters femModelParameters,
-                                        INotificationService notificationService,
-                                        IStrandApiService strandApiService,
-                                        IEffectiveLengthService effectiveLengthService) : base(processModel)
+                                      IDesignModel designModel,
+                                      IFemModel femModel,
+                                      IDesignCodeAdapter femDesignAdapter,
+                                      IEventAggregator eventAggregator,
+                                      IFemFilePathService femFilePathService,
+                                      IFemModelDisplayService femModelDisplayService,
+                                      IFemModelParameters femModelParameters,
+                                      INotificationService notificationService,
+                                      IStrandApiService strandApiService,
+                                      IEffectiveLengthService effectiveLengthService,
+                                      IBeamAxisDisplay beamAxisDisplay,
+                                      IUlsDesignResults ulsDesignResults) : base(processModel)
     {
         _processModel = processModel;
         _designModel = designModel;
         _femModel = femModel;
         _eventAggregator = eventAggregator;
+        _beamAxisDisplay = beamAxisDisplay;
         _femDesignAdapter = femDesignAdapter;
         _femModelDisplayService = femModelDisplayService;
         _femModelParameters = femModelParameters;
@@ -65,13 +63,13 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         _femFilePathService = femFilePathService ?? throw new ArgumentNullException(nameof(femFilePathService));
         _effectiveLengthService = effectiveLengthService;
         _strandApiService = strandApiService;
+        _ulsDesignResults = ulsDesignResults;
 
         _refreshEvent = _eventAggregator.GetEvent<RefreshEvent>();
         _refreshCalculationEvent = _eventAggregator.GetEvent<RefreshCalculationEvent>();
         _fileOpenedEvent = _eventAggregator.GetEvent<FileOpenedEvent>();
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _runUlsSolverEvent = _eventAggregator.GetEvent<RunUlsSolverEvent>();
-        _designCodeChangedEvent = _eventAggregator.GetEvent<DesignCodeChangedEvent>();
         _designContourChangedEvent = _eventAggregator.GetEvent<DesignContourChangedEvent>();
         _calculateEvent = _eventAggregator.GetEvent<CalculateEvent>();
 
@@ -79,19 +77,12 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         _refreshEvent.Subscribe(async () => await Refresh());
         _refreshCalculationEvent.Subscribe(async () => await RefreshCalculation());
         _runUlsSolverEvent.Subscribe(async () => await UpdateAndRunUlsSolver());
-        _designContourChangedEvent.Subscribe(async (beamAxisDisplay) => await DesignContourChanged(beamAxisDisplay));
+        _designContourChangedEvent.Subscribe(async () => await DesignContourChanged());
         _calculateEvent.Subscribe(async () => await Calculate());
-
-        _lastBeamAxisDisplay = new(_designModel.DesignCode);
     }
 
     [ObservableProperty]
     public required IFemModelParameters _femModelParameters;
-
-    private BeamAxisDisplay _lastBeamAxisDisplay;
-
-    //[ObservableProperty]
-    //public BeamAxisDisplay beamAxisDisplay;
 
     [RelayCommand]
     private async Task LoadCaseChanged()
@@ -118,7 +109,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
                     UpdateLoadCombinations(FemModelParameters.LoadCaseCombinations);
                     _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, _designModel.IsDesignLengthCalculated, FemModelParameters, _designModel.DesignSettings);
-                    await DesignContourChanged(_lastBeamAxisDisplay);
+                    await DesignContourChanged();
 
                     // Publish the event to notify the application that the FEM model has been loaded.
                     _eventAggregator.GetEvent<FemLoadedEvent>().Publish();
@@ -228,12 +219,12 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
         switch (_lastEventEnum)
         {
-            case LastEventEnum.LengthChanged:
+            case LastEventEnum.ContourChanged:
                 {
                     _femModelDisplayService.ReloadFemDisplayModel(FemModels.ModelId, _femModel.FileName, true);
                     _isMainModelResultsOpen = false;
 
-                    await DesignContourChanged(_lastBeamAxisDisplay);
+                    await DesignContourChanged();
                     break;
                 }
             case LastEventEnum.LoadCaseChanged:
@@ -246,36 +237,23 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         }
     }
 
-    private async Task DesignContourChanged(BeamAxisDisplay? beamAxisDisplay)
+    private async Task DesignContourChanged()
     {
         try
         {
-            if (beamAxisDisplay is not null)
-                _lastBeamAxisDisplay = beamAxisDisplay;
-            if (_lastBeamAxisDisplay is null)
-                return;
-
-            if (_lastBeamAxisDisplay.SelectedDesignLength == null)
-            {
-                _lastBeamAxisDisplay.SelectedDesignLength = _lastBeamAxisDisplay.DesignLengths.First();
-            }
-
-            switch (_lastBeamAxisDisplay.SelectedDesignLength?.ResultType)
-            {
-                case ResultType.BeamLength:
-                    await _femModelDisplayService.DisplayDesignLengths(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _lastBeamAxisDisplay.SelectedDesignLength.BeamAxis);
-                    break;
-                case ResultType.Slenderness:
-                    await _femModelDisplayService.DisplayDesignSlenderness(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _lastBeamAxisDisplay.SelectedDesignLength.BeamAxis);
-                    break;
-                default:
-                    break;
-            }
+            if (_beamAxisDisplay.SelectedDesignLength is not null)
+                await _femModelDisplayService.DisplayDesignLengths(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _beamAxisDisplay.SelectedDesignLength.BeamAxis);
+            else if (_beamAxisDisplay.SelectedSlendernessOrientation is not null)
+                await _femModelDisplayService.DisplayDesignSlenderness(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _beamAxisDisplay.SelectedSlendernessOrientation.BeamAxis);
+            else if (_beamAxisDisplay.SelectedKFactor is not null)
+                await _femModelDisplayService.DisplayDesignKFactors(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _beamAxisDisplay.SelectedKFactor.BeamAxis);
+            else if (_beamAxisDisplay.SelectedUlsUtilizationType is not null)
+                await _femModelDisplayService.DisplaySansDesignResults(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _ulsDesignResults.SansUlsResults, _beamAxisDisplay.SelectedUlsUtilizationType.SansUtilizationType);
         }
         catch (Exception) { throw; }
         finally
         {
-            _lastEventEnum = LastEventEnum.LengthChanged;
+            _lastEventEnum = LastEventEnum.ContourChanged;
         }
     }
 
@@ -291,9 +269,9 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
                 if (!_isMainModelResultsOpen)
                     _femModelDisplayService.OpenFemResultsFile(FemModels.ModelId, _femModel.FileName);
 
-                var results = await _femDesignAdapter.GetDesignService(_designModel.DesignCode.ToDesignCodeEnum()).RunUlsDesign(FemModels.ModelId, FemModelParameters?.Beams?.ToList());
+                await _femDesignAdapter.GetDesignService(_designModel.DesignCode.ToDesignCodeEnum()).RunUlsDesign(FemModels.ModelId, FemModelParameters?.Beams?.ToList());
 
-                await _femModelDisplayService.DisplayDesignResults(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, results);
+                await DesignContourChanged();
             }
 
             _eventAggregator.GetEvent<LoadCaseChangedEvent>().Publish();
