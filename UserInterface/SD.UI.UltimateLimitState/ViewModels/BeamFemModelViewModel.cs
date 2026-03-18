@@ -89,7 +89,7 @@ public partial class BeamFemModelViewModel : FemViewModelBase
 
     private void SelectedBeamResultChanged(UlsResult? result)
     {
-        if (result == null || _selectedBeamResult == result)
+        if (_strand7ModelOpened && (result == null || _selectedBeamResult == result))
             return;
 
         UpdateFemModel(result, false);
@@ -158,6 +158,7 @@ public partial class BeamFemModelViewModel : FemViewModelBase
     public void Loaded()
     {
         _isLoaded = true;
+        SelectedBeamResultChanged(_selectedBeamResult);
     }
 
     [RelayCommand]

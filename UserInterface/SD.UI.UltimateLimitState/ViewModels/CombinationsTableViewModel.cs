@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
+using SD.Core.Shared.Enum;
 using SD.Core.Shared.Models;
 using SD.Data.Interfaces;
 using SD.Element.Design.Interfaces;
@@ -161,26 +162,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         return femModelOpened;
     }
 
-    protected override async Task SelectedLoadCombinationsChanged()
-    {
-        try
-        {
-            await SetPrimaryProcess(false, true, true);
-            if (LoadCaseCombinations == null)
-                return;
-
-            var selectedLoadCaseNumbers = LoadCaseCombinations.Where(sll => sll.Include)?.Select(sll => sll.Number);
-            await UpdateAndRunUlsSolver();
-        }
-        catch (Exception ex)
-        {
-            _notificationService.NotifyUserOfErrorAndCloseFile(new Notification("Error", ex.Message));
-        }
-        finally
-        {
-            await SetPrimaryProcess(true, true, true);
-        }
-    }
+    protected override async Task SelectedLoadCombinationsChanged() => await UpdateAndRunUlsSolver();
 
     private async Task Refresh()
     {
@@ -261,18 +243,21 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     {
         try
         {
+            var hasSelectedItem = AssignLoadCaseCombinationsToRun();
+            if (!hasSelectedItem)
+            {
+                _notificationService.ShowSnackNotification(new ShortNotification("No load case combination selected."));
+                return;
+            }
+
             await SetPrimaryProcess(false, true, true);
 
-            var hasSelectedItem = AssignLoadCaseCombinationsToRun();
-            if (hasSelectedItem)
-            {
-                if (!_isMainModelResultsOpen)
-                    _femModelDisplayService.OpenFemResultsFile(FemModels.ModelId, _femModel.FileName);
+            if (!_isMainModelResultsOpen)
+                _femModelDisplayService.OpenFemResultsFile(FemModels.ModelId, _femModel.FileName);
 
-                await _femDesignAdapter.GetDesignService(_designModel.DesignCode.ToDesignCodeEnum()).RunUlsDesign(FemModels.ModelId, FemModelParameters?.Beams?.ToList());
+            await _femDesignAdapter.GetDesignService(_designModel.DesignCode.ToDesignCodeEnum()).RunUlsDesign(FemModels.ModelId, FemModelParameters?.Beams?.ToList());
 
-                await DesignContourChanged();
-            }
+            await DesignContourChanged();
 
             _eventAggregator.GetEvent<LoadCaseChangedEvent>().Publish();
         }
@@ -290,11 +275,9 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     private bool AssignLoadCaseCombinationsToRun()
     {
         var selectedLoadCases = LoadCaseCombinations?.Where(lcc => lcc.Include)?.ToList();
+        FemModelParameters.LoadCaseCombinations?.ToList()?.ForEach(lcc => lcc.Include = false);
         if (selectedLoadCases == null || selectedLoadCases.Count == 0)
-        {
-            FemModelParameters.LoadCaseCombinations?.ToList()?.ForEach(lcc => lcc.Include = false);
             return false;
-        }
 
         var hasSelectedItem = false;
         foreach (var combination in selectedLoadCases)

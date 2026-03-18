@@ -31,7 +31,7 @@
             </i:EventTrigger>
         </i:Interaction.Triggers>
         <DataGrid.Columns>
-            <DataGridCheckBoxColumn Binding="{Binding Include}" IsReadOnly="True">
+            <DataGridCheckBoxColumn Binding="{Binding Include, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridCheckBoxColumn.Header>
                     <Border Background="Transparent">
                         <CheckBox

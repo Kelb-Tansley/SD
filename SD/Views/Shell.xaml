@@ -123,7 +123,7 @@
                     </Grid>
                 </Grid>
                 <Grid
-                    Panel.ZIndex="10000"
+                    Panel.ZIndex="1000"
                     Background="{StaticResource MaterialDesignLightBackground}"
                     Opacity="0.6"
                     Visibility="{Binding ProcessModel.IsPrimaryProcessRunning, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}">

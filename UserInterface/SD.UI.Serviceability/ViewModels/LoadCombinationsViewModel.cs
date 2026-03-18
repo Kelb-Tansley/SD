@@ -71,7 +71,7 @@ public partial class LoadCombinationsViewModel : LoadCasesViewModelBase
             if (LoadCaseCombinations == null)
                 return;
 
-            var selectedLoadCaseNumbers = LoadCaseCombinations.Where(sll => sll.Include)?.Select(sll => sll.Number);
+            //var selectedLoadCaseNumbers = LoadCaseCombinations.Where(sll => sll.Include)?.Select(sll => sll.Number);
             _femModelDisplayService.ReloadFemDisplayModel(FemModels.ServiceabilityModelId, _femModel.FileName, false);
 
             var designableBeams = _femModelParameters.Beams.Where(beam => beam.CanDesign()).ToList();

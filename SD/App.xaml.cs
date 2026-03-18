@@ -25,6 +25,7 @@ using SD.Services;
 using SD.UI.Models;
 using SD.UI.Services;
 using SD.UI.Singletons;
+using SD.UI.UltimateLimitState.ViewModels;
 using SD.Views;
 using System.Diagnostics;
 using System.IO;
@@ -145,6 +146,12 @@ public partial class App : PrismApplication
         containerRegistry.RegisterSingleton<IViewManagementModel, ViewManagementModel>();
         containerRegistry.RegisterSingleton<ISnackbarModel, SnackbarModel>();
         containerRegistry.RegisterSingleton<IBeamAxisDisplay, BeamAxisDisplay>();
+
+        // Register eagerly loaded view models as singletons
+        containerRegistry.RegisterSingleton<FemModelViewModel>();
+        containerRegistry.RegisterSingleton<CombinationsTableViewModel>();
+        containerRegistry.RegisterSingleton<BeamFemModelViewModel>();
+        containerRegistry.RegisterSingleton<BeamDesignViewModel>();
 
         RegisterLogger(containerRegistry);
         RegisterRepositories(containerRegistry);
