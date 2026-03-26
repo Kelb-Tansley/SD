@@ -5,12 +5,12 @@ using SD.UI.UltimateLimitState.Views;
 
 namespace SD.UI.Main.ViewModels;
 
-public partial class NavigationViewModel : ObservableObject
+public partial class DesignViewModel : ObservableObject
 {
     [ObservableProperty]
     private bool isNavigationPanelCollapsed;
 
-    public NavigationViewModel(IRegionManager regionManager, IContainerProvider containerProvider)
+    public DesignViewModel(IRegionManager regionManager, IContainerProvider containerProvider)
     {
         regionManager.RegisterViewWithRegion(RegionNames.NavigationLeftPanelRegion, typeof(CombinationsTableView));
         regionManager.RegisterViewWithRegion(RegionNames.FemRegion, typeof(FemModelView));

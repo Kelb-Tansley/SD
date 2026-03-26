@@ -1,4 +1,3 @@
-﻿using Prism.Events;
+﻿namespace SD.UI.Events;
 
-namespace SD.UI.Events;
-public class WindViewLoadEvent : PubSubEvent { }
+public class WindViewLoadEvent : PubSubEvent<string> { }

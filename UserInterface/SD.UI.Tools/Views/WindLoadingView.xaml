@@ -6,9 +6,20 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
     xmlns:viewmodels="clr-namespace:SD.UI.Tools.ViewModels"
+    xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
     d:DataContext="{d:DesignInstance Type=viewmodels:WindLoadingViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding UnloadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,7 +32,18 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <WindowsFormsHost
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            MinWidth="500"
+            Margin="8,8,16,8">
+            <wf:PictureBox x:Name="FemModelPanel" SizeChanged="FemModelPanel_SizeChanged" />
+        </WindowsFormsHost>
+        <StackPanel Grid.Column="1" VerticalAlignment="Stretch">
             <TextBlock
                 Margin="0,4,0,16"
                 Foreground="{StaticResource MaterialDesignLightForeground}"
@@ -183,6 +205,7 @@
         </StackPanel>
         <StackPanel
             Grid.Row="1"
+            Grid.Column="1"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Models;
+using SD.Element.Design.Interfaces;
 using SD.Fem.Strand7.Interfaces;
 using SD.UI.Constants;
 using SD.UI.ViewModel;
@@ -12,7 +13,9 @@ namespace SD.UI.Tools.ViewModels;
 public partial class BucklingAnalysisViewModel(IViewManagementModel viewManagementModel,
                                                IBucklingAnalysisService bucklingAnalysisService,
                                                IFemModel femModel,
-                                               INotificationService notificationService) : FemViewModelBase(viewManagementModel)
+                                               IFemModelDisplayService femModelDisplayService,
+                                               INotificationService notificationService)
+    : FemDisplayViewModelBase(viewManagementModel, femModelDisplayService, FemModels.GeneralToolsModelId)
 {
     private readonly IBucklingAnalysisService _bucklingAnalysisService = bucklingAnalysisService;
     private readonly IFemModel _femModel = femModel;

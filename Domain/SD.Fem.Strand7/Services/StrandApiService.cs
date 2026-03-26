@@ -761,7 +761,7 @@ public class StrandApiService(
     {
         _ = St7.St7CloseResultFile(modelId).HandleApiError();
     }
-    public void GetFemModelParameters(IFemModelParameters femModelParameters, DesignCode designCode, int modelId, SolverType solverType, StrandResultFile strandResultFile)
+    public void GetFemModelParameters(IFemModelParameters femModelParameters, DesignCode designCode, int modelId, SolverType solverType, StrandResultFile? strandResultFile)
     {
         var unitFactor = DetermineUnitFactors.GetModelUnitFactors(modelId);
         var (beamProperties, nonDesignableProperties) = GetFemBeamSections(modelId, unitFactor, designCode);
@@ -769,9 +769,11 @@ public class StrandApiService(
         femModelParameters.IsInitialized = true;
         femModelParameters.BeamProperties.SetRange(beamProperties);
         femModelParameters.SetNonDesignableSections(nonDesignableProperties);
-        femModelParameters.LoadCaseCombinations.SetRange(GetFemModelLoadCaseCombinations(modelId, solverType, strandResultFile));
         femModelParameters.Beams.SetRange(GetBeamLengths(modelId, unitFactor, beamProperties));
         femModelParameters.UnitFactor = unitFactor;
+
+        if (strandResultFile != null)
+            femModelParameters.LoadCaseCombinations.SetRange(GetFemModelLoadCaseCombinations(modelId, solverType, strandResultFile));
 
         St7.St7SetBeamResultPosMode(modelId, St7.bpParam).ThrowIfFails();
     }

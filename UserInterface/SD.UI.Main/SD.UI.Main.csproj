@@ -28,13 +28,13 @@
 		<Compile Update="Views\DesignSettingsView.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Update="Views\FileBrowserView.xaml.cs">
+		<Compile Update="Views\BrowserView.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
 		<Compile Update="Views\HeaderView.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Update="Views\NavigationView.xaml.cs">
+		<Compile Update="Views\DesignView.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
 		<Compile Update="Views\NotificationView.xaml.cs">

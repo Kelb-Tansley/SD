@@ -118,7 +118,7 @@
                         Visibility="{Binding ProcessModel.IsFemModelLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                     <Grid Grid.Row="2" Visibility="{Binding ProcessModel.IsPrimaryProcessRunning, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                        <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.NavigationRegion}" Visibility="{Binding IsFemLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.DesignRegion}" Visibility="{Binding IsFemLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.BrowserRegion}" Visibility="{Binding IsBrowserLoaded, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </Grid>
                 </Grid>

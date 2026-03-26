@@ -10,7 +10,7 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:MenuViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Menu Margin="4,0,0,0">
+    <Menu Margin="16,0,0,0">
         <MenuItem Padding="16,-4,16,0" Header="_File">
             <MenuItem
                 Command="{Binding CloseFileCommand}"
@@ -24,7 +24,7 @@
                 Icon="{materialDesign:PackIcon Kind=ExitToApp}" />
             <!--  InputGestureText="Ctrl+E"  -->
         </MenuItem>
-        <MenuItem Padding="16,-4,16,0" Header="_Tools">
+        <!--<MenuItem Padding="16,-4,16,0" Header="_Tools">
             <MenuItem
                 Command="{Binding BeamWindLoadCommand}"
                 Header="Beam wind loading"
@@ -40,14 +40,16 @@
                 Header="Tank Design"
                 Icon="{materialDesign:PackIcon Kind=Cylinder}"
                 IsEnabled="{Binding FemModel.FileExists}" />
-            <!--  Command="{Binding BeamSansWindLoadCommand}"  -->
+        -->
+        <!--  Command="{Binding BeamSansWindLoadCommand}"  -->
 
-            <!--
-                Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
-                CommandParameter="{x:Static Dock.Right}"
-            -->
-            <!--<Separator />-->
+        <!--
+            Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}"
+            CommandParameter="{x:Static Dock.Right}"
+        -->
+        <!--<Separator />-->
+        <!--
 
-        </MenuItem>
+        </MenuItem>-->
     </Menu>
 </UserControl>

@@ -83,8 +83,8 @@ public partial class ShellViewModel : FemViewModelBase
         _regionManager.RegisterViewWithRegion(RegionNames.MenuRegion, typeof(MenuView));
         _regionManager.RegisterViewWithRegion(RegionNames.HeaderRegion, typeof(HeaderView));
         _regionManager.RegisterViewWithRegion(RegionNames.ToolbarRegion, typeof(ToolBarView));
-        _regionManager.RegisterViewWithRegion(RegionNames.NavigationRegion, typeof(NavigationView));
-        _regionManager.RegisterViewWithRegion(RegionNames.BrowserRegion, typeof(FileBrowserView));
+        _regionManager.RegisterViewWithRegion(RegionNames.DesignRegion, typeof(DesignView));
+        _regionManager.RegisterViewWithRegion(RegionNames.BrowserRegion, typeof(BrowserView));
 
         _regionManager.RegisterViewWithRegion(RegionNames.RightDrawerContentRegion, typeof(GeneralToolsView));
 

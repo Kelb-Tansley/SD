@@ -45,6 +45,7 @@
                 Panel.ZIndex="1"
                 prism:RegionManager.RegionName="{x:Static ui:RegionNames.MenuRegion}"
                 FocusVisualStyle="{x:Null}"
+                Visibility="{Binding ProcessModel.IsFemModelLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
                 WindowChrome.IsHitTestVisibleInChrome="True" />
 
             <!--  TitleBar  -->

@@ -2,10 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SD.Core.Shared.Contracts;
 using SD.UI.Events;
-using SD.UI.Models;
 using SD.UI.ViewModel;
-using System.Windows.Forms;
-using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace SD.UI.Main.ViewModels;
 
@@ -17,7 +14,6 @@ public partial class ToolBarViewModel : ViewModelBase
     private readonly IEventAggregator _eventAggregator;
     private readonly IUlsDesignResults _ulsDesignResults;
 
-    private readonly FileOpeningEvent _fileOpeningEvent;
     private readonly FileOpenedEvent _fileOpenedEvent;
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
@@ -42,7 +38,6 @@ public partial class ToolBarViewModel : ViewModelBase
     [ObservableProperty]
     public bool _useEnvelopeLoadCase;
 
-
     public ToolBarViewModel(IRegionManager regionManager,
                             IViewManagementModel viewManagementModel,
                             IFemModel femModel,
@@ -62,41 +57,11 @@ public partial class ToolBarViewModel : ViewModelBase
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
         _beamAxisDisplay = beamAxisDisplay ?? throw new ArgumentNullException(nameof(beamAxisDisplay));
 
-        _fileOpeningEvent = _eventAggregator.GetEvent<FileOpeningEvent>();
         _fileOpenedEvent = _eventAggregator.GetEvent<FileOpenedEvent>();
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _refreshEvent = _eventAggregator.GetEvent<RefreshEvent>();
         _designCodeChangedEvent = _eventAggregator.GetEvent<DesignCodeChangedEvent>();
         _calculateEvent = _eventAggregator.GetEvent<CalculateEvent>();
-    }
-
-    [RelayCommand]
-    private void FolderBrowse()
-    {
-        var openFileDialog = new OpenFileDialog
-        {
-            Filter = "Strand7 files (*.st7)|*.st7",
-            InitialDirectory = _femModel.FileName,
-            CheckFileExists = true,
-            CheckPathExists = true,
-            DefaultExt = "st7",
-            Multiselect = false,
-            Title = "Select a Strand7 file (.st7)",
-            ValidateNames = true,
-            RestoreDirectory = true
-        };
-
-        if (openFileDialog.ShowDialog() != DialogResult.OK)
-            return;
-
-        // If a Strand7 file has been selected, close all other opened strand files before loading the new file
-        _fileClosedEvent.Publish();
-
-        _femModel.FileName = openFileDialog.FileName;
-
-        _fileOpenedEvent.Publish();
-
-        openFileDialog.Dispose();
     }
 
     [RelayCommand]
@@ -132,7 +97,6 @@ public partial class ToolBarViewModel : ViewModelBase
     [RelayCommand]
     public void Loaded()
     {
-        _fileOpeningEvent.Subscribe(FolderBrowse);
         _fileClosedEvent.Subscribe(FileClosed);
         _designCodeChangedEvent.Subscribe(DesignCodeChanged);
     }
@@ -140,7 +104,6 @@ public partial class ToolBarViewModel : ViewModelBase
     [RelayCommand]
     public void Closing()
     {
-        _fileOpeningEvent.Unsubscribe(FolderBrowse);
         _fileClosedEvent.Unsubscribe(FileClosed);
     }
 

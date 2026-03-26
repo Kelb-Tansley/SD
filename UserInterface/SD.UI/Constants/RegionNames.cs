@@ -6,7 +6,7 @@ public static class RegionNames
     public const string HeaderRegion = "HeaderRegion";
     public const string ToolbarRegion = "ToolbarRegion";
     public const string BrowserRegion = "BrowserRegion";
-    public const string NavigationRegion = "NavigationRegion";
+    public const string DesignRegion = "DesignRegion";
 
     // DialogHost regions
     public const string SettingsRegion = "SettingsRegion";
@@ -18,7 +18,6 @@ public static class RegionNames
     // Sub regions
     public const string MenuRegion = "MenuRegion";
 
-    public const string DesignRegion = "DesignRegion";
     public const string NavigationLeftPanelRegion = "NavigationLeftPanelRegion";
     public const string FemRegion = "FemRegion";
     public const string TabbedFemRegion = "TabbedFemRegion";
@@ -30,7 +29,6 @@ public static class RegionNames
     public const string SlsLoadCombinationsViewRegion = "SlsLoadCombinationsViewRegion";
     public const string SlsFemModelViewRegion = "SlsFemModelViewRegion";
     public const string UlsFemModelViewRegion = "UlsFemModelViewRegion";
-
 
     public const string SideWindowHeaderRegion = "SideWindowHeaderRegion";
     public const string SideWindowDesignRegion = "SideWindowDesignRegion";

@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SD.Core.Infrastructure.Interfaces;
+using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Extensions;
 using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.Loading;
+using SD.Element.Design.Interfaces;
 using SD.Fem.Strand7.Interfaces;
 using SD.UI.Constants;
 using SD.UI.Events;
@@ -12,11 +15,12 @@ using System.Collections.ObjectModel;
 
 namespace SD.UI.Tools.ViewModels;
 
-public partial class WindLoadingViewModel : FemViewModelBase
+public partial class WindLoadingViewModel : FemDisplayViewModelBase
 {
     private readonly IFemModelParameters _femModelParameters;
     private readonly IStrandApiService _strandApiService;
-
+    private readonly INotificationService _notificationService;
+    private readonly IDesignModel _designModel;
     private readonly WindViewLoadEvent _windViewLoadEvent;
 
     [ObservableProperty]
@@ -39,15 +43,39 @@ public partial class WindLoadingViewModel : FemViewModelBase
     public WindLoadingViewModel(IViewManagementModel viewManagementModel,
                                 IStrandApiService strandApiService,
                                 IEventAggregator eventAggregator,
-                                IFemModelParameters femModelParameters) : base(viewManagementModel)
+                                IFemModelParameters femModelParameters,
+                                IFemModelDisplayService femModelDisplayService,
+                                IDesignModel designModel,
+                                INotificationService notificationService)
+        : base(viewManagementModel, femModelDisplayService, FemModels.WindLoadingDisplayModelId)
     {
-        _strandApiService = strandApiService;
-        _femModelParameters = femModelParameters;
+        _strandApiService = strandApiService ?? throw new ArgumentNullException(nameof(strandApiService));
+        _femModelParameters = femModelParameters ?? throw new ArgumentNullException(nameof(femModelParameters));
+        _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+        _designModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
 
         _windViewLoadEvent = eventAggregator.GetEvent<WindViewLoadEvent>();
         _windViewLoadEvent.Subscribe(GetLoadCases);
 
         SelectedLoadDirection = LoadDirections[0];
+    }
+
+    private void GetLoadCases(string filePath)
+    {
+        try
+        {
+            FilePath = filePath;
+
+            IsModelOpen = true;
+
+            UpdateFemModelView();
+
+            LoadCases.SetRange(_strandApiService.GetPrimaryLoadCases(_modelId));
+        }
+        catch (Exception ex)
+        {
+            _notificationService.NotifyUserOfError(new Notification("Error", ex.Message));
+        }
     }
 
     [RelayCommand]
@@ -72,12 +100,12 @@ public partial class WindLoadingViewModel : FemViewModelBase
     [RelayCommand]
     private void ApplyWindLoad()
     {
-        _strandApiService.ApplyBeamWindLoads(FemModels.ModelId, SelectedLoadCase.Number, windLoadVector, WindLoadingModel, _femModelParameters.Beams, _femModelParameters.UnitFactor);
-    }
+        if (SelectedLoadCase == null)
+            return;
 
-    private void GetLoadCases()
-    {
-        LoadCases.SetRange(_strandApiService.GetPrimaryLoadCases(FemModels.ModelId));
+        _strandApiService.GetFemModelParameters(_femModelParameters, _designModel.DesignCode.ToDesignCodeEnum(), _modelId, _designModel.SolverType, null);
+
+        _strandApiService.ApplyBeamWindLoads(_modelId, SelectedLoadCase.Number, windLoadVector, WindLoadingModel, _femModelParameters.Beams, _femModelParameters.UnitFactor);
     }
 
     [RelayCommand]
