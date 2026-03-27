@@ -21,13 +21,13 @@ public partial class TankDesignViewModel : FemDisplayViewModelBase
     private readonly INotificationService _notificationService;
 
     [ObservableProperty]
-    public double _tankDiameter = 12400;
+    public double _tankDiameter = 10000;
 
     [ObservableProperty]
-    public double _baseThickness = 12;
+    public double _baseThickness = 10;
 
     [ObservableProperty]
-    public double _roofThickness = 8;
+    public double _roofThickness = 10;
 
     [ObservableProperty]
     public double _meshElementSize = 250;
@@ -36,7 +36,7 @@ public partial class TankDesignViewModel : FemDisplayViewModelBase
     public ObservableCollection<HeightSegment> _segments = [];
 
     [ObservableProperty]
-    public string _plateElementCount = "4 Nodes";
+    public string _plateElementCount;
 
     private readonly string STRAND_TANK_MODEL_FILE_NAME = "TankModel.st7";
 
@@ -116,9 +116,6 @@ public partial class TankDesignViewModel : FemDisplayViewModelBase
 
     private int GetPlateNodeCount()
     {
-        if (PlateElementCount.Contains("4 Node"))
-            return 4;
-
-        return 0;
+        return int.Parse(PlateElementCount);
     }
 }

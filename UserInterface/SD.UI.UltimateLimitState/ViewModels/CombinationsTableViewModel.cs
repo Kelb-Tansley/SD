@@ -10,6 +10,7 @@ using SD.Fem.Strand7.Interfaces;
 using SD.UI.Constants;
 using SD.UI.Enums;
 using SD.UI.Events;
+using SD.UI.Services;
 using SD.UI.ViewModel;
 
 namespace SD.UI.UltimateLimitState.ViewModels;
@@ -38,6 +39,8 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
     private LastEventEnum _lastEventEnum;
     private bool _isMainModelResultsOpen;
+
+    private readonly SemaphoreSlim _reloadSemaphore = new(1, 1);
 
     public CombinationsTableViewModel(IProcessModel processModel,
                                       IDesignModel designModel,
@@ -101,13 +104,14 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
             if (!string.IsNullOrWhiteSpace(_femModel.FileName))
             {
-                _femModelDisplayService.ReloadFemDisplayModel(FemModels.ModelId, _femModel.FileName, true);
+                await _reloadSemaphore.RunInBackgroundAsync(() => _femModelDisplayService.ReloadFemDisplayModel(FemModels.ModelId, _femModel.FileName, true));
+
                 _isMainModelResultsOpen = false;
 
                 femModelOpened = await TryLoadFemModelProperties();
                 if (femModelOpened)
                 {
-                    _femModelDisplayService.OpenFemFile(FemModels.DisplayModelId, _femModel.FileName, true);
+                    await _reloadSemaphore.RunInBackgroundAsync(() => _femModelDisplayService.OpenFemFile(FemModels.DisplayModelId, _femModel.FileName, true));
 
                     UpdateLoadCombinations(FemModelParameters.LoadCaseCombinations);
                     _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, _designModel.IsDesignLengthCalculated, FemModelParameters, _designModel.DesignSettings);

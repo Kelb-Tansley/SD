@@ -1109,5 +1109,11 @@ public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
         St7.St7SaveFile(modelId).ThrowIfFails();
         St7.St7CloseFile(modelId).ThrowIfFails();
     }
-
+    public void SubdividePlates(int modelId, IEnumerable<StrandPlate> allPlates, int plateNodeCount)
+    {
+        var target = plateNodeCount == 4 ? St7.stPlateQuad4 : plateNodeCount == 8 ? St7.stPlateQuad8 : St7.stPlateQuad9;
+        St7.St7SetAllEntitySelectState(modelId, St7.tyPLATE, St7.btTrue).ThrowIfFails();
+        St7.St7Subdivide(modelId, 1, 1, 1, target, 0).ThrowIfFails();
+        St7.St7SetAllEntitySelectState(modelId, St7.tyPLATE, St7.btFalse).ThrowIfFails();
+    }
 }

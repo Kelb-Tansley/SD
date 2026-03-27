@@ -44,14 +44,11 @@ public class TankDesignService(IStrandApiCreateService strandApiCreateService,
             var plateHeight = heightSegment.Height / plateCount;
 
             // Create a cylinder for this height segment
-            if (plateNodeCount == 4)
-            {
-                var startNode = nodeNumber;
-                var nodes = GenerateCylinderNodes(startPosition, diameter / 2, heightSegment.Height, plateWidth, plateHeight, ref nodeNumber);
+            var startNode = nodeNumber;
+            var nodes = GenerateCylinderNodes(startPosition, diameter / 2, heightSegment.Height, plateWidth, plateHeight, ref nodeNumber);
 
-                var segmentPlates = Build4NodePlates(nodes.Item1, nodes.Item2, rings: plateCount, thickness: heightSegment.Thickness, propertyNumber, startNode);
-                allPlates.AddRange(segmentPlates);
-            }
+            var segmentPlates = Build4NodePlates(nodes.Item1, nodes.Item2, rings: plateCount, thickness: heightSegment.Thickness, propertyNumber, startNode);
+            allPlates.AddRange(segmentPlates);
 
             propertyNumber++;
             startPosition[2] += heightSegment.Height;
@@ -68,6 +65,10 @@ public class TankDesignService(IStrandApiCreateService strandApiCreateService,
 
         _strandApiService.CreateFemModel(modelId, fileName);
         _strandApiCreateService.CreatePlates(modelId, allPlates);
+
+        if (plateNodeCount > 4)
+            _strandApiService.SubdividePlates(modelId, allPlates, plateNodeCount);
+
         _strandApiService.SaveAndCloseFile(modelId);
     }
 

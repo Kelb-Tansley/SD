@@ -42,4 +42,5 @@ public interface IStrandApiService
     public void SetLinearBucklingModes(int modelId, string fileName, string resultFilePath, int numModes, int variableCaseNum, int fixedCaseNum);
     public void CreateFemModel(int modelId, string fileName);
     public void SaveAndCloseFile(int modelId);
+    public void SubdividePlates(int modelId, IEnumerable<StrandPlate> allPlates, int plateNodeCount);
 }

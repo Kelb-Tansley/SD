@@ -8,7 +8,7 @@
     xmlns:prism="http://prismlibrary.com/"
     Title="Aurestruct"
     Width="550"
-    Height="330"
+    Height="270"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="Transparent"
     ResizeMode="NoResize"

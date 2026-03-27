@@ -53,11 +53,11 @@
                 Margin="0,4,0,16"
                 Foreground="{StaticResource MaterialDesignLightForeground}"
                 Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                Text="Cylindrical Tank Design" />
+                Text="Cylindrical Tank" />
             <TextBlock
                 Width="320"
                 HorizontalAlignment="Left"
-                Text="This tool builds a plate element model based on the specified load cases and design parameters."
+                Text="This tool builds and saves a Strand7 plate element model."
                 TextWrapping="Wrap" />
             <StackPanel
                 Margin="0,12,0,12"
@@ -70,7 +70,6 @@
                     Text="Diameter (mm):" />
                 <TextBox
                     MinWidth="100"
-                    materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignTextBox}"
                     Text="{Binding TankDiameter}" />
             </StackPanel>
@@ -85,7 +84,6 @@
                     Text="Base thickness (mm):" />
                 <TextBox
                     MinWidth="100"
-                    materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignTextBox}"
                     Text="{Binding BaseThickness}" />
             </StackPanel>
@@ -100,7 +98,6 @@
                     Text="Roof thickness (mm):" />
                 <TextBox
                     MinWidth="100"
-                    materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignTextBox}"
                     Text="{Binding RoofThickness}" />
             </StackPanel>
@@ -115,7 +112,6 @@
                     Text="Mesh element size (mm):" />
                 <TextBox
                     MinWidth="100"
-                    materialDesign:TextFieldAssist.HasClearButton="True"
                     Style="{StaticResource MaterialDesignTextBox}"
                     Text="{Binding MeshElementSize}" />
             </StackPanel>
@@ -133,8 +129,11 @@
                     materialDesign:HintAssist.Hint="Plate nodes"
                     IsEditable="False"
                     SelectedIndex="1"
-                    SelectedValuePath="{Binding PlateElementCount}">
-                    <ComboBoxItem Content="4 Node" />
+                    SelectedValue="{Binding PlateElementCount}"
+                    SelectedValuePath="Tag">
+                    <ComboBoxItem Content="4 Node" Tag="4" />
+                    <ComboBoxItem Content="8 Node" Tag="8" />
+                    <ComboBoxItem Content="9 Node" Tag="9" />
                 </ComboBox>
             </StackPanel>
             <StackPanel
@@ -183,7 +182,8 @@
                 Width="100"
                 Margin="12"
                 Command="{Binding SaveCommand}"
-                Content="Save"
+                Content="Save As"
+                IsEnabled="{Binding IsModelOpen}"
                 Style="{StaticResource MaterialDesignOutlinedButton}" />
             <Button
                 Width="100"

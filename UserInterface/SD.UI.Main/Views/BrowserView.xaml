@@ -47,7 +47,7 @@
                     HorizontalAlignment="Center"
                     Opacity="0.75"
                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                    Text="Strand7 Beam Design" />
+                    Text="Beam Design" />
                 <Button
                     Grid.Row="1"
                     Width="250"
@@ -120,7 +120,7 @@
                     HorizontalAlignment="Center"
                     Opacity="0.75"
                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
-                    Text="Quick Tools" />
+                    Text="FEM Tools" />
                 <Button
                     Width="180"
                     Height="180"

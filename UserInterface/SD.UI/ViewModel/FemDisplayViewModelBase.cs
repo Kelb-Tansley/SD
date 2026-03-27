@@ -11,6 +11,8 @@ public abstract partial class FemDisplayViewModelBase(IViewManagementModel viewM
 {
     protected readonly IFemModelDisplayService _femModelDisplayService = femModelDisplayService;
 
+    private readonly SemaphoreSlim _reloadSemaphore = new(1, 1);
+
     [ObservableProperty]
     public bool _isModelOpen = false;
 
