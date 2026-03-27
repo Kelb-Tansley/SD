@@ -160,14 +160,19 @@
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="NonDesignablePropertiesPopupTemplate">
-                <Grid>
+                <StackPanel>
+                    <TextBlock
+                        Margin="8,0,8,20"
+                        VerticalAlignment="Center"
+                        Foreground="{StaticResource DarkSage}"
+                        Text="The following beam properties cannot be designed:" />
                     <ListBox
                         Margin="0,-16"
                         DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
                         DisplayMemberPath="Name"
                         ItemsSource="{Binding FemModelParameters.NonDesignableSections}"
                         Style="{StaticResource MaterialDesignListBox}" />
-                </Grid>
+                </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
