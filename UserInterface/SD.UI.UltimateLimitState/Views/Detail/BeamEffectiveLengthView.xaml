@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:behaviors="clr-namespace:SD.UI.Behaviors;assembly=SD.UI"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     HorizontalAlignment="Stretch"
@@ -18,11 +19,14 @@
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="Height" Value="20" />
                 <Setter Property="MaxWidth" Value="48" />
+                <Setter Property="MinWidth" Value="48" />
+                <Setter Property="Margin" Value="8,0,0,0" />
                 <Setter Property="FontSize" Value="{StaticResource PrimaryFontSize}" />
                 <Setter Property="Foreground" Value="{StaticResource PrimaryDark1}" />
                 <Setter Property="BorderBrush" Value="{StaticResource PrimaryLight6}" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="HorizontalContentAlignment" Value="Right" />
+                <Setter Property="behaviors:SelectAllTextOnFocusBehavior.IsEnabled" Value="True" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
