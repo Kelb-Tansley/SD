@@ -1,16 +1,12 @@
-﻿using SD.Core.Shared.Models;
-using SD.Core.Shared.Models.Loading;
+﻿using SD.Core.Shared.Models.Loading;
 using SD.Core.Shared.Models.Sans;
 using SD.Element.Design.Services;
-using System.Collections.ObjectModel;
 
 namespace SD.Fem.Strand7.Services;
 
-public class StrandApiService(
-    IDesignCodeAdapter femDesignAdapter,
-    IConnectionService connectionService,
-    IEffectiveLengthService effectiveLengthService,
-    IContourFileService contourFileService) : IStrandApiService
+public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
+                              IConnectionService connectionService,
+                              IContourFileService contourFileService) : IStrandApiService
 {
     private readonly IDesignCodeAdapter _femDesignAdapter = femDesignAdapter ?? throw new ArgumentNullException(nameof(femDesignAdapter));
     private readonly IConnectionService _connectionService = connectionService ?? throw new ArgumentNullException(nameof(connectionService));
@@ -33,19 +29,16 @@ public class StrandApiService(
 
         return !result.IsValid ? OpenFileReadOnly(modelId, fileName) : result.IsValid;
     }
-
     private bool OpenFileReadOnly(int modelId, string fileName)
     {
         var readOnlyResult = St7.St7OpenFileReadOnly(modelId, fileName, _connectionService.GetScratchLocation()).HandleApiError();
         return readOnlyResult.ErrorCode == St7.ERR7_FileAlreadyOpen || readOnlyResult.IsValid;
     }
-
     public void ClearFemDisplayModel(int modelId)
     {
         _ = St7.St7DestroyModelWindow(modelId).HandleApiError();
         _ = St7.St7ClearModelWindow(modelId).HandleApiError();
     }
-
     public IEnumerable<Beam> GetDisplayedByGroupBeams(int modelId, IEnumerable<Beam> beams)
     {
         var visibleBeams = new List<Beam>();
@@ -60,7 +53,6 @@ public class StrandApiService(
         }
         return visibleBeams;
     }
-
     public void DisplayFemFile(int modelId, nint handle)
     {
         St7.St7CreateModelWindow(modelId).ThrowIfFails();
@@ -75,23 +67,19 @@ public class StrandApiService(
         St7.St7ShowWindowStatusBar(modelId).ThrowIfFails();
         St7.St7ShowWindowViewToolbar(modelId).ThrowIfFails();
     }
-
     public void RunLinearStaticAnalysis(int modelId)
     {
         St7.St7RunSolver(modelId, St7.stLinearStatic, St7.smProgressRun, St7.btTrue).ThrowIfFails();
     }
-
     public void RunLinearBucklingAnalysis(int modelId)
     {
         St7.St7RunSolver(modelId, St7.stLinearBuckling, St7.smNormalCloseRun, St7.btTrue).ThrowIfFails();
     }
-
     public void EnableFirstLoadFreedomCase(int modelId, string resultFilePath)
     {
         St7.St7SetResultFileName(modelId, resultFilePath).ThrowIfFails();
         St7.St7EnableLSALoadCase(modelId, 1, 1).ThrowIfFails();
     }
-
     public void SetLinearBucklingModes(int modelId, string fileName, string resultFilePath, int numModes, int variableCaseNum, int fixedCaseNum)
     {
         St7.St7SetLBAInitial(modelId, $"{fileName}.LSA", variableCaseNum, fixedCaseNum).ThrowIfFails();
@@ -99,7 +87,6 @@ public class StrandApiService(
         St7.St7SetResultLogFileName(modelId, resultFilePath).ThrowIfFails();
         St7.St7SetResultFileName(modelId, resultFilePath).ThrowIfFails();
     }
-
     public void DisplayFocusedFemFile(int modelId, nint handle, int loadCase, ref int childId, bool isInitialized, ZoomLevel zoomLevel, Beam focusedBeam, IEnumerable<Beam> beams, BeamDisplayComponent beamDisplayComponent)
     {
         if (!isInitialized)
@@ -210,7 +197,6 @@ public class StrandApiService(
 
         St7.St7SaveFile(modelId).ThrowIfFails();
     }
-
     public List<LoadCase> GetPrimaryLoadCases(int modelId)
     {
         int numCases = 0;
@@ -225,28 +211,24 @@ public class StrandApiService(
         }
         return loadCases;
     }
-
     public int GetNumberOfPrimaryLoadCases(int modelId)
     {
         int numCases = 0;
         St7.St7GetNumLoadCase(modelId, ref numCases).ThrowIfFails();
         return numCases;
     }
-
     public int GetNumberOfLSALoadCaseCombinations(int modelId)
     {
         int numCases = 0;
         St7.St7GetNumLSACombinations(modelId, ref numCases).ThrowIfFails();
         return numCases;
     }
-
     public double GetBucklingFactor(int modelId, int modeNumber)
     {
         double bucklingFactor = 0;
         St7.St7GetBucklingFactor(modelId, modeNumber, ref bucklingFactor).ThrowIfFails();
         return bucklingFactor;
     }
-
     private static double GetSectionShapeFactor(SectionType sectionType, WindLoadingModel windLoadingModel)
     {
         return sectionType switch
@@ -261,7 +243,6 @@ public class StrandApiService(
             _ => throw new NotImplementedException(),
         };
     }
-
     private static void HideNonBeamEntities(int modelId)
     {
         St7.St7HideEntity(modelId, St7.tyNODE).ThrowIfFails();
@@ -271,7 +252,6 @@ public class StrandApiService(
         St7.St7HideEntity(modelId, St7.tyVERTEX).ThrowIfFails();
         St7.St7HideEntity(modelId, St7.tyLOADPATH).ThrowIfFails();
     }
-
     private static void InitializeResultModelWindow(int modelId, nint handle)
     {
         St7.St7SetFreeNodes(modelId, St7.nsFreeNodeNone).ThrowIfFails();
@@ -290,7 +270,6 @@ public class StrandApiService(
         St7.St7ShowWindowSelectionToolbar(modelId).ThrowIfFails();
         St7.St7ShowWindowStatusBar(modelId).ThrowIfFails();
     }
-
     private static List<Beam> GetConnectedBeamsByZoomLevel(Beam focusedBeam, ZoomLevel zoomLevel, IEnumerable<Beam> beams)
     {
         var connectedBeams = new List<Beam>();
@@ -346,7 +325,6 @@ public class StrandApiService(
 
         return connectedBeams.Distinct().ToList();
     }
-
     private static List<Beam> GetConnectedBeams(Beam focusedBeam, IEnumerable<Beam> beams)
     {
         var connectedBeams = new List<Beam>();
@@ -358,7 +336,6 @@ public class StrandApiService(
         }
         return connectedBeams.Distinct().ToList();
     }
-
     public void UpdateFemFile(int modelId, nint handle)
     {
         St7.St7SetModelWindowParent(modelId, handle).ThrowIfFails();
@@ -410,7 +387,6 @@ public class StrandApiService(
 
         DisplayContour(modelId, await _contourFileService.GenerateResultsContourFile(visibleResults));
     }
-
     private static List<UlsResultPeak> GetMaxForEachBeamId(IEnumerable<SansUlsResult> results, SansUtilizationType sansUtilizationType)
     {
         var grouped = results.GroupBy(x => x.Beam.Number).ToList();
@@ -424,7 +400,6 @@ public class StrandApiService(
 
         return [.. maxResults.Distinct()];
     }
-
     private static UlsResultPeak? GetMaxByUtilizationType(SansUtilizationType sansUtilizationType, IGrouping<int, SansUlsResult> group)
     {
         switch (sansUtilizationType)
@@ -671,7 +646,6 @@ public class StrandApiService(
                 return null;
         }
     }
-
     public async Task DisplayDeflectionContours(int modelId, double minDeflectionRatio, DeflectionAxis deflectionAxis, IEnumerable<DeflectionResult>? results)
     {
         DisplayContour(modelId, await _contourFileService.GenerateSlsResultsContourFile(results?.ToList(), deflectionAxis));
@@ -684,7 +658,6 @@ public class StrandApiService(
         integers[St7.ipSetMaxLimit] = St7.btFalse;
         St7.St7SetEntityContourSettingsLimits(modelId, St7.tyBEAM, integers, limits).ThrowIfFails();
     }
-
     public StrandResultFile OpenFemResultsFile(int modelId, string fileName, SolverType solverType, bool closeFirst = false)
     {
         var strandResultFile = new StrandResultFile();
@@ -925,6 +898,24 @@ public class StrandApiService(
         return beamLengths;
     }
 
+    public async Task DisplayDesignableBeams(int modelId, IEnumerable<Beam> beams)
+    {
+        var visibleBeams = GetVisibleBeams(modelId, beams);
+
+        DisplayContour(modelId, await _contourFileService.GenerateDesignableBeamsContourFile(visibleBeams));
+
+        var settings = new int[5];
+        settings[St7.ipContourLimit] = St7.clUserRange;
+        settings[St7.ipContourMode] = St7.cmDiscrete;
+        settings[St7.ipNumContours] = 1;
+        settings[St7.ipSetMinLimit] = 0;
+        settings[St7.ipSetMaxLimit] = 1;
+
+        var limits = new double[2];
+        limits[St7.ipMinLimit] = 0; limits[St7.ipMaxLimit] = 1;
+
+        St7.St7SetEntityContourSettingsLimits(modelId, St7.tyBEAM, settings, limits).ThrowIfFails();
+    }
     public async Task DisplayDesignLengths(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor)
     {
         var visibleBeams = GetVisibleBeams(modelId, beams);
@@ -980,16 +971,10 @@ public class StrandApiService(
 
         HideNonBeamEntities(modelId);
     }
+
     public async Task DisplayDesignSlenderness(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor)
     {
-        var visibleBeams = new List<Beam>();
-        foreach (var beam in beams)
-        {
-            byte visible = 1;
-            St7.St7GetEntityNumVisibility(modelId, St7.tyBEAM, beam.Number, ref visible).ThrowIfFails();
-            if (visible != 0)
-                visibleBeams.Add(beam);
-        }
+        var visibleBeams = GetVisibleBeams(modelId, beams);
 
         switch (beamAxisEnum)
         {
@@ -1008,8 +993,29 @@ public class StrandApiService(
         HideNonBeamEntities(modelId);
     }
 
+    private static List<Beam> GetVisibleBeams(int modelId, IEnumerable<Beam> beams)
+    {
+        var visibleBeams = new List<Beam>();
+        foreach (var beam in beams)
+        {
+            byte visible = 1;
+            St7.St7GetEntityNumVisibility(modelId, St7.tyBEAM, beam.Number, ref visible).ThrowIfFails();
+            if (visible != 0)
+                visibleBeams.Add(beam);
+        }
+
+        return visibleBeams;
+    }
+
     private static void DisplayContour(int modelId, string fileName)
     {
+        var settings = new int[5];
+        settings[St7.ipContourLimit] = St7.clDefault;
+        settings[St7.ipContourMode] = St7.cmContinuous;
+        var limits = new double[2];
+
+        St7.St7SetEntityContourSettingsLimits(modelId, St7.tyBEAM, settings, limits).ThrowIfFails();
+
         St7.St7SetEntityContourFile(modelId, St7.tyBEAM, St7.ucElement, fileName).ThrowIfFails();
     }
 
@@ -1104,17 +1110,4 @@ public class StrandApiService(
         St7.St7CloseFile(modelId).ThrowIfFails();
     }
 
-    private static List<Beam> GetVisibleBeams(int modelId, IEnumerable<Beam> beams)
-    {
-        var visibleBeams = new List<Beam>();
-        foreach (var beam in beams)
-        {
-            byte visible = 1;
-            St7.St7GetEntityNumVisibility(modelId, St7.tyBEAM, beam.Number, ref visible).ThrowIfFails();
-            if (visible != 0)
-                visibleBeams.Add(beam);
-        }
-
-        return visibleBeams;
-    }
 }

@@ -45,34 +45,33 @@
                 </DoubleAnimationUsingKeyFrames>
             </Storyboard>
             <DataTemplate x:Key="DesignLengthPopupTemplate">
-                <Grid>
+                <Grid Margin="0,0,0,8">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="160" />
-                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="180" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel Margin="0,0,0,16">
+                    <StackPanel>
                         <TextBlock
                             Margin="8,0,8,20"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource DarkSage}"
-                            Text="Beam ULS Utilization:" />
+                            Text="Design Limits:" />
                         <ListBox
                             Margin="0,-16"
                             materialDesign:ListBoxAssist.IsToggle="False"
                             materialDesign:ListBoxItemAssist.ShowSelection="True"
                             DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
                             DisplayMemberPath="DisplayName"
-                            ItemsSource="{Binding BeamAxisDisplay.UlsUtilizationTypes}"
-                            SelectedItem="{Binding BeamAxisDisplay.SelectedUlsUtilizationType}"
+                            ItemsSource="{Binding BeamAxisDisplay.DesignableBeams}"
+                            SelectedItem="{Binding BeamAxisDisplay.SelectedDesignableBeam}"
                             Style="{StaticResource MaterialDesignListBox}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding BeamAxisDisplay.SelectedUlsUtilizationTypeChangedCommand}" />
+                                    <i:InvokeCommandAction Command="{Binding BeamAxisDisplay.SelectedDesignableBeamChangedCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBox>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
+                        <Separator Margin="0,8,0,0" />
                         <TextBlock
                             Margin="8,0,8,20"
                             VerticalAlignment="Center"
@@ -132,6 +131,28 @@
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding BeamAxisDisplay.SelectedSlendernessOrientationChangedCommand}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock
+                            Margin="8,0,8,20"
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource DarkSage}"
+                            Text="Beam ULS Utilization:" />
+                        <ListBox
+                            Margin="0,-16"
+                            materialDesign:ListBoxAssist.IsToggle="False"
+                            materialDesign:ListBoxItemAssist.ShowSelection="True"
+                            DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
+                            DisplayMemberPath="DisplayName"
+                            ItemsSource="{Binding BeamAxisDisplay.UlsUtilizationTypes}"
+                            SelectedItem="{Binding BeamAxisDisplay.SelectedUlsUtilizationType}"
+                            Style="{StaticResource MaterialDesignListBox}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding BeamAxisDisplay.SelectedUlsUtilizationTypeChangedCommand}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBox>

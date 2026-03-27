@@ -13,7 +13,7 @@ public class FemModelDisplayService(IStrandApiService strandApiService,
     public async Task DisplaySansDesignResults(int modelId, string fileName, nint handle, IEnumerable<SansUlsResult> results, SansUtilizationType sansUtilizationType)
     {
         if (results is null || !results.Any())
-            return;
+            throw new Exception("No results found. Run the solver first.");
 
         //_strandApiService.ClearFemDisplayModel(modelId);
         _strandApiService.DisplayFemFile(modelId, handle);
@@ -54,6 +54,11 @@ public class FemModelDisplayService(IStrandApiService strandApiService,
     {
         _strandApiService.DisplayFemFile(modelId, handle);
         await _strandApiService.DisplayDeflectionContours(modelId, minDeflectionRatio, deflectionAxis, results);
+    }
+    public async Task DisplayDesignableBeams(int modelId, string fileName, nint handle)
+    {
+        _strandApiService.DisplayFemFile(modelId, handle);
+        await _strandApiService.DisplayDesignableBeams(modelId, [.. _femModelParameters.Beams]);
     }
     public IEnumerable<Beam> GetDisplayedByGroupBeams(int modelId, IEnumerable<Beam> beams)
     {

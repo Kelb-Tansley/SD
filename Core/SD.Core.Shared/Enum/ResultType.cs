@@ -6,5 +6,6 @@ public enum ResultType
     BeamLength,
     Slenderness,
     KFactor,
-    UlsUtilizationType
+    UlsUtilizationType,
+    BeamDesignable
 }

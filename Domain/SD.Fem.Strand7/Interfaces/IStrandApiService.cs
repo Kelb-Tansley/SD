@@ -22,6 +22,7 @@ public interface IStrandApiService
     public Task DisplayDesignLengths(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor);
     public Task DisplayDesignKFactors(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams);
     public Task DisplayDesignSlenderness(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor);
+    public Task DisplayDesignableBeams(int modelId, IEnumerable<Beam> beams);
     public void ClearFemDisplayModel(int modelId);
     public IEnumerable<Beam> GetDisplayedByGroupBeams(int modelId, IEnumerable<Beam> beams);
     public Task DisplayDeflectionContours(int modelId, double minDeflectionRatio, DeflectionAxis deflectionAxis, IEnumerable<DeflectionResult>? results);

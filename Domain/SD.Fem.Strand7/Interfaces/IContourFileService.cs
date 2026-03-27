@@ -2,6 +2,7 @@
 
 public interface IContourFileService
 {
+    Task<string> GenerateDesignableBeamsContourFile(List<Beam> visibleBeams);
     Task<string> GenerateL1ContourFile(List<Beam> beams, double lengthFactor);
     Task<string> GenerateL2ContourFile(List<Beam> beams, double lengthFactor);
     Task<string> GenerateLzContourFile(List<Beam> beams, double lengthFactor);

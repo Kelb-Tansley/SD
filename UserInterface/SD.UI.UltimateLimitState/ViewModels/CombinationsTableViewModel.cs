@@ -27,6 +27,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     private readonly IEffectiveLengthService _effectiveLengthService;
     private readonly IStrandApiService _strandApiService;
     private readonly IUlsDesignResults _ulsDesignResults;
+
     private readonly RefreshEvent _refreshEvent;
     private readonly RefreshCalculationEvent _refreshCalculationEvent;
     private readonly FileOpenedEvent _fileOpenedEvent;
@@ -34,6 +35,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     private readonly RunUlsSolverEvent _runUlsSolverEvent;
     private readonly DesignContourChangedEvent _designContourChangedEvent;
     private readonly CalculateEvent _calculateEvent;
+
     private LastEventEnum _lastEventEnum;
     private bool _isMainModelResultsOpen;
 
@@ -222,7 +224,9 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     {
         try
         {
-            if (_beamAxisDisplay.SelectedDesignLength is not null)
+            if (_beamAxisDisplay.SelectedDesignableBeam is not null)
+                await _femModelDisplayService.DisplayDesignableBeams(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle);
+            else if (_beamAxisDisplay.SelectedDesignLength is not null)
                 await _femModelDisplayService.DisplayDesignLengths(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _beamAxisDisplay.SelectedDesignLength.BeamAxis);
             else if (_beamAxisDisplay.SelectedSlendernessOrientation is not null)
                 await _femModelDisplayService.DisplayDesignSlenderness(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _beamAxisDisplay.SelectedSlendernessOrientation.BeamAxis);
@@ -231,7 +235,10 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
             else if (_beamAxisDisplay.SelectedUlsUtilizationType is not null)
                 await _femModelDisplayService.DisplaySansDesignResults(FemModels.DisplayModelId, _femModel.FileName, _femModel.ModelHandle, _ulsDesignResults.SansUlsResults, _beamAxisDisplay.SelectedUlsUtilizationType.SansUtilizationType);
         }
-        catch (Exception) { throw; }
+        catch (Exception ex)
+        {
+            _notificationService.NotifyUserOfError(new Notification("Error", ex.Message));
+        }
         finally
         {
             _lastEventEnum = LastEventEnum.ContourChanged;

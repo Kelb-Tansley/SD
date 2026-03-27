@@ -13,7 +13,6 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
 {
     private readonly IDesignModel _designModel;
     private readonly DesignContourChangedEvent _designContourChangedEvent;
-    private readonly DesignCodeChangedEvent _designCodeChangedEvent;
 
     public BeamAxisDisplay(IEventAggregator eventAggregator,
                            IDesignModel designModel)
@@ -21,15 +20,24 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
         _designModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
 
         _designContourChangedEvent = eventAggregator.GetEvent<DesignContourChangedEvent>();
-        _designCodeChangedEvent = eventAggregator.GetEvent<DesignCodeChangedEvent>();
+        var designCodeChangedEvent = eventAggregator.GetEvent<DesignCodeChangedEvent>();
+        var fileOpenedEvent = eventAggregator.GetEvent<FileOpenedEvent>();
 
-        _designCodeChangedEvent.Subscribe(OnDesignCodeChanged);
+        designCodeChangedEvent.Subscribe(OnDesignCodeChanged);
+        fileOpenedEvent.Subscribe(FileOpened);
+
         OnDesignCodeChanged();
-        SelectedDesignLength = DesignLengths.FirstOrDefault();
+        FileOpened();
+    }
+
+    private void FileOpened()
+    {
+        SelectedDesignableBeam = DesignableBeams!.FirstOrDefault();
     }
 
     private void OnDesignCodeChanged()
     {
+        DesignableBeams = GetDesignableBeams();
         DesignLengths = GetDefaultLengths(_designModel.DesignCode);
         KFactors = GetKFactors(_designModel.DesignCode);
         UlsUtilizationTypes = GetUlsUtilizationTypes(_designModel.DesignCode);
@@ -37,18 +45,18 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
     }
 
     [ObservableProperty]
+    public ObservableCollection<BeamAxisDisplayModel>? _designableBeams;
+    [ObservableProperty]
     public ObservableCollection<BeamAxisDisplayModel>? _designLengths;
-
     [ObservableProperty]
     public ObservableCollection<BeamAxisDisplayModel>? _kFactors;
-
     [ObservableProperty]
     public ObservableCollection<BeamAxisDisplayModel>? _slendernessOrientations;
-
     [ObservableProperty]
     public ObservableCollection<BeamAxisDisplayModel>? _ulsUtilizationTypes;
 
-
+    [ObservableProperty]
+    public BeamAxisDisplayModel? _selectedDesignableBeam;
     [ObservableProperty]
     public BeamAxisDisplayModel? _selectedDesignLength;
     [ObservableProperty]
@@ -58,6 +66,10 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
     [ObservableProperty]
     public BeamAxisDisplayModel? _selectedUlsUtilizationType;
 
+    private static ObservableCollection<BeamAxisDisplayModel> GetDesignableBeams()
+    {
+        return [new() { DisplayName = "Designable Beams", BeamAxis = BeamAxis.All, ResultType = ResultType.BeamDesignable }];
+    }
     private static ObservableCollection<BeamAxisDisplayModel> GetDefaultLengths(string designCode)
     {
         return designCode switch
@@ -159,6 +171,19 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
         };
     }
 
+    [RelayCommand]
+    private void SelectedDesignableBeamChanged()
+    {
+        if (SelectedDesignableBeam is null)
+            return;
+
+        SelectedKFactor = null;
+        SelectedSlendernessOrientation = null;
+        SelectedUlsUtilizationType = null;
+        SelectedDesignLength = null;
+
+        _designContourChangedEvent.Publish();
+    }
 
     [RelayCommand]
     private void SelectedDesignLengthChanged()
@@ -169,6 +194,7 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
         SelectedKFactor = null;
         SelectedSlendernessOrientation = null;
         SelectedUlsUtilizationType = null;
+        SelectedDesignableBeam = null;
 
         _designContourChangedEvent.Publish();
     }
@@ -182,6 +208,7 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
         SelectedDesignLength = null;
         SelectedSlendernessOrientation = null;
         SelectedUlsUtilizationType = null;
+        SelectedDesignableBeam = null;
 
         _designContourChangedEvent.Publish();
     }
@@ -195,6 +222,7 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
         SelectedDesignLength = null;
         SelectedKFactor = null;
         SelectedUlsUtilizationType = null;
+        SelectedDesignableBeam = null;
 
         _designContourChangedEvent.Publish();
     }
@@ -208,6 +236,7 @@ public partial class BeamAxisDisplay : ObservableObject, IBeamAxisDisplay
         SelectedDesignLength = null;
         SelectedKFactor = null;
         SelectedSlendernessOrientation = null;
+        SelectedDesignableBeam = null;
 
         _designContourChangedEvent.Publish();
     }

@@ -24,4 +24,5 @@ public interface IFemModelDisplayService
     public void DisplayFemModel(int modelId, nint handle, bool clearFirst = true);
     public void ReloadFemDisplayModel(int modelId, string fileName, bool closeFirst = true);
     public Task DisplayDeflectionContours(int modelId, nint handle, double minDeflectionRatio, DeflectionAxis deflectionAxis, IEnumerable<DeflectionResult>? results);
+    public Task DisplayDesignableBeams(int modelId, string fileName, nint handle);
 }
