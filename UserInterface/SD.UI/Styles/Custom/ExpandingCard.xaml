@@ -33,7 +33,6 @@
                             Margin="0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
-                            Cursor="Hand"
                             IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=TwoWay}"
                             Style="{StaticResource MaterialDesignFlatToggleButton}"
                             ToolTip="Expand/Collapse">

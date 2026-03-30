@@ -25,43 +25,65 @@
                 <Setter Property="Padding" Value="16" />
             </Style>
             <DataTemplate x:Key="SansDetailsView">
-                <Grid DataContext="{Binding Path=DataContext.SelectedBeamResult, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Border Style="{StaticResource CardBorder}">
-                        <views:BeamHeaderCardView />
-                    </Border>
-                    <ScrollViewer
-                        Grid.Row="1"
-                        HorizontalScrollBarVisibility="Auto"
-                        VerticalScrollBarVisibility="Auto">
-                        <!--  SANS  -->
-                        <StackPanel>
-                            <Border Background="Transparent" Style="{StaticResource CardBorder}">
-                                <controls:ExpandingCard ExpanderTitle="Effective Length" IsExpanded="True">
-                                    <views:BeamEffectiveLengthView />
-                                </controls:ExpandingCard>
-                            </Border>
-                            <Border Background="Transparent" Style="{StaticResource CardBorder}">
-                                <controls:ExpandingCard ExpanderTitle="Member Capacity">
-                                    <views:BeamCapacityView />
-                                </controls:ExpandingCard>
-                            </Border>
-                            <Border Background="Transparent" Style="{StaticResource CardBorder}">
-                                <controls:ExpandingCard ExpanderTitle="ULS Utilization">
-                                    <views:BeamUtilizationView />
-                                </controls:ExpandingCard>
-                            </Border>
-                            <Border Background="Transparent" Style="{StaticResource CardBorder}">
-                                <controls:ExpandingCard ExpanderTitle="Section Properties">
-                                    <views:BeamSectionProperties />
-                                </controls:ExpandingCard>
-                            </Border>
-                        </StackPanel>
-                    </ScrollViewer>
-                </Grid>
+                <ScrollViewer
+                    DataContext="{Binding Path=DataContext.SelectedBeamResult, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}}"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto">
+                    <!--  SANS  -->
+                    <StackPanel>
+                        <Border Style="{StaticResource CardBorder}">
+                            <views:BeamHeaderCardView />
+                        </Border>
+                        <!--<Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="Effective Length">
+                            <views:BeamEffectiveLengthView Margin="8" />
+                        </Expander>-->
+                        <Border Background="Transparent" Style="{StaticResource CardBorder}">
+                            <controls:ExpandingCard ExpanderTitle="Effective Length">
+                                <views:BeamEffectiveLengthView />
+                            </controls:ExpandingCard>
+                        </Border>
+                        <Border Background="Transparent" Style="{StaticResource CardBorder}">
+                            <controls:ExpandingCard ExpanderTitle="Member Capacity">
+                                <views:BeamCapacityView />
+                            </controls:ExpandingCard>
+                        </Border>
+                        <Border Background="Transparent" Style="{StaticResource CardBorder}">
+                            <controls:ExpandingCard ExpanderTitle="ULS Utilization">
+                                <views:BeamUtilizationView />
+                            </controls:ExpandingCard>
+                        </Border>
+                        <!--<Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="ULS Utilization">
+                            <views:BeamUtilizationView Margin="8" />
+                        </Expander>-->
+                        <!--<Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="Member Capacity">
+                            <views:BeamCapacityView Margin="8" />
+                        </Expander>-->
+                        <Border Background="Transparent" Style="{StaticResource CardBorder}">
+                            <controls:ExpandingCard ExpanderTitle="Section Properties">
+                                <views:BeamSectionProperties />
+                            </controls:ExpandingCard>
+                        </Border>
+                        <!--<Expander
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
+                            BorderThickness="0,0,0,1"
+                            Header="Section Properties">
+                            <views:BeamSectionProperties Margin="8" />
+                        </Expander>-->
+                    </StackPanel>
+                </ScrollViewer>
             </DataTemplate>
 
             <DataTemplate x:Key="ASDetailsView">
@@ -110,7 +132,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid MinWidth="340">
+    <Grid>
         <ContentPresenter
             Content="{Binding Path=DataContext.SelectedDesignCode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}}"
             ContentTemplateSelector="{StaticResource UlsDetailsDesignCodeSelector}"
