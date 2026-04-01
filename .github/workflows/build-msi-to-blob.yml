@@ -37,23 +37,48 @@ jobs:
           $logFile = Join-Path $env:TEMP 'vsix-install.log'
           $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
           if (Test-Path $vswhere) {
-            $instPath = & $vswhere -latest -products * -property installationPath | Select-Object -First 1
+            $instanceJson = & $vswhere -latest -products * -format json | ConvertFrom-Json | Select-Object -First 1
+            $instPath = $instanceJson.installationPath
+            $instanceId = $instanceJson.instanceId
+            $productId = $instanceJson.productId
+            $installationVersion = $instanceJson.installationVersion
             $vsixInstaller = Join-Path $instPath 'Common7\IDE\VSIXInstaller.exe'
           } else {
             $vsixInstaller = 'C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\VSIXInstaller.exe'
             $instPath = 'C:\Program Files\Microsoft Visual Studio\18\Community'
+            $instanceId = ''
+            $productId = 'Microsoft.VisualStudio.Product.Community'
+            $installationVersion = '18.0'
           }
 
           if (Test-Path $vsixInstaller) {
             Write-Host "Installing VSIX using $vsixInstaller"
 
+            $skuName = switch -Regex ($productId) {
+              'Enterprise$' { 'Enterprise' }
+              'Professional$' { 'Pro' }
+              'Community$' { 'Community' }
+              default { '' }
+            }
+
+            $skuVersion = (($installationVersion -split '\.')[0..1] -join '.')
+
             $arguments = @(
               '/quiet'
               '/shutdownprocesses'
-              "/appInstallPath:$instPath"
+              '/appName:VS'
+              "/skuName:$skuName"
+              "/skuVersion:$skuVersion"
               "/logFile:$logFile"
-              $out
             )
+
+            if ($instanceId) {
+              $arguments += "/instanceIds:$instanceId"
+            }
+
+            $arguments += $out
+
+            Write-Host "VSIX arguments: $($arguments -join ' ')"
 
             $process = Start-Process -FilePath $vsixInstaller -ArgumentList $arguments -Wait -PassThru -NoNewWindow
             Write-Host "VSIX install exit code: $($process.ExitCode)"
