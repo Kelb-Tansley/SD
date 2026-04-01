@@ -197,7 +197,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_DA05756420E94AEA96DD50F65121B27C"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]\\UAT"
+            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"

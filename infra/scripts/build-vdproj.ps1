@@ -74,16 +74,40 @@ try {
 $devenvCmd = $devenv
 $solutionPath = $solution.FullName
 $installerProjectName = 'SD.Installer'
+$devenvLog = Join-Path $root 'artifacts\msi\devenv-build.log'
 
 # Restore first to ensure all SDK-style projects have project.assets.json before devenv builds.
 Write-Host "Running: dotnet restore `"$solutionPath`""
 dotnet restore "$solutionPath" --nologo
 
-Write-Host "Running: $devenvCmd `"$solutionPath`" /Build Release /Project `"$installerProjectName`" /ProjectConfig Release"
-& "$devenvCmd" "$solutionPath" /Build Release /Project "$installerProjectName" /ProjectConfig Release
+Write-Host "Running: $devenvCmd `"$solutionPath`" /Build Release /Project `"$installerProjectName`" /ProjectConfig Release /Out `"$devenvLog`""
+& "$devenvCmd" "$solutionPath" /Build Release /Project "$installerProjectName" /ProjectConfig Release /Out "$devenvLog"
 
-$msiCandidates = Get-ChildItem -Path (Join-Path $root 'Installer\SD.Installer\Release') -Filter *.msi -File -ErrorAction SilentlyContinue
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "devenv exit code: $LASTEXITCODE"
+    if (Test-Path $devenvLog) {
+        Write-Host "devenv log tail:"
+        Get-Content -Path $devenvLog -Tail 200
+    }
+    throw "devenv build failed with exit code $LASTEXITCODE"
+}
+
+$msiCandidates = @()
+$releaseDir = Join-Path $root 'Installer\SD.Installer\Release'
+if (Test-Path $releaseDir) {
+    $msiCandidates += Get-ChildItem -Path $releaseDir -Filter *.msi -File -ErrorAction SilentlyContinue
+}
+
+# Fallback search paths for runner/environment differences in setup project output location.
 if (-not $msiCandidates) {
+    $msiCandidates += Get-ChildItem -Path (Join-Path $root 'Installer\SD.Installer') -Filter *.msi -File -Recurse -ErrorAction SilentlyContinue
+}
+
+if (-not $msiCandidates) {
+    if (Test-Path $devenvLog) {
+        Write-Host "devenv log tail:"
+        Get-Content -Path $devenvLog -Tail 200
+    }
     throw 'No MSI was produced in Installer\SD.Installer\Release'
 }
 

@@ -102,6 +102,14 @@ jobs:
         shell: pwsh
         run: ./infra/scripts/build-vdproj.ps1
 
+      - name: Upload devenv build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: devenv-build-log-${{ github.event.inputs.release_version }}
+          path: artifacts/msi/devenv-build.log
+          if-no-files-found: ignore
+
       - name: Upload MSI as workflow artifact
         uses: actions/upload-artifact@v4
         with:
