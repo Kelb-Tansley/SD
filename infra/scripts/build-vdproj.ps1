@@ -24,32 +24,31 @@ if (-not $devenv) {
     throw 'devenv.com was not found. Use a windows runner with Visual Studio installed.'
 }
 
-$disableOutOfProc = & $vsWhere -latest -products * -find 'Common7\IDE\CommonExtensions\Microsoft\VSI\DisableOutOfProcBuild\DisableOutOfProcBuild.exe' | Select-Object -First 1
-if ($disableOutOfProc -and (Test-Path $disableOutOfProc)) {
-    & $disableOutOfProc
-}
-else {
-    # If the helper is not available or cannot detect the instance path (common on CI runners),
-    # set the registry DWORD EnableOutOfProcBuild=0 directly for all VS instances reported by vswhere.
-    try {
-        $instancesJson = & $vsWhere -all -products * -requires Microsoft.Component.MSBuild -format json
-        if ($instancesJson) {
-            $instances = $instancesJson | ConvertFrom-Json
-            foreach ($inst in $instances) {
-                $instanceId = $inst.instanceId
-                # Derive the Visual Studio version key like '18.0' from installationVersion (major)
-                $major = ($inst.installationVersion -split '\.')[0]
-                if (-not $major) { continue }
-                $vsRegPrefix = "$major.0_$instanceId`_Config"
-                $msbuildKey = Join-Path -Path "HKCU:\SOFTWARE\Microsoft\VisualStudio" -ChildPath "$vsRegPrefix\MSBuild"
-                if (-not (Test-Path $msbuildKey)) { New-Item -Path $msbuildKey -Force | Out-Null }
-                Set-ItemProperty -Path $msbuildKey -Name EnableOutOfProcBuild -Type DWord -Value 0 -Force
-                Write-Host "Set EnableOutOfProcBuild=0 for instance $instanceId (VS $major)"
+# Disable out-of-proc build directly via registry for every Visual Studio instance.
+# The helper executable relies on matching the current working directory to a VS instance path,
+# which does not work on GitHub-hosted runners.
+try {
+    $instancesJson = & $vsWhere -all -products * -requires Microsoft.Component.MSBuild -format json
+    if ($instancesJson) {
+        $instances = $instancesJson | ConvertFrom-Json
+        foreach ($inst in $instances) {
+            $instanceId = $inst.instanceId
+            $major = ($inst.installationVersion -split '\.')[0]
+            if (-not $major) { continue }
+
+            $vsRegPrefix = "$major.0_$instanceId`_Config"
+            $msbuildKey = Join-Path -Path "HKCU:\SOFTWARE\Microsoft\VisualStudio" -ChildPath "$vsRegPrefix\MSBuild"
+
+            if (-not (Test-Path $msbuildKey)) {
+                New-Item -Path $msbuildKey -Force | Out-Null
             }
+
+            Set-ItemProperty -Path $msbuildKey -Name EnableOutOfProcBuild -Type DWord -Value 0 -Force
+            Write-Host "Set EnableOutOfProcBuild=0 for instance $instanceId (VS $major)"
         }
-    } catch {
-        Write-Host "Warning: failed to set EnableOutOfProcBuild via registry: $($_.Exception.Message)"
     }
+} catch {
+    Write-Host "Warning: failed to set EnableOutOfProcBuild via registry: $($_.Exception.Message)"
 }
 
 # Build the installer project using the full paths and explicit quoting to avoid

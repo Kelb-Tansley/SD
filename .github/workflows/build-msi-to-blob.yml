@@ -34,21 +34,39 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $out = Join-Path $env:TEMP 'InstallerProjects2022.vsix'
+          $logFile = Join-Path $env:TEMP 'vsix-install.log'
           $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
           if (Test-Path $vswhere) {
             $instPath = & $vswhere -latest -products * -property installationPath | Select-Object -First 1
             $vsixInstaller = Join-Path $instPath 'Common7\IDE\VSIXInstaller.exe'
           } else {
             $vsixInstaller = 'C:\Program Files\Microsoft Visual Studio\18\Community\Common7\IDE\VSIXInstaller.exe'
+            $instPath = 'C:\Program Files\Microsoft Visual Studio\18\Community'
           }
 
           if (Test-Path $vsixInstaller) {
             Write-Host "Installing VSIX using $vsixInstaller"
-            & $vsixInstaller $out /logFile "$env:TEMP\vsix-install.log"
-            Write-Host "VSIX install exit code: $LASTEXITCODE"
-            if ($LASTEXITCODE -ne 0) { Write-Host (Get-Content "$env:TEMP\vsix-install.log" -ErrorAction SilentlyContinue) }
+
+            $arguments = @(
+              '/quiet'
+              '/shutdownprocesses'
+              "/appInstallPath:$instPath"
+              "/logFile:$logFile"
+              $out
+            )
+
+            $process = Start-Process -FilePath $vsixInstaller -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+            Write-Host "VSIX install exit code: $($process.ExitCode)"
+
+            if (Test-Path $logFile) {
+              Get-Content $logFile -Raw
+            }
+
+            if ($process.ExitCode -ne 0) {
+              throw "VSIX installation failed with exit code $($process.ExitCode)"
+            }
           } else {
-            Write-Host "VSIXInstaller not found at $vsixInstaller; continuing without installing extension"
+            throw "VSIXInstaller not found at $vsixInstaller"
           }
 
       - name: Build MSI from Visual Studio installer project
