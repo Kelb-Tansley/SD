@@ -28,6 +28,29 @@ $disableOutOfProc = & $vsWhere -latest -products * -find 'Common7\IDE\CommonExte
 if ($disableOutOfProc -and (Test-Path $disableOutOfProc)) {
     & $disableOutOfProc
 }
+else {
+    # If the helper is not available or cannot detect the instance path (common on CI runners),
+    # set the registry DWORD EnableOutOfProcBuild=0 directly for all VS instances reported by vswhere.
+    try {
+        $instancesJson = & $vsWhere -all -products * -requires Microsoft.Component.MSBuild -format json
+        if ($instancesJson) {
+            $instances = $instancesJson | ConvertFrom-Json
+            foreach ($inst in $instances) {
+                $instanceId = $inst.instanceId
+                # Derive the Visual Studio version key like '18.0' from installationVersion (major)
+                $major = ($inst.installationVersion -split '\.')[0]
+                if (-not $major) { continue }
+                $vsRegPrefix = "$major.0_$instanceId`_Config"
+                $msbuildKey = Join-Path -Path "HKCU:\SOFTWARE\Microsoft\VisualStudio" -ChildPath "$vsRegPrefix\MSBuild"
+                if (-not (Test-Path $msbuildKey)) { New-Item -Path $msbuildKey -Force | Out-Null }
+                Set-ItemProperty -Path $msbuildKey -Name EnableOutOfProcBuild -Type DWord -Value 0 -Force
+                Write-Host "Set EnableOutOfProcBuild=0 for instance $instanceId (VS $major)"
+            }
+        }
+    } catch {
+        Write-Host "Warning: failed to set EnableOutOfProcBuild via registry: $($_.Exception.Message)"
+    }
+}
 
 & $devenv $solution.FullName /Build Release /Project 'Installer\SD.Installer\SD.Installer.vdproj' /ProjectConfig Release
 
