@@ -52,7 +52,14 @@ else {
     }
 }
 
-& $devenv $solution.FullName /Build Release /Project 'Installer\SD.Installer\SD.Installer.vdproj' /ProjectConfig Release
+# Build the installer project using the full paths and explicit quoting to avoid
+# command-line parsing issues on CI runners.
+$devenvCmd = $devenv
+$solutionPath = $solution.FullName
+# Use the full installer project path rather than a relative project name
+$installerProjectPath = $installerProject
+Write-Host "Running: $devenvCmd `"$solutionPath`" /Build Release /Project `"$installerProjectPath`" /ProjectConfig Release"
+& "$devenvCmd" "$solutionPath" /Build Release /Project "$installerProjectPath" /ProjectConfig Release
 
 $msiCandidates = Get-ChildItem -Path (Join-Path $root 'Installer\SD.Installer\Release') -Filter *.msi -File -ErrorAction SilentlyContinue
 if (-not $msiCandidates) {
