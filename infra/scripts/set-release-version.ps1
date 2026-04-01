@@ -11,7 +11,19 @@ if ($Version -notmatch '^\d+\.\d+\.\d+\.\d+$') {
 
 $root = Resolve-Path (Join-Path $PSScriptRoot '..\..')
 $versionParts = $Version -split '\.'
-$msiVersion = "$($versionParts[0]).$($versionParts[1]).$($versionParts[2])"
+
+$major = [int]$versionParts[0]
+$minor = [int]$versionParts[1]
+$patch = [int]$versionParts[2]
+$revision = [int]$versionParts[3]
+
+if ($major -gt 255 -or $minor -gt 255 -or $revision -gt 65535) {
+    throw "Version '$Version' is out of MSI ProductVersion bounds. Major/Minor must be <=255 and Revision must be <=65535."
+}
+
+# MSI ProductVersion has only three numeric parts. We map it to Major.Minor.Revision
+# so each release revision updates MSI ProductVersion and avoids version clashes.
+$msiVersion = "$major.$minor.$revision"
 
 $csprojFiles = Get-ChildItem -Path $root -Filter *.csproj -File -Recurse |
     Where-Object { $_.FullName -notmatch '\\(bin|obj)\\' }
@@ -48,8 +60,8 @@ $newVdprojContent = [regex]::Replace(
 
 $newVdprojContent = [regex]::Replace(
     $newVdprojContent,
-    '("OutputFilename"\s*=\s*"8:Release\\\\)[^"]+(\.msi")',
-    "`$1RSA UAT $Version`$2"
+    '"OutputFilename"\s*=\s*"8:Release\\\\[^"]*\.msi"',
+    ('"OutputFilename" = "8:Release\\{0}.msi"' -f $Version)
 )
 
 if ($newVdprojContent -ne $vdprojContent) {
@@ -57,5 +69,6 @@ if ($newVdprojContent -ne $vdprojContent) {
 }
 
 Write-Host "Release version stamped: $Version"
-Write-Host "MSI ProductVersion set to: $msiVersion"
+Write-Host "MSI ProductVersion (3-part MSI format, mapped as Major.Minor.Revision): $msiVersion"
+Write-Host "Mapping detail: input '$Version' => MSI '$msiVersion' (Patch=$patch is kept in Assembly/File versions and file naming)"
 Write-Host "Updated csproj files: $updatedProjects"

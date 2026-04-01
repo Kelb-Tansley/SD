@@ -13,8 +13,8 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>Assets\Icons\appicon.ico</ApplicationIcon>
 		<PackageIcon>Assets\Icons\appicon.png</PackageIcon>
-		<AssemblyVersion>1.0.0.4</AssemblyVersion>
-		<FileVersion>1.0.0.4</FileVersion>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
 		<AnalysisLevel>latest</AnalysisLevel>
 		<CodeSigningEnabled>false</CodeSigningEnabled>
 		<SignToolPath Condition="'$(SignToolPath)' == ''">signtool</SignToolPath>
