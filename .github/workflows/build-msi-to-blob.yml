@@ -120,7 +120,12 @@ jobs:
                 $manifests = Get-ChildItem -Path $extensionsRoot -Filter extension.vsixmanifest -File -Recurse -ErrorAction SilentlyContinue
                 foreach ($manifest in $manifests) {
                   $text = Get-Content -Path $manifest.FullName -Raw -ErrorAction SilentlyContinue
-                  if ($text -and ($text -match 'Installer\s*Projects' -or $text -match 'MicrosoftVisualStudio2022InstallerProjects')) {
+                  if ($text -and (
+                    $text -match 'Installer\s*Projects' -or
+                    $text -match 'InstallerProjects' -or
+                    $text -match 'MicrosoftVisualStudio2022InstallerProjects' -or
+                    $text -match 'Microsoft\.VisualStudio\.InstallerProjects'
+                  )) {
                     $installed = $true
                     break
                   }
@@ -184,7 +189,8 @@ jobs:
                 Write-Host 'VSIX log tail:'
                 Get-Content -Path $logFile -Tail 200
               }
-              throw "VSIX installation timed out after $timeoutSeconds seconds"
+              Write-Warning "VSIX installation timed out after $timeoutSeconds seconds. Continuing to build; build step will fail later if extension is actually missing."
+              return
             }
 
             $process.Refresh()
@@ -195,7 +201,7 @@ jobs:
             }
 
             if ($process.ExitCode -ne 0) {
-              throw "VSIX installation failed with exit code $($process.ExitCode)"
+              Write-Warning "VSIX installation exited with code $($process.ExitCode). Continuing to build; build step will fail later if extension is actually missing."
             }
           } else {
             throw "VSIXInstaller not found at $vsixInstaller"
