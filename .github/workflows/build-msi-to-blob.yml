@@ -104,7 +104,41 @@ jobs:
           }
           ./infra/scripts/set-release-version.ps1 -Version $env:RELEASE_VERSION
 
+      - name: Check InstallerProjects extension already installed
+        id: check_installer_projects
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $installed = $false
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+
+          if (Test-Path $vswhere) {
+            $instPath = & $vswhere -latest -products * -property installationPath | Select-Object -First 1
+            if ($instPath) {
+              $extensionsRoot = Join-Path $instPath 'Common7\IDE\Extensions'
+              if (Test-Path $extensionsRoot) {
+                $manifests = Get-ChildItem -Path $extensionsRoot -Filter extension.vsixmanifest -File -Recurse -ErrorAction SilentlyContinue
+                foreach ($manifest in $manifests) {
+                  $text = Get-Content -Path $manifest.FullName -Raw -ErrorAction SilentlyContinue
+                  if ($text -and ($text -match 'Installer\s*Projects' -or $text -match 'MicrosoftVisualStudio2022InstallerProjects')) {
+                    $installed = $true
+                    break
+                  }
+                }
+              }
+            }
+          }
+
+          if ($installed) {
+            Write-Host 'InstallerProjects extension appears to be already installed. Download/install steps will be skipped.'
+            'installed=true' | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          } else {
+            Write-Host 'InstallerProjects extension not detected. Download/install steps will run.'
+            'installed=false' | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          }
+
       - name: Download InstallerProjects VSIX
+        if: steps.check_installer_projects.outputs.installed != 'true'
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -113,7 +147,9 @@ jobs:
           Write-Host "Downloaded VSIX to $out"
 
       - name: Install InstallerProjects extension
+        if: steps.check_installer_projects.outputs.installed != 'true'
         shell: pwsh
+        timeout-minutes: 20
         run: |
           $ErrorActionPreference = 'Stop'
           $out = Join-Path $env:TEMP 'InstallerProjects2022.vsix'
@@ -139,7 +175,19 @@ jobs:
 
             Write-Host "VSIX arguments: $($arguments -join ' ')"
 
-            $process = Start-Process -FilePath $vsixInstaller -ArgumentList $arguments -Wait -PassThru -NoNewWindow
+            $process = Start-Process -FilePath $vsixInstaller -ArgumentList $arguments -PassThru -NoNewWindow
+            $timeoutSeconds = 900
+            if (-not (Wait-Process -Id $process.Id -Timeout $timeoutSeconds -ErrorAction SilentlyContinue)) {
+              Write-Host "VSIX install timed out after $timeoutSeconds seconds. Killing process $($process.Id)."
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+              if (Test-Path $logFile) {
+                Write-Host 'VSIX log tail:'
+                Get-Content -Path $logFile -Tail 200
+              }
+              throw "VSIX installation timed out after $timeoutSeconds seconds"
+            }
+
+            $process.Refresh()
             Write-Host "VSIX install exit code: $($process.ExitCode)"
 
             if (Test-Path $logFile) {
