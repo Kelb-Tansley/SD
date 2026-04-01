@@ -7,6 +7,10 @@
     <SolidColorBrush x:Key="HerbalSage" Color="#BAC5B3" />
     <SolidColorBrush x:Key="LightSage" Color="#BCBB9D" />
     <SolidColorBrush x:Key="WhisperingSage" Color="#D1E0D1" />
+    <SolidColorBrush
+        x:Key="BlindWhisperingSage"
+        Opacity="0.5"
+        Color="#D1E0D1" />
 
 
     <!--  Primary Base  -->
@@ -78,4 +82,7 @@
     <!--  charcoal‑green  -->
     <SolidColorBrush x:Key="SecondaryDark7" Color="#090F0E" />
     <!--  almost black with sage undertone  -->
+
+
+    <SolidColorBrush x:Key="DarkText" Color="#DD000000" />
 </ResourceDictionary>

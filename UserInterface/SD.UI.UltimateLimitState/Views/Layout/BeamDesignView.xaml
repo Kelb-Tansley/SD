@@ -124,11 +124,11 @@
             <Grid Margin="8,0,0,0">
                 <Border
                     Margin="0,0,-6,0"
-                    Padding="8,6"
+                    Padding="4,2"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Panel.ZIndex="1"
-                    Background="{StaticResource MaterialDesignLightBackground}">
+                    Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType={x:Type UserControl}, Mode=FindAncestor}}">
                     <materialDesign:PopupBox
                         IsEnabled="{Binding ProcessModel.IsFemModelLoaded}"
                         PlacementMode="RightAndAlignTopEdges"
@@ -139,6 +139,7 @@
                             <materialDesign:PackIcon
                                 Width="{StaticResource IconSize}"
                                 Height="{StaticResource IconSize}"
+                                Margin="4"
                                 Foreground="{StaticResource PrimaryColor}"
                                 Kind="Filter" />
                         </materialDesign:PopupBox.ToggleContent>
@@ -154,7 +155,24 @@
                     RowHeight="34.5"
                     SelectedItem="{Binding SelectedBeamResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionMode="Single"
+                    SelectionUnit="FullRow"
                     Style="{StaticResource MaterialDesignDataGrid}">
+                    <DataGrid.Resources>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ContentPresenter
+                                                Margin="{TemplateBinding Padding}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center" />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.Resources>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding SelectedBeamResultChangedCommand}" />

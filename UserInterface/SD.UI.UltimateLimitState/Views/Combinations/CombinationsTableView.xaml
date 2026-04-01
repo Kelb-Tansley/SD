@@ -23,8 +23,26 @@
         AutoGenerateColumns="False"
         CanUserAddRows="False"
         ItemsSource="{Binding LoadCaseCombinations}"
+        MinRowHeight="42"
         SelectedItem="{Binding SelectedLoadCaseCombination, Mode=TwoWay}"
-        SelectionMode="Single">
+        SelectionMode="Single"
+        SelectionUnit="FullRow">
+        <DataGrid.Resources>
+            <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DataGridCell">
+                            <Grid Background="{TemplateBinding Background}">
+                                <ContentPresenter
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </DataGrid.Resources>
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseLeftButtonUp">
                 <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}" />
@@ -33,7 +51,7 @@
         <DataGrid.Columns>
             <DataGridCheckBoxColumn Binding="{Binding Include, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridCheckBoxColumn.Header>
-                    <Border Background="Transparent">
+                    <Border>
                         <CheckBox
                             d:DataContext="{d:DesignInstance Type=viewmodels:CombinationsTableViewModel}"
                             Command="{Binding CheckAllCommand}"

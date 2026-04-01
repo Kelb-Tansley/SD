@@ -52,12 +52,12 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel>
                         <TextBlock
-                            Margin="8,0,8,20"
+                            Margin="8,0,8,16"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource DarkSage}"
                             Text="Design Limits:" />
                         <ListBox
-                            Margin="0,-16"
+                            Margin="0,-8,0,0"
                             materialDesign:ListBoxAssist.IsToggle="False"
                             materialDesign:ListBoxItemAssist.ShowSelection="True"
                             DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
@@ -71,14 +71,14 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBox>
-                        <Separator Margin="0,8,0,0" />
+                        <Separator Margin="0" />
                         <TextBlock
-                            Margin="8,0,8,20"
+                            Margin="8,8,8,16"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource DarkSage}"
                             Text="Beam Length:" />
                         <ListBox
-                            Margin="0,-16"
+                            Margin="0,-8,0,0"
                             materialDesign:ListBoxAssist.IsToggle="False"
                             materialDesign:ListBoxItemAssist.ShowSelection="True"
                             DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
@@ -92,14 +92,14 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBox>
-                        <Separator Margin="0,8,0,0" />
+                        <Separator Margin="0" />
                         <TextBlock
-                            Margin="8,0,8,20"
+                            Margin="8,8,8,16"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource DarkSage}"
                             Text="Beam K Factor:" />
                         <ListBox
-                            Margin="0,-16"
+                            Margin="0,-8,0,0"
                             materialDesign:ListBoxAssist.IsToggle="False"
                             materialDesign:ListBoxItemAssist.ShowSelection="True"
                             DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
@@ -113,14 +113,14 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ListBox>
-                        <Separator Margin="0,8,0,0" />
+                        <Separator Margin="0" />
                         <TextBlock
-                            Margin="8,0,8,20"
+                            Margin="8,8,8,16"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource DarkSage}"
                             Text="Beam slenderness ratio:" />
                         <ListBox
-                            Margin="0,-16"
+                            Margin="0,-8,0,0"
                             materialDesign:ListBoxAssist.IsToggle="False"
                             materialDesign:ListBoxItemAssist.ShowSelection="True"
                             DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
@@ -137,12 +137,12 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1">
                         <TextBlock
-                            Margin="8,0,8,20"
+                            Margin="8,0,8,16"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource DarkSage}"
                             Text="Beam ULS Utilization:" />
                         <ListBox
-                            Margin="0,-16"
+                            Margin="0,-8,0,0"
                             materialDesign:ListBoxAssist.IsToggle="False"
                             materialDesign:ListBoxItemAssist.ShowSelection="True"
                             DataContext="{Binding DataContext, ElementName=DesignLengthPopupBoxUserControl}"
@@ -201,7 +201,7 @@
         </ToolBar>
         <ToolBar Style="{StaticResource MaterialDesignToolBar}">
             <materialDesign:PopupBox
-                Margin="16,10"
+                Margin="8,10"
                 IsEnabled="{Binding ProcessModel.IsFemModelLoaded}"
                 PlacementMode="RightAndAlignTopEdges"
                 PopupContentTemplate="{StaticResource DesignLengthPopupTemplate}"
@@ -211,6 +211,7 @@
                     <materialDesign:PackIcon
                         Width="{StaticResource IconSize}"
                         Height="{StaticResource IconSize}"
+                        Margin="16,0"
                         Foreground="{StaticResource PrimaryColor}"
                         Kind="Beaker" />
                 </materialDesign:PopupBox.ToggleContent>
@@ -254,7 +255,7 @@
             </Button>
             <Separator />
             <materialDesign:PopupBox
-                Margin="16,10"
+                Margin="8,10"
                 IsEnabled="{Binding ProcessModel.IsFemModelLoaded}"
                 PlacementMode="RightAndAlignTopEdges"
                 PopupContentTemplate="{StaticResource NonDesignablePropertiesPopupTemplate}"
@@ -267,6 +268,7 @@
                 <materialDesign:PopupBox.ToggleContent>
                     <StackPanel
                         x:Name="NonDesignablePackIcon"
+                        Margin="14,0"
                         VerticalAlignment="Center"
                         Orientation="Horizontal">
                         <materialDesign:PackIcon

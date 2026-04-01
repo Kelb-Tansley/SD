@@ -40,11 +40,14 @@ public partial class BrowserViewModel : ObservableObject
         _windViewLoadEvent = _eventAggregator.GetEvent<WindViewLoadEvent>();
         _generalToolsViewChangedEvent = _eventAggregator.GetEvent<GeneralToolsViewChangedEvent>();
 
-        _fileClosedEvent.Subscribe(FileClosed);
+        _fileClosedEvent.Subscribe(async () => await FileClosed());
     }
 
     [ObservableProperty]
     public ObservableCollection<FileHistoryDisplayModel>? fileHistories;
+
+    [ObservableProperty]
+    public bool? _hasFileHistories;
 
     [ObservableProperty]
     public FileHistoryDisplayModel? selectedFile;
@@ -107,6 +110,7 @@ public partial class BrowserViewModel : ObservableObject
     public async Task Loaded()
     {
         FileHistories = new ObservableCollection<FileHistoryDisplayModel>((await _femFilePathService.GetPreviousFemFiles()).ToFileHistoryDisplayModels());
+        HasFileHistories = FileHistories.Count > 0;
     }
 
     [RelayCommand]
@@ -137,8 +141,10 @@ public partial class BrowserViewModel : ObservableObject
         _viewManagementModel.IsRightDrawerOpen = true;
     }
 
-    private void FileClosed()
+    private async Task FileClosed()
     {
         SelectedFile = null;
+
+        await Loaded();
     }
 }

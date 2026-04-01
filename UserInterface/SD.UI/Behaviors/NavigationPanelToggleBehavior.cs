@@ -114,8 +114,8 @@ namespace SD.UI.Behaviors
                 }
             }
 
-            if (_toggleIcon != null)
-                _toggleIcon.Kind = collapse ? PackIconKind.ChevronRight : PackIconKind.ChevronLeft;
+            //if (_toggleIcon != null)
+            //    _toggleIcon.Kind = collapse ? PackIconKind.UnfoldMoreVertical : PackIconKind.UnfoldMoreVertical;
         }
 
         private static void ClearAnimation(ColumnDefinition column, GridLength finalWidth)

@@ -7,11 +7,17 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ObsoleteBrushes.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+
+
                 <materialDesign:CustomColorTheme
                     BaseTheme="Light"
                     PrimaryColor="#1E3F2F"
                     SecondaryColor="#4F7F63" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+
                 <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

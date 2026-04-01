@@ -42,7 +42,7 @@
                             <views:BeamEffectiveLengthView Margin="8" />
                         </Expander>-->
                         <Border Background="Transparent" Style="{StaticResource CardBorder}">
-                            <controls:ExpandingCard ExpanderTitle="Effective Length">
+                            <controls:ExpandingCard ExpanderTitle="Effective Length" IsExpanded="True">
                                 <views:BeamEffectiveLengthView />
                             </controls:ExpandingCard>
                         </Border>

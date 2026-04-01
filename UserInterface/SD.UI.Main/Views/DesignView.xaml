@@ -45,7 +45,7 @@
             VerticalAlignment="Top"
             Panel.ZIndex="200"
             Style="{StaticResource MaterialDesignIconButton}">
-            <materialDesign:PackIcon x:Name="NavToggleIcon" Kind="ChevronLeft" />
+            <materialDesign:PackIcon x:Name="NavToggleIcon" Kind="UnfoldMoreVertical" />
         </Button>
 
         <GridSplitter

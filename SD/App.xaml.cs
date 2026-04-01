@@ -47,10 +47,31 @@ public partial class App : PrismApplication
         SubscribeToAppExitEvent();
 
         SetupExceptionHandling();
+        EnsureApplicationIntegrity();
 
         var splashService = Container.Resolve<ISplashService>();
         splashService.ShowSplash<Splash>();
         return Container.Resolve<Shell>();
+    }
+
+    private void EnsureApplicationIntegrity()
+    {
+        try
+        {
+            var integritySettings = Container.Resolve<IntegritySettings>();
+            ArtifactIntegrityService.ValidateOrThrow(integritySettings, AppContext.BaseDirectory);
+        }
+        catch (Exception exception)
+        {
+            System.Windows.MessageBox.Show(
+                $"Application integrity validation failed and the app will now close.\n\n{exception.Message}",
+                "Security Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            Current.Shutdown();
+            throw;
+        }
     }
 
     private void SubscribeToAppExitEvent()
@@ -214,6 +235,10 @@ public partial class App : PrismApplication
         var apiSettings = new ApiSettings();
         configuration.GetSection("Api").Bind(apiSettings);
         containerRegistry.RegisterInstance(apiSettings);
+
+        var integritySettings = new IntegritySettings();
+        configuration.GetSection("Integrity").Bind(integritySettings);
+        containerRegistry.RegisterInstance(integritySettings);
     }
 
     private void OnCurrentExit(object sender, ExitEventArgs e)
