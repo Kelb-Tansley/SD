@@ -74,6 +74,11 @@ try {
 $devenvCmd = $devenv
 $solutionPath = $solution.FullName
 $installerProjectName = 'SD.Installer'
+
+# Restore first to ensure all SDK-style projects have project.assets.json before devenv builds.
+Write-Host "Running: dotnet restore `"$solutionPath`""
+dotnet restore "$solutionPath" --nologo
+
 Write-Host "Running: $devenvCmd `"$solutionPath`" /Build Release /Project `"$installerProjectName`" /ProjectConfig Release"
 & "$devenvCmd" "$solutionPath" /Build Release /Project "$installerProjectName" /ProjectConfig Release
 
