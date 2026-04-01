@@ -52,7 +52,8 @@ jobs:
           }
           $prefix = "msi/$env:RELEASE_VERSION/"
           # Use splatting to avoid backtick-continuation issues with the Windows az.cmd wrapper.
-          # The wrapper echoes the invocation to stdout, so filter to the last numeric-only line.
+          # Avoid --query length(@) because parentheses can be misparsed by az.cmd on Windows.
+          # Request JSON and count items in PowerShell instead.
           $azArgs = @(
             'storage', 'blob', 'list',
             '--auth-mode', 'login',
@@ -60,8 +61,7 @@ jobs:
             '--container-name', $env:AZURE_STORAGE_CONTAINER,
             '--prefix', $prefix,
             '--num-results', '1',
-            '--query', 'length(@)',
-            '-o', 'tsv'
+            '--output', 'json'
           )
           $raw = & az @azArgs 2>&1 | ForEach-Object { $_.ToString() }
           $azExit = $LASTEXITCODE
@@ -71,16 +71,17 @@ jobs:
             throw "az storage blob list failed with exit code $azExit"
           }
 
-          $numericLine = $raw |
-            ForEach-Object { $_.Trim() } |
-            Where-Object { $_ -match '^\d+$' } |
-            Select-Object -Last 1
-          if (-not $numericLine) {
+          $rawText = ($raw -join [Environment]::NewLine)
+          $jsonStart = $rawText.IndexOf('[')
+          if ($jsonStart -lt 0) {
             Write-Host 'az storage blob list raw output:'
             $raw | ForEach-Object { Write-Host $_ }
-            throw 'Could not parse numeric blob count from az output.'
+            throw 'Could not locate JSON payload in az output.'
           }
-          $existingCount = if ($numericLine) { [int]$numericLine } else { 0 }
+
+          $jsonPayload = $rawText.Substring($jsonStart)
+          $items = $jsonPayload | ConvertFrom-Json
+          $existingCount = @($items).Count
 
           if ($existingCount -gt 0) {
             throw "Release version '$env:RELEASE_VERSION' already exists in blob folder '$prefix'. Use a new version number."
