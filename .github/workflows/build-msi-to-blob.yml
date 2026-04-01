@@ -156,13 +156,24 @@ jobs:
         shell: pwsh
         run: ./infra/scripts/build-vdproj.ps1
 
-      - name: Upload devenv build log
+      - name: Check devenv build log exists
         if: always()
+        id: check_devenv_log
+        shell: pwsh
+        run: |
+          $path = 'artifacts/msi/devenv-build.log'
+          if (Test-Path $path) {
+            "exists=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          } else {
+            "exists=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          }
+
+      - name: Upload devenv build log
+        if: always() && steps.check_devenv_log.outputs.exists == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: devenv-build-log-${{ github.event.inputs.release_version }}
           path: artifacts/msi/devenv-build.log
-          if-no-files-found: ignore
 
       - name: Upload MSI as workflow artifact
         uses: actions/upload-artifact@v4
