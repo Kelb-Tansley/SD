@@ -4,10 +4,27 @@ $root = Resolve-Path (Join-Path $PSScriptRoot '..\..')
 $artifactsDir = Join-Path $root 'artifacts\msi'
 New-Item -Path $artifactsDir -ItemType Directory -Force | Out-Null
 
-$solution = Get-ChildItem -Path $root -Filter *.sln -File -Recurse | Select-Object -First 1
-if (-not $solution) {
-    throw "No solution file was found under $root"
+$solution = $null
+$preferredSolution = Get-Item (Join-Path $root 'SD\StructuralDesign.sln') -ErrorAction SilentlyContinue
+if ($preferredSolution) {
+    $solutionText = Get-Content -Path $preferredSolution.FullName -Raw -ErrorAction SilentlyContinue
+    if ($solutionText -and $solutionText -match 'Installer\\SD\.Installer\\SD\.Installer\.vdproj') {
+        $solution = $preferredSolution
+    }
 }
+
+if (-not $solution) {
+    $solution = Get-ChildItem -Path $root -Filter *.sln -File -Recurse |
+        Where-Object {
+            $text = Get-Content -Path $_.FullName -Raw -ErrorAction SilentlyContinue
+            $text -and $text -match 'Installer\\SD\.Installer\\SD\.Installer\.vdproj'
+        } |
+        Select-Object -First 1
+}
+if (-not $solution) {
+    throw "No solution containing Installer\\SD.Installer\\SD.Installer.vdproj was found under $root"
+}
+Write-Host "Selected solution: $($solution.FullName)"
 
 $installerProject = Join-Path $root 'Installer\SD.Installer\SD.Installer.vdproj'
 if (-not (Test-Path $installerProject)) {
@@ -51,14 +68,14 @@ try {
     Write-Host "Warning: failed to set EnableOutOfProcBuild via registry: $($_.Exception.Message)"
 }
 
-# Build the installer project using the full paths and explicit quoting to avoid
-# command-line parsing issues on CI runners.
+# Build the installer project from the solution that actually contains it.
+# For devenv /Project, use the project name from the solution rather than the
+# absolute path to the .vdproj file.
 $devenvCmd = $devenv
 $solutionPath = $solution.FullName
-# Use the full installer project path rather than a relative project name
-$installerProjectPath = $installerProject
-Write-Host "Running: $devenvCmd `"$solutionPath`" /Build Release /Project `"$installerProjectPath`" /ProjectConfig Release"
-& "$devenvCmd" "$solutionPath" /Build Release /Project "$installerProjectPath" /ProjectConfig Release
+$installerProjectName = 'SD.Installer'
+Write-Host "Running: $devenvCmd `"$solutionPath`" /Build Release /Project `"$installerProjectName`" /ProjectConfig Release"
+& "$devenvCmd" "$solutionPath" /Build Release /Project "$installerProjectName" /ProjectConfig Release
 
 $msiCandidates = Get-ChildItem -Path (Join-Path $root 'Installer\SD.Installer\Release') -Filter *.msi -File -ErrorAction SilentlyContinue
 if (-not $msiCandidates) {
