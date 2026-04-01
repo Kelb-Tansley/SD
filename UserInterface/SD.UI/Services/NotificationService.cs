@@ -33,7 +33,7 @@ public class NotificationService : INotificationService
         _fileClosedEvent.Publish();
     }
 
-    public void ShowSnackNotification(Notification notification)
+    public void ShowSnackNotification(ShortNotification notification)
     {
         _snackbarModel.ShowMessage(notification.Description, notification.Timer);
     }

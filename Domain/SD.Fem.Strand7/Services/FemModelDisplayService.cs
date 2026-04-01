@@ -1,23 +1,34 @@
-﻿namespace SD.Fem.Strand7.Services;
+﻿using SD.Core.Shared.Models.Sans;
+
+namespace SD.Fem.Strand7.Services;
+
 public class FemModelDisplayService(IStrandApiService strandApiService,
-    IDesignModel designModel,
-    IFemModelParameters femModelParameters) : IFemModelDisplayService
+                                    IDesignModel designModel,
+                                    IFemModelParameters femModelParameters) : IFemModelDisplayService
 {
     private readonly IDesignModel _designModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
     private readonly IStrandApiService _strandApiService = strandApiService ?? throw new ArgumentNullException(nameof(strandApiService));
     private readonly IFemModelParameters _femModelParameters = femModelParameters ?? throw new ArgumentNullException(nameof(femModelParameters));
 
-    public async Task DisplayDesignResults(int modelId, string fileName, nint handle, IEnumerable<UlsResultPeak> results)
+    public async Task DisplaySansDesignResults(int modelId, string fileName, nint handle, IEnumerable<SansUlsResult> results, SansUtilizationType sansUtilizationType)
     {
-        _strandApiService.ClearFemDisplayModel(modelId);
+        if (results is null || !results.Any())
+            throw new Exception("No results found. Run the solver first.");
+
+        //_strandApiService.ClearFemDisplayModel(modelId);
         _strandApiService.DisplayFemFile(modelId, handle);
-        await _strandApiService.DisplayFemDesignResults(modelId, results);
+        await _strandApiService.DisplaySansFemDesignResults(modelId, results, sansUtilizationType);
     }
 
     public async Task DisplayDesignLengths(int modelId, string fileName, nint handle, BeamAxis beamAxisEnum)
     {
         _strandApiService.DisplayFemFile(modelId, handle);
-        await _strandApiService.DisplayDesignLengths(modelId, beamAxisEnum, _femModelParameters.Beams.ToList(), _femModelParameters.UnitFactor.Length);
+        await _strandApiService.DisplayDesignLengths(modelId, beamAxisEnum, [.. _femModelParameters.Beams], _femModelParameters.UnitFactor.Length);
+    }
+    public async Task DisplayDesignKFactors(int modelId, string fileName, nint handle, BeamAxis beamAxisEnum)
+    {
+        _strandApiService.DisplayFemFile(modelId, handle);
+        await _strandApiService.DisplayDesignKFactors(modelId, beamAxisEnum, [.. _femModelParameters.Beams]);
     }
     public async Task DisplayDesignSlenderness(int modelId, string fileName, nint handle, BeamAxis beamAxisEnum)
     {
@@ -28,9 +39,11 @@ public class FemModelDisplayService(IStrandApiService strandApiService,
     {
         return _strandApiService.OpenFemFile(modelId, fileName, closeFirst);
     }
-    public void ClearFemDisplayModel(int modelId)
+    public void DisplayFemModel(int modelId, nint handle, bool clearFirst = true)
     {
-        _strandApiService.ClearFemDisplayModel(modelId);
+        if (clearFirst)
+            _strandApiService.ClearFemDisplayModel(modelId);
+        _strandApiService.DisplayFemFile(modelId, handle);
     }
     public void ReloadFemDisplayModel(int modelId, string fileName, bool closeFirst = true)
     {
@@ -41,6 +54,11 @@ public class FemModelDisplayService(IStrandApiService strandApiService,
     {
         _strandApiService.DisplayFemFile(modelId, handle);
         await _strandApiService.DisplayDeflectionContours(modelId, minDeflectionRatio, deflectionAxis, results);
+    }
+    public async Task DisplayDesignableBeams(int modelId, string fileName, nint handle)
+    {
+        _strandApiService.DisplayFemFile(modelId, handle);
+        await _strandApiService.DisplayDesignableBeams(modelId, [.. _femModelParameters.Beams]);
     }
     public IEnumerable<Beam> GetDisplayedByGroupBeams(int modelId, IEnumerable<Beam> beams)
     {
@@ -68,6 +86,10 @@ public class FemModelDisplayService(IStrandApiService strandApiService,
     }
 
     public void CloseFemResultsFile(int modelId)
+    {
+        _strandApiService.CloseFemResultsFile(modelId);
+    }
+    public void SaveFileAs(int modelId)
     {
         _strandApiService.CloseFemResultsFile(modelId);
     }

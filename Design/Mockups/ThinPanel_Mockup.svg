@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="812" viewBox="0 0 360 812">
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#f7f7f6"/>
+
+  <!-- Thin right panel container -->
+  <rect x="16" y="16" width="328" height="780" rx="6" fill="#ffffff" stroke="#e0e6e0"/>
+
+  <!-- Top header (Peak utilization) -->
+  <rect x="28" y="28" width="296" height="68" rx="6" fill="#f1f6f2" />
+  <text x="44" y="52" font-family="Segoe UI, Arial" font-size="14" fill="#2a493b">Peak utilization</text>
+  <text x="44" y="74" font-family="Segoe UI, Arial" font-size="22" font-weight="700" fill="#2a493b">20.89%</text>
+  <text x="210" y="60" font-family="Segoe UI, Arial" font-size="11" fill="#516b5f">Reason:</text>
+  <text x="210" y="76" font-family="Segoe UI, Arial" font-size="11" fill="#234c3c">Major axis bending</text>
+  <!-- K/L inline controls (single-line, numeric spinner visual) -->
+  <g id="k-controls-header">
+    <text x="36" y="100" font-family="Segoe UI, Arial" font-size="11" fill="#516b5f">L(2)</text>
+    <rect x="80" y="88" width="56" height="28" rx="6" fill="#ffffff" stroke="#cfe3d3"/>
+    <text x="102" y="106" font-family="Segoe UI, Arial" font-size="12" font-weight="700" fill="#214f3f">5000 mm</text>
+
+    <text x="156" y="100" font-family="Segoe UI, Arial" font-size="11" fill="#516b5f">K(2)</text>
+    <rect x="188" y="88" width="48" height="28" rx="6" fill="#ffffff" stroke="#cfe3d3"/>
+    <text x="206" y="106" font-family="Segoe UI, Arial" font-size="12" font-weight="700" fill="#214f3f">1.00</text>
+    <!-- spinner arrows -->
+    <polygon points="232,94 224,100 232,106" fill="#9aaea6"/>
+    <polygon points="196,106 204,100 196,94" fill="#9aaea6"/>
+
+    <!-- Minor axis inline -->
+    <text x="36" y="132" font-family="Segoe UI, Arial" font-size="11" fill="#516b5f">L(1)</text>
+    <rect x="80" y="120" width="56" height="28" rx="6" fill="#ffffff" stroke="#cfe3d3"/>
+    <text x="102" y="138" font-family="Segoe UI, Arial" font-size="12" font-weight="700" fill="#214f3f">5000 mm</text>
+
+    <text x="156" y="132" font-family="Segoe UI, Arial" font-size="11" fill="#516b5f">K(1)</text>
+    <rect x="188" y="120" width="48" height="28" rx="6" fill="#ffffff" stroke="#cfe3d3"/>
+    <text x="206" y="138" font-family="Segoe UI, Arial" font-size="12" font-weight="700" fill="#214f3f">1.00</text>
+    <polygon points="232,126 224,132 232,138" fill="#9aaea6"/>
+    <polygon points="196,138 204,132 196,126" fill="#9aaea6"/>
+  </g>
+
+  <!-- Small KPI row under header -->
+  <g>
+    <rect x="28" y="104" width="296" height="44" rx="6" fill="#ffffff" stroke="#ebf0ec"/>
+    <text x="40" y="132" font-family="Segoe UI, Arial" font-size="12" fill="#333">Cr</text>
+    <text x="72" y="132" font-family="Segoe UI, Arial" font-size="12" font-weight="600">0 kN</text>
+
+    <text x="140" y="132" font-family="Segoe UI, Arial" font-size="12" fill="#333">Tr</text>
+    <text x="172" y="132" font-family="Segoe UI, Arial" font-size="12" font-weight="600">1609.37 kN</text>
+
+    <text x="40" y="152" font-family="Segoe UI, Arial" font-size="12" fill="#333">Vrx-x</text>
+    <text x="80" y="152" font-family="Segoe UI, Arial" font-size="12" font-weight="600">685.43 kN</text>
+  </g>
+
+  <!-- Cards list (compact) -->
+  <g id="cards">
+    <!-- ULS Card Header -->
+    <rect x="28" y="164" width="296" height="44" rx="6" fill="#ffffff" stroke="#e6ebe8"/>
+    <text x="40" y="188" font-family="Segoe UI, Arial" font-size="13" font-weight="700" fill="#1f4537">ULS Utilization</text>
+    <text x="240" y="188" font-family="Segoe UI, Arial" font-size="12" fill="#2a6953">Mu/Mr (Major): 20.89%</text>
+    <polygon points="316,176 306,186 316,196" fill="#9aaea6"/>
+
+    <!-- Capacity Card Header -->
+    <rect x="28" y="214" width="296" height="44" rx="6" fill="#ffffff" stroke="#e6ebe8"/>
+    <text x="40" y="238" font-family="Segoe UI, Arial" font-size="13" font-weight="700" fill="#1f4537">Member Capacity</text>
+    <text x="240" y="238" font-family="Segoe UI, Arial" font-size="12" fill="#2a6953">Tr: 1609.37 kN</text>
+    <polygon points="316,226 306,236 316,246" fill="#9aaea6"/>
+
+    <!-- Section Properties Card Header -->
+    <rect x="28" y="264" width="296" height="44" rx="6" fill="#ffffff" stroke="#e6ebe8"/>
+    <text x="40" y="288" font-family="Segoe UI, Arial" font-size="13" font-weight="700" fill="#1f4537">Section Properties</text>
+    <text x="240" y="288" font-family="Segoe UI, Arial" font-size="12" fill="#2a6953">Ag: 5500 mm²</text>
+    <polygon points="316,276 306,286 316,296" fill="#9aaea6"/>
+
+    <!-- Effective Length Card Header -->
+    <rect x="28" y="314" width="296" height="44" rx="6" fill="#ffffff" stroke="#e6ebe8"/>
+    <text x="40" y="338" font-family="Segoe UI, Arial" font-size="13" font-weight="700" fill="#1f4537">Effective Length</text>
+    <text x="240" y="338" font-family="Segoe UI, Arial" font-size="12" fill="#2a6953">Major: 5000 mm</text>
+    <polygon points="316,326 306,336 316,346" fill="#9aaea6"/>
+  </g>
+
+  <!-- Expanded details sample (for ULS) -->
+  <g id="uls-details">
+    <rect x="28" y="372" width="296" height="220" rx="6" fill="#fbfdfb" stroke="#e9efe9"/>
+    <text x="40" y="394" font-family="Segoe UI, Arial" font-size="12" fill="#233e32">Tu/Tr</text>
+    <text x="140" y="394" font-family="Segoe UI, Arial" font-size="12" font-weight="600">0%</text>
+
+    <text x="40" y="412" font-family="Segoe UI, Arial" font-size="12" fill="#233e32">Mu/Mr (Major)</text>
+    <text x="200" y="412" font-family="Segoe UI, Arial" font-size="12" font-weight="600">20.89%</text>
+
+    <text x="40" y="430" font-family="Segoe UI, Arial" font-size="12" fill="#233e32">Vu/Vr (Major)</text>
+    <text x="200" y="430" font-family="Segoe UI, Arial" font-size="12" font-weight="600">4.56%</text>
+
+    <text x="40" y="448" font-family="Segoe UI, Arial" font-size="12" fill="#233e32">Von Mises</text>
+    <text x="200" y="448" font-family="Segoe UI, Arial" font-size="12" font-weight="600">19.74% (62.18 MPa)</text>
+
+    <text x="40" y="466" font-family="Segoe UI, Arial" font-size="12" fill="#999">(other rows hidden for brevity)</text>
+
+  </g>
+
+  <!-- Footer action buttons (fixed) -->
+  <g id="footer">
+    <circle cx="300" cy="690" r="22" fill="#e9f2ec" stroke="#bdd7c3"/>
+    <text x="293" y="696" font-family="Segoe UI, Arial" font-size="18" fill="#2e6b4f">≡</text>
+
+    <circle cx="300" cy="740" r="22" fill="#2f6f52"/>
+    <text x="292" y="747" font-family="Segoe UI, Arial" font-size="16" fill="#ffffff">X</text>
+
+    <circle cx="300" cy="790" r="22" fill="#2f6f52"/>
+    <text x="292" y="797" font-family="Segoe UI, Arial" font-size="16" fill="#ffffff">→</text>
+  </g>
+
+  <!-- Notes -->
+  <text x="28" y="712" font-family="Segoe UI, Arial" font-size="10" fill="#777">Tap any card to expand inline — hides empty/NaN rows</text>
+
+</svg>

@@ -14,6 +14,7 @@ public class DesignSettingsMapper : IEntityMapper<DesignSettings, BeamDesignSett
             BeamMinStations = settings.BeamMinStations,
             CreatedDate = DateTime.Now,
             ModifiedDate = DateTime.Now,
+            Id = Guid.NewGuid(),
         };
     }
 

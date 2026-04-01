@@ -61,8 +61,8 @@ public sealed class CompressionOnlyStepDefinitions
             throw new ArgumentNullException(nameof(thisLocation));
 
         _femModel.FileName = Path.Combine(thisLocation, $@"TestFiles\Compression\{fileName}");
-        _designModel.IsLsa = true;
-        _designModel.IsNla = false;
+        //_designModel.IsLsa = true;
+        //_designModel.IsNla = false;
     }
 
     [Given("the mathcad compression test file name is (.*)")]

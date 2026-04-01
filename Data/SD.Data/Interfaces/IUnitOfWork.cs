@@ -1,7 +1,7 @@
 ﻿namespace SD.Data.Interfaces;
+
 public interface IUnitOfWork : IDisposable
 {
-    void Commit();
-    void Rollback();
+    Task Commit();
     IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
 }

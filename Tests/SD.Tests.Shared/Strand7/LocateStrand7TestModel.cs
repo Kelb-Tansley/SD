@@ -12,8 +12,8 @@ public static class LocateStrand7TestModel
             throw new ArgumentNullException(nameof(thisLocation));
 
         femModel.FileName = Path.Combine(thisLocation, $@"TestFiles\{fileName}");
-        designModel.IsLsa = true;
-        designModel.IsNla = false;
+        //designModel.IsLsa = true;
+        //designModel.IsNla = false;
         modelId = 1;
     }
 }

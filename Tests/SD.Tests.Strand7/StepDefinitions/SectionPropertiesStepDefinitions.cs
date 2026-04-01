@@ -70,7 +70,8 @@ public sealed class SectionPropertiesStepDefinitions
         _strandApiService.OpenFemFile(_modelId, _femModel.FileName);
 
         var unitFactor = DetermineUnitFactors.GetModelUnitFactors(_modelId);
-        _beamProps = _strandApiService.GetFemBeamSections(_modelId, unitFactor, DesignCode.SANS).FirstOrDefault(prop => prop.Number == propertyNumber);
+        var (designableProperties, _) = _strandApiService.GetFemBeamSections(_modelId, unitFactor, DesignCode.SANS);
+        _beamProps = designableProperties.FirstOrDefault(prop => prop.Number == propertyNumber);
 
         _output.WriteLine("Section Type = " + _beamProps.SectionType.ToString());
         _output.WriteLine("B1 = " + _beamProps.B1.ToString());

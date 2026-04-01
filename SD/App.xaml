@@ -7,17 +7,29 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ObsoleteBrushes.xaml" />
+
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign2.Defaults.xaml" />
+
+
                 <materialDesign:CustomColorTheme
                     BaseTheme="Light"
-                    PrimaryColor="#4A4A4A"
-                    SecondaryColor="#1F4E79" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                    PrimaryColor="#1E3F2F"
+                    SecondaryColor="#4F7F63" />
+
                 <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
 
-<!--PrimaryColor="#425563"
+<!--
+    PrimaryColor="#425563"
     
-SecondaryColor="#E84A37"-->
+    SecondaryColor="#E84A37"
+    
+    
+    PrimaryColor="#4A4A4A"
+    SecondaryColor="#1F4E79"
+-->

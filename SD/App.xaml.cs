@@ -1,37 +1,39 @@
-﻿using System.Windows;
-using SD.Element.Design.Interfaces;
-using SD.Element.Design.Sans.Models;
-using SD.Fem.Strand7.Services;
-using SD.Fem.Strand7.Interfaces;
-using SD.Core.Shared.Contracts;
-using SD.Views;
-using SD.UI.Singletons;
-using SD.Core.Shared.Models;
-using SD.Data.Services;
-using SD.Data.Repository;
-using SD.Data.Interfaces;
-using SD.Data.Entities;
-using SD.Data.Mapping;
-using SD.Core.Shared.Models.BeamModels;
-using SD.Services;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using SD.UI.Services;
-using SD.Element.Design.Sans.Services;
+﻿using Microsoft.Extensions.Configuration;
 using SD.Adapters;
+using SD.Core.Infrastructure.Interfaces;
+using SD.Core.Infrastructure.Logging;
+using SD.Core.Shared.Contracts;
+using SD.Core.Shared.Events;
+using SD.Core.Shared.Models;
+using SD.Core.Shared.Models.BeamModels;
+using SD.Core.Shared.Models.Core;
+using SD.Data.Entities;
+using SD.Data.Interfaces;
+using SD.Data.Mapping;
+using SD.Data.Repository;
+using SD.Data.Services;
+using SD.Element.Design.AS.Services;
+using SD.Element.Design.Interfaces;
+using SD.Element.Design.Models;
+using SD.Element.Design.Sans.Services;
+using SD.Element.Design.Services;
+using SD.Fem.Strand7.Interfaces;
+using SD.Fem.Strand7.Services;
 using SD.MathcadPrime.Interfaces;
 using SD.MathcadPrime.Services;
-using System.Reflection;
-using SD.Core.Infrastructure.Logging;
+using SD.Services;
+using SD.UI.Models;
+using SD.UI.Services;
+using SD.UI.Singletons;
+using SD.UI.UltimateLimitState.ViewModels;
+using SD.Views;
 using System.Diagnostics;
-using SD.Core.Shared.Models.Core;
-using SD.Element.Design.AS.Services;
-using SD.Core.Shared.Events;
-using SD.Element.Design.Models;
-using SD.Element.Design.Services;
-using SD.Core.Infrastructure.Interfaces;
+using System.IO;
+using System.Reflection;
+using System.Windows;
 
 namespace SD;
+
 public partial class App : PrismApplication
 {
     private AppShutdownEvent? _shutdownEvent;
@@ -45,10 +47,31 @@ public partial class App : PrismApplication
         SubscribeToAppExitEvent();
 
         SetupExceptionHandling();
+        EnsureApplicationIntegrity();
 
         var splashService = Container.Resolve<ISplashService>();
         splashService.ShowSplash<Splash>();
         return Container.Resolve<Shell>();
+    }
+
+    private void EnsureApplicationIntegrity()
+    {
+        try
+        {
+            var integritySettings = Container.Resolve<IntegritySettings>();
+            ArtifactIntegrityService.ValidateOrThrow(integritySettings, AppContext.BaseDirectory);
+        }
+        catch (Exception exception)
+        {
+            System.Windows.MessageBox.Show(
+                $"Application integrity validation failed and the app will now close.\n\n{exception.Message}",
+                "Security Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            Current.Shutdown();
+            throw;
+        }
     }
 
     private void SubscribeToAppExitEvent()
@@ -68,10 +91,13 @@ public partial class App : PrismApplication
         // Ensure this runs on the UI thread
         Current.Dispatcher.Invoke(() =>
         {
-            foreach (Window window in Current.Windows)
-                window.Close();
+            if (Current != null)
+            {
+                foreach (Window window in Current.Windows)
+                    window.Close();
 
-            Current.Shutdown();
+                Current.Shutdown();
+            }
         });
     }
 
@@ -107,6 +133,8 @@ public partial class App : PrismApplication
         containerRegistry.Register<IStrandResultsService, StrandResultsService>();
         containerRegistry.Register<IContourFileService, ContourFileService>();
         containerRegistry.Register<IFemModelDisplayService, FemModelDisplayService>();
+        containerRegistry.Register<ITankDesignService, TankDesignService>();
+        containerRegistry.Register<IStrandApiCreateService, StrandApiCreateService>(); 
 
         containerRegistry.Register<IDesignCodeAdapter, DesignCodeAdapter>();
         containerRegistry.Register<IBeamChainService, BeamChainService>();
@@ -115,6 +143,7 @@ public partial class App : PrismApplication
 
         containerRegistry.Register<ITokenCacheService, TokenCacheService>();
         containerRegistry.Register<IAuthenticationService, AuthenticationService>();
+
 
         // Code specific services
         containerRegistry.Register<IDeflectionService, SansDeflectionService>();
@@ -137,12 +166,25 @@ public partial class App : PrismApplication
         containerRegistry.RegisterSingleton<IFemModelParameters, FemModelParameters>();
         containerRegistry.RegisterSingleton<IViewManagementModel, ViewManagementModel>();
         containerRegistry.RegisterSingleton<ISnackbarModel, SnackbarModel>();
+        containerRegistry.RegisterSingleton<IBeamAxisDisplay, BeamAxisDisplay>();
+
+        // Register eagerly loaded view models as singletons
+        containerRegistry.RegisterSingleton<FemModelViewModel>();
+        containerRegistry.RegisterSingleton<CombinationsTableViewModel>();
+        containerRegistry.RegisterSingleton<BeamFemModelViewModel>();
+        containerRegistry.RegisterSingleton<BeamDesignViewModel>();
 
         RegisterLogger(containerRegistry);
         RegisterRepositories(containerRegistry);
         RegisterMappers(containerRegistry);
         RegisterConfigSettings(containerRegistry);
         RegisterRuntimeSettings(containerRegistry);
+        RegisterHttpClients(containerRegistry);
+    }
+
+    private void RegisterHttpClients(IContainerRegistry containerRegistry)
+    {
+        containerRegistry.RegisterSingleton<IWebApiHttpClient, WebApiHttpClient>();
     }
 
     private void RegisterLogger(IContainerRegistry containerRegistry)
@@ -168,9 +210,7 @@ public partial class App : PrismApplication
         containerRegistry.Register<IFemFilePathService, FemFilePathService>();
         containerRegistry.Register<IUserPreferencesService, UserPreferencesService>();
 
-        //containerRegistry.Register<IRepository<BeamPropertySettings>, Repository<BeamPropertySettings>>();
-        //containerRegistry.Register<IRepository<DesignSettings>, Repository<DesignSettings>>();
-        containerRegistry.Register<IUnitOfWork, UnitOfWork>();
+        containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
     }
 
     private static void RegisterMappers(IContainerRegistry containerRegistry)
@@ -195,12 +235,24 @@ public partial class App : PrismApplication
         var apiSettings = new ApiSettings();
         configuration.GetSection("Api").Bind(apiSettings);
         containerRegistry.RegisterInstance(apiSettings);
+
+        var integritySettings = new IntegritySettings();
+        configuration.GetSection("Integrity").Bind(integritySettings);
+        containerRegistry.RegisterInstance(integritySettings);
     }
 
     private void OnCurrentExit(object sender, ExitEventArgs e)
     {
-        var mathcadService = Container.Resolve<IMathcadService>();
-        mathcadService.CloseMathcad();
+        try
+        {
+            var mathcadService = Container.Resolve<IMathcadService>();
+            if (mathcadService != null)
+                mathcadService.CloseMathcad();
+        }
+        catch (Exception)
+        {
+            return;
+        }
     }
 
     #region Exception Handling

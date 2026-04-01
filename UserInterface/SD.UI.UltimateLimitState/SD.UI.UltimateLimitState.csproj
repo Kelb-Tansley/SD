@@ -23,6 +23,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Views\Combinations\CombinationsTableView.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
 		<Compile Update="Views\Detail\AS\ASBeamCapacityView.xaml.cs">
 		  <SubType>Code</SubType>
 		</Compile>
@@ -56,18 +59,6 @@
 		<Compile Update="Views\Contour\FemModelView.xaml.cs">
 			<SubType>Code</SubType>
 		</Compile>
-		<Compile Update="Views\Contour\UlsLoadCombinationsView.xaml.cs">
-			<SubType>Code</SubType>
-		</Compile>
-		<Compile Update="Views\Contour\UlsDesignView.xaml.cs">
-			<SubType>Code</SubType>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Page Update="Views\Contour\UlsDesignView.xaml">
-			<SubType>Designer</SubType>
-		</Page>
 	</ItemGroup>
 
 </Project>

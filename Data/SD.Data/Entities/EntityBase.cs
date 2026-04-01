@@ -4,9 +4,8 @@ namespace SD.Data.Entities;
 public class EntityBase
 {
     [Key]
-    public int? Id { get; set; }
-    public bool IsDeleted { get; set; }
-    public required DateTime CreatedDate { get; set; }
-    public required DateTime ModifiedDate { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public bool IsDeleted { get; set; } = false;
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
+    public DateTime ModifiedDate { get; set; } = DateTime.Now;
 }
-

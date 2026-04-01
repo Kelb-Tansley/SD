@@ -1,6 +1,5 @@
-﻿using SD.Core.Shared.Models;
+﻿namespace SD.Element.Design.Interfaces;
 
-namespace SD.Element.Design.Interfaces;
 public interface IAuthenticationService
 {
     public Task<bool> IsUserValid();

@@ -64,8 +64,8 @@ public sealed class SingleBeamStepDefinitions
         ArgumentException.ThrowIfNullOrWhiteSpace(thisLocation);
 
         _femModel.FileName = Path.Combine(thisLocation, $@"TestFiles\Single\{fileName}");
-        _designModel.IsLsa = true;
-        _designModel.IsNla = false;
+        //_designModel.IsLsa = true;
+        //_designModel.IsNla = false;
     }
 
     [When("the beam design is run")]

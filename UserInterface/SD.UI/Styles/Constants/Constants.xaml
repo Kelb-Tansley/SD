@@ -9,4 +9,7 @@
     <!--  Window Constants  -->
     <sys:Double x:Key="LargePopUpMinHeight">552</sys:Double>
     <sys:Double x:Key="LargePopUpMinWidth">600</sys:Double>
+
+    <sys:Double x:Key="IconSize">24</sys:Double>
+    <sys:Double x:Key="ButtonWidth">90</sys:Double>
 </ResourceDictionary>

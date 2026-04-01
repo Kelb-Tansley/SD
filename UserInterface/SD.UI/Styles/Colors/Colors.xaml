@@ -1,0 +1,88 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Key Variations  -->
+    <SolidColorBrush x:Key="DarkSage" Color="#5F6F5A" />
+    <SolidColorBrush x:Key="LessDarkSage" Color="#7A8B74" />
+    <SolidColorBrush x:Key="MildSage" Color="#95A68F" />
+    <SolidColorBrush x:Key="HerbalSage" Color="#BAC5B3" />
+    <SolidColorBrush x:Key="LightSage" Color="#BCBB9D" />
+    <SolidColorBrush x:Key="WhisperingSage" Color="#D1E0D1" />
+    <SolidColorBrush
+        x:Key="BlindWhisperingSage"
+        Opacity="0.5"
+        Color="#D1E0D1" />
+
+
+    <!--  Primary Base  -->
+    <SolidColorBrush x:Key="PrimaryColor" Color="#1E3F2F" />
+
+    <!--  Primary – Lighter Shades  -->
+    <SolidColorBrush x:Key="PrimaryLight1" Color="#35594A" />
+    <!--  softer forest green  -->
+    <SolidColorBrush x:Key="PrimaryLight2" Color="#4C7365" />
+    <!--  balanced mid‑tone green  -->
+    <SolidColorBrush x:Key="PrimaryLight3" Color="#628D80" />
+    <!--  muted, calm green  -->
+    <SolidColorBrush x:Key="PrimaryLight4" Color="#79A79A" />
+    <!--  gentle desaturated green  -->
+    <SolidColorBrush x:Key="PrimaryLight5" Color="#90C1B5" />
+    <!--  pastel aqua‑green  -->
+    <SolidColorBrush x:Key="PrimaryLight6" Color="#A6DBD0" />
+    <!--  light mint‑green  -->
+    <SolidColorBrush x:Key="PrimaryLight7" Color="#BDF5EB" />
+    <!--  very light mint tint  -->
+
+    <!--  Primary – Darker Shades  -->
+    <SolidColorBrush x:Key="PrimaryDark1" Color="#193627" />
+    <!--  deeper, richer forest green  -->
+    <SolidColorBrush x:Key="PrimaryDark2" Color="#152E21" />
+    <!--  strong dark green  -->
+    <SolidColorBrush x:Key="PrimaryDark3" Color="#11251B" />
+    <!--  near‑pine green  -->
+    <SolidColorBrush x:Key="PrimaryDark4" Color="#0D1D15" />
+    <!--  very dark green  -->
+    <SolidColorBrush x:Key="PrimaryDark5" Color="#0A1610" />
+    <!--  charcoal‑green  -->
+    <SolidColorBrush x:Key="PrimaryDark6" Color="#070F0B" />
+    <!--  almost black with green undertone  -->
+    <SolidColorBrush x:Key="PrimaryDark7" Color="#040905" />
+    <!--  black‑green accent  -->
+
+    <!--  Secondary Base  -->
+    <SolidColorBrush x:Key="SecondaryColor" Color="#4F7F63" />
+
+    <!--  Secondary – Lighter Sage Shades  -->
+    <SolidColorBrush x:Key="SecondaryLight1" Color="#6A8C78" />
+    <!--  muted soft sage  -->
+    <SolidColorBrush x:Key="SecondaryLight2" Color="#7FA18B" />
+    <!--  balanced natural sage  -->
+    <SolidColorBrush x:Key="SecondaryLight3" Color="#93B59E" />
+    <!--  gentle grey‑sage  -->
+    <SolidColorBrush x:Key="SecondaryLight4" Color="#A8C9B1" />
+    <!--  classic light sage  -->
+    <SolidColorBrush x:Key="SecondaryLight5" Color="#BDDCC4" />
+    <!--  pale dusty sage  -->
+    <SolidColorBrush x:Key="SecondaryLight6" Color="#D2E9D7" />
+    <!--  very light grey‑sage  -->
+    <SolidColorBrush x:Key="SecondaryLight7" Color="#E8F4EB" />
+    <!--  near‑white sage tint  -->
+
+    <!--  Secondary – Darker Shades  -->
+    <SolidColorBrush x:Key="SecondaryDark1" Color="#456F57" />
+    <!--  deeper sage  -->
+    <SolidColorBrush x:Key="SecondaryDark2" Color="#3B5F4B" />
+    <!--  muted dark green  -->
+    <SolidColorBrush x:Key="SecondaryDark3" Color="#314F3F" />
+    <!--  earthy dark green  -->
+    <SolidColorBrush x:Key="SecondaryDark4" Color="#273F33" />
+    <!--  forest‑sage hybrid  -->
+    <SolidColorBrush x:Key="SecondaryDark5" Color="#1D2F27" />
+    <!--  deep muted green  -->
+    <SolidColorBrush x:Key="SecondaryDark6" Color="#131F1B" />
+    <!--  charcoal‑green  -->
+    <SolidColorBrush x:Key="SecondaryDark7" Color="#090F0E" />
+    <!--  almost black with sage undertone  -->
+
+
+    <SolidColorBrush x:Key="DarkText" Color="#DD000000" />
+</ResourceDictionary>

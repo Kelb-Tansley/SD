@@ -1,7 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SD.Core.Shared.Models.Loading;
+﻿using SD.Core.Shared.Models.Loading;
+using SD.Core.Shared.Models.Sans;
 
 namespace SD.Fem.Strand7.Interfaces;
+
 public interface IStrandApiService
 {
     public bool OpenFemFile(int modelId, string fileName, bool closeFirst = true, bool openReadOnly = true);
@@ -14,12 +15,14 @@ public interface IStrandApiService
     public StrandResultFile OpenFemResultsFile(int modelId, string fileName, SolverType solverType, bool closeFirst = false);
     public void CloseFemResultsFile(int modelId);
     public void CloseAllFemFiles(int modelId);
-    public void GetFemModelParameters(IFemModelParameters femModelParameters, DesignCode designCode, int modelId, SolverType solverType, StrandResultFile strandResultFile);
+    public void GetFemModelParameters(IFemModelParameters femModelParameters, DesignCode designCode, int modelId, SolverType solverType, StrandResultFile? strandResultFile);
     public List<LoadCaseCombination> GetFemModelLoadCaseCombinations(int modelId, SolverType solverType, StrandResultFile strandResultFile);
-    public List<Section> GetFemBeamSections(int modelId, UnitFactor unitFactor, DesignCode designCode);
-    public Task DisplayFemDesignResults(int modelId, IEnumerable<UlsResultPeak> results);
+    public (List<Section> Designable, List<Section> NonDesignable) GetFemBeamSections(int modelId, UnitFactor unitFactor, DesignCode designCode);
+    public Task DisplaySansFemDesignResults(int modelId, IEnumerable<SansUlsResult> results, SansUtilizationType sansUtilizationType);
     public Task DisplayDesignLengths(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor);
+    public Task DisplayDesignKFactors(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams);
     public Task DisplayDesignSlenderness(int modelId, BeamAxis beamAxisEnum, IEnumerable<Beam> beams, double lengthFactor);
+    public Task DisplayDesignableBeams(int modelId, IEnumerable<Beam> beams);
     public void ClearFemDisplayModel(int modelId);
     public IEnumerable<Beam> GetDisplayedByGroupBeams(int modelId, IEnumerable<Beam> beams);
     public Task DisplayDeflectionContours(int modelId, double minDeflectionRatio, DeflectionAxis deflectionAxis, IEnumerable<DeflectionResult>? results);
@@ -37,4 +40,7 @@ public interface IStrandApiService
     public void RunLinearBucklingAnalysis(int modelId);
     public void EnableFirstLoadFreedomCase(int modelId, string resultFilePath);
     public void SetLinearBucklingModes(int modelId, string fileName, string resultFilePath, int numModes, int variableCaseNum, int fixedCaseNum);
+    public void CreateFemModel(int modelId, string fileName);
+    public void SaveAndCloseFile(int modelId);
+    public void SubdividePlates(int modelId, IEnumerable<StrandPlate> allPlates, int plateNodeCount);
 }

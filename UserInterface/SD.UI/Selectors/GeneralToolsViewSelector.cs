@@ -8,6 +8,7 @@ public class GeneralToolsViewSelector : DataTemplateSelector
 {
     public DataTemplate? WindLoadingDataTemplate { get; set; }
     public DataTemplate? BucklingAnalysisDataTemplate { get; set; }
+    public DataTemplate? TankDesignDataTemplate { get; set; }
 
     public override DataTemplate? SelectTemplate(object value, DependencyObject container)
     {
@@ -20,6 +21,7 @@ public class GeneralToolsViewSelector : DataTemplateSelector
         {
             GeneralToolsView.WindLoading => WindLoadingDataTemplate,
             GeneralToolsView.BucklingAnalysis => BucklingAnalysisDataTemplate,
+            GeneralToolsView.TankDesign => TankDesignDataTemplate,
             _ => WindLoadingDataTemplate,
         };
     }

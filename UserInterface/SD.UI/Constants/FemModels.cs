@@ -1,4 +1,5 @@
 ﻿namespace SD.UI.Constants;
+
 public static class FemModels
 {
     /// <summary>
@@ -25,4 +26,19 @@ public static class FemModels
     /// Represents the identifier for the general tools model.
     /// </summary>
     public const int GeneralToolsModelId = 5;
+
+    /// <summary>
+    /// Represents the identifier for the tank design model.
+    /// </summary>
+    public const int TankDesignModelId = 6;
+
+    /// <summary>
+    /// Represents the identifier for the tank design display model.
+    /// </summary>
+    public const int TankDesignDisplayModelId = 7;
+
+    /// <summary>
+    /// Represents the identifier for the wind loading display model.
+    /// </summary>
+    public const int WindLoadingDisplayModelId = 8;
 }

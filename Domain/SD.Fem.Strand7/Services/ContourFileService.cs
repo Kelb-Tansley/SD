@@ -1,6 +1,21 @@
 ﻿namespace SD.Fem.Strand7.Services;
+
 public class ContourFileService(IAppSettings appSettings) : IContourFileService
 {
+    public async Task<string> GenerateDesignableBeamsContourFile(List<Beam> beams)
+    {
+        const string fileName = "Designable Beams Contour";
+        const string fileTitle = "Designable Beams (True = 1 & False = 0)\n";
+
+        var fileRows = new StringBuilder();
+        foreach (var beam in beams)
+        {
+            var designable = beam.CanDesign() ? 1 : 0;
+            fileRows.AppendLine($"{beam.Number} {designable} {designable}");
+        }
+
+        return await GenerateBeamContourFile(fileName, fileTitle, fileRows);
+    }
     public async Task<string> GenerateL1ContourFile(List<Beam> beams, double lengthFactor)
     {
         const string fileName = "Design Length 1 Contour";
@@ -98,7 +113,8 @@ public class ContourFileService(IAppSettings appSettings) : IContourFileService
     public async Task<string> GenerateResultsContourFile(List<UlsResultPeak> results)
     {
         const string fileName = "ULS Results Contour";
-        var fileTitle = results.First().DesignCode == DesignCode.SANS ? "ULS Utilization (%)\n" : "ULS Utilisation (%)\n";
+        var firstResult = results.First();
+        var fileTitle = firstResult.DesignCode == DesignCode.SANS ? $"ULS Utilization - {firstResult.PeakType} - (%)\n" : "ULS Utilisation (%)\n";
 
         var fileRows = new StringBuilder();
         foreach (var result in results)
@@ -146,5 +162,65 @@ public class ContourFileService(IAppSettings appSettings) : IContourFileService
         {
             throw;
         }
+    }
+
+    public async Task<string> GenerateK1ContourFile(List<Beam> beams)
+    {
+        const string fileName = "Design K 1 Contour";
+        const string fileTitle = "Design K 1 (Minor axis)\n";
+
+        var fileRows = new StringBuilder();
+        foreach (var beam in beams)
+            fileRows.AppendLine($"{beam.Number} {beam.BeamChain.K1} {beam.BeamChain.K1}");
+
+        return await GenerateBeamContourFile(fileName, fileTitle, fileRows);
+    }
+
+    public async Task<string> GenerateK2ContourFile(List<Beam> beams)
+    {
+        const string fileName = "Design K 2 Contour";
+        const string fileTitle = "Design K 2 (Minor axis)\n";
+
+        var fileRows = new StringBuilder();
+        foreach (var beam in beams)
+            fileRows.AppendLine($"{beam.Number} {beam.BeamChain.K2} {beam.BeamChain.K2}");
+
+        return await GenerateBeamContourFile(fileName, fileTitle, fileRows);
+    }
+
+    public async Task<string> GenerateKzContourFile(List<Beam> beams)
+    {
+        const string fileName = "Design Kz Contour";
+        const string fileTitle = "Design Kz (Torsional axis)\n";
+
+        var fileRows = new StringBuilder();
+        foreach (var beam in beams)
+            fileRows.AppendLine($"{beam.Number} {beam.BeamChain.Kz} {beam.BeamChain.Kz}");
+
+        return await GenerateBeamContourFile(fileName, fileTitle, fileRows);
+    }
+
+    public async Task<string> GenerateKeTopContourFile(List<Beam> beams)
+    {
+        const string fileName = "Design Ke Top Contour";
+        const string fileTitle = "Design Ke (Top bending axis)\n";
+
+        var fileRows = new StringBuilder();
+        foreach (var beam in beams)
+            fileRows.AppendLine($"{beam.Number} {beam.BeamChain.KeTop} {beam.BeamChain.KeTop}");
+
+        return await GenerateBeamContourFile(fileName, fileTitle, fileRows);
+    }
+
+    public async Task<string> GenerateKeBottomContourFile(List<Beam> beams)
+    {
+        const string fileName = "Design Ke Bottom Contour";
+        const string fileTitle = "Design Ke (Bottom bending axis)\n";
+
+        var fileRows = new StringBuilder();
+        foreach (var beam in beams)
+            fileRows.AppendLine($"{beam.Number} {beam.BeamChain.KeBottom} {beam.BeamChain.KeBottom}");
+
+        return await GenerateBeamContourFile(fileName, fileTitle, fileRows);
     }
 }

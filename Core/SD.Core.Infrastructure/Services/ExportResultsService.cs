@@ -39,7 +39,7 @@ public class SansExportResultsService : IExportResultsService
 
     private void ExcelExportWorkerDoWork(DoWorkEventArgs e, string filePath, List<SansUlsResult> results)
     {
-        ExcelPackage.License.SetNonCommercialOrganization("Hatch");
+        ExcelPackage.License.SetNonCommercialOrganization("Aurestruct");
         using var package = new ExcelPackage();
 
         _notificationService.ShowSnackNotification(new Notification("Started", "Excel export process has started..."));

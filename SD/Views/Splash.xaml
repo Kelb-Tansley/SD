@@ -6,17 +6,25 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    Title="Splash"
-    Width="470"
+    Title="Aurestruct"
+    Width="550"
     Height="270"
     prism:ViewModelLocator.AutoWireViewModel="True"
     Background="Transparent"
     ResizeMode="NoResize"
     ShowInTaskbar="True"
-    Topmost="True"
+    Topmost="False"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid Background="{DynamicResource PrimaryHueMidBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="18" />
@@ -42,13 +50,7 @@
                 <RowDefinition Height="48" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <materialDesign:PackIcon
-                Width="48"
-                Height="48"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Foreground="{StaticResource MaterialDesignDarkForeground}"
-                Kind="OfficeBuilding" />
+            <Image Source="{StaticResource AppIconSvg}" Stretch="UniformToFill" />
 
             <!--  Close and Minimize Buttons  -->
             <Grid
@@ -92,10 +94,11 @@
                 <TextBlock
                     MinWidth="100"
                     HorizontalAlignment="Left"
+                    FontFamily="{StaticResource PrimaryFont}"
                     FontSize="36"
                     FontWeight="SemiBold"
-                    Foreground="{StaticResource MaterialDesignDarkForeground}"
-                    Text="Structural Design" />
+                    Foreground="{StaticResource WhisperingSage}"
+                    Text="AURESTRUCT" />
                 <!--  Version and target db  -->
                 <StackPanel HorizontalAlignment="Center">
                     <TextBlock
@@ -103,7 +106,7 @@
                         HorizontalAlignment="Center"
                         FontSize="13"
                         FontWeight="SemiBold"
-                        Foreground="{StaticResource MaterialDesignDarkForeground}"
+                        Foreground="{StaticResource DarkSage}"
                         Text="{Binding ApplicationVersion, StringFormat='v {0}'}" />
                     <TextBlock
                         Margin="0"

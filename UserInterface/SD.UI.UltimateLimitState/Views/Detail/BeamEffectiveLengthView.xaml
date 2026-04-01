@@ -2,6 +2,7 @@
     x:Class="SD.UI.UltimateLimitState.Views.BeamEffectiveLengthView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:SD.UI.Behaviors;assembly=SD.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -14,10 +15,202 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="SpinnerTextBox" TargetType="TextBox">
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Height" Value="20" />
+                <Setter Property="MaxWidth" Value="48" />
+                <Setter Property="MinWidth" Value="48" />
+                <Setter Property="Margin" Value="8,0,0,0" />
+                <Setter Property="FontSize" Value="{StaticResource PrimaryFontSize}" />
+                <Setter Property="Foreground" Value="{StaticResource PrimaryDark1}" />
+                <Setter Property="BorderBrush" Value="{StaticResource PrimaryLight6}" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Right" />
+                <Setter Property="behaviors:SelectAllTextOnFocusBehavior.IsEnabled" Value="True" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
+    <StackPanel Grid.Column="0" Orientation="Vertical">
+        <!--  Inline K/L rows  -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                Margin="0,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                ToolTip="Un-braced length of major axis.">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Text="L(2)" />
+                <TextBlock
+                    Margin="8,0,8,0"
+                    Padding="6,4"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Foreground="{StaticResource PrimaryDark1}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0:F2}  mm">
+                            <Binding Path="Beam.BeamChain.L2" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            <!--  K(2) numeric spinner (visual)  -->
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Text="K(2)" />
+                <TextBox
+                    VerticalAlignment="Center"
+                    Style="{StaticResource SpinnerTextBox}"
+                    Text="{Binding Beam.BeamChain.K2, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
+                    ToolTip="Effective length factor K(2)" />
+            </StackPanel>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                Margin="0,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                ToolTip="Un-braced length of minor axis.">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Text="L(1)" />
+                <TextBlock
+                    Margin="8,0,8,0"
+                    Padding="6,4"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Foreground="{StaticResource PrimaryDark1}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0:F2}  mm">
+                            <Binding Path="Beam.BeamChain.L1" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            <!--  K(1) numeric spinner (visual)  -->
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Text="K(1)" />
+                <TextBox
+                    VerticalAlignment="Center"
+                    Style="{StaticResource SpinnerTextBox}"
+                    Text="{Binding Beam.BeamChain.K1, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
+                    ToolTip="Effective length factor K(1)" />
+            </StackPanel>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                Margin="0,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                ToolTip="Un-braced torsional length, 13.3.2.">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Text="L(z)" />
+                <TextBlock
+                    Margin="8,0,8,0"
+                    Padding="6,4"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Foreground="{StaticResource PrimaryDark1}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0:F2}  mm">
+                            <Binding Path="Beam.BeamChain.Lz" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            <!--  K(z) numeric spinner (visual)  -->
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Text="K(z)" />
+                <TextBox
+                    VerticalAlignment="Center"
+                    Style="{StaticResource SpinnerTextBox}"
+                    Text="{Binding Beam.BeamChain.Kz, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
+                    ToolTip="Effective length factor K(z)" />
+            </StackPanel>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                Margin="0,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                ToolTip="Un-braced length (Above Neutral Axis), 13.6.">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Text="L(e)" />
+                <TextBlock
+                    Margin="8,0,8,0"
+                    Padding="6,4"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Foreground="{StaticResource PrimaryDark1}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0:F2}  mm">
+                            <Binding Path="Beam.BeamChain.LeTop" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            <!--  K(e) numeric spinner (visual)  -->
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Text="K(e)" />
+                <TextBox
+                    VerticalAlignment="Center"
+                    Style="{StaticResource SpinnerTextBox}"
+                    Text="{Binding Beam.BeamChain.KeTop, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
+                    ToolTip="Effective length factor K(e)" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+    <!--<Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" MinWidth="30" />
@@ -231,5 +424,5 @@
             Margin="0,4,0,0"
             Content="Un-braced length (Below Neutral Axis), 13.6:"
             FontWeight="SemiBold" />
-    </Grid>
+    </Grid>-->
 </UserControl>

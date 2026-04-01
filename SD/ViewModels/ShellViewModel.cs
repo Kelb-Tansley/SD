@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SD.Core.Infrastructure.Interfaces;
-using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Entity;
 using SD.Core.Shared.Events;
@@ -11,10 +10,7 @@ using SD.Element.Design.Interfaces;
 using SD.UI.Constants;
 using SD.UI.Events;
 using SD.UI.Helpers;
-using SD.UI.Loading.Views;
 using SD.UI.Main.Views;
-using SD.UI.Singletons;
-using SD.UI.Tools.Views;
 using SD.UI.UltimateLimitState.Views;
 using SD.UI.ViewModel;
 
@@ -29,28 +25,35 @@ public partial class ShellViewModel : FemViewModelBase
     private readonly IRuntimeAppSettings _runtimeAppSettings;
     private readonly IEventAggregator _eventAggregator;
     private readonly INotificationService _notificationService;
+    private readonly IUserPreferencesService _userPreferencesService;
+    private readonly IDataAccessService _dataAccessService;
 
     [ObservableProperty]
     public bool isFemLoaded = true;
     [ObservableProperty]
     public bool notificationDisplayed = false;
     [ObservableProperty]
+    public bool isBottomDrawerOpen = true;
+    [ObservableProperty]
     public bool isBrowserLoaded = true;
     [ObservableProperty]
-    public bool showShell;
+    public bool? showShell = false;
     [ObservableProperty]
     public WindowResizer? mainWindowResizer;
     [ObservableProperty]
     public IProcessModel _processModel;
     [ObservableProperty]
     public ISnackbarModel _snackbarModel;
-    private readonly IUserPreferencesService _userPreferencesService;
+    [ObservableProperty]
+    public bool isWindowMaximized = false;
+
     private FemLoadedEvent? _femLoadedEvent;
     private DialogOpenedEvent? _dialogOpenedEvent;
     private DialogClosedEvent? _dialogClosedEvent;
     private ShellResizeEvent? _shellResizeResizeEvent;
     private AppShutdownEvent? _appShutdownEvent;
     private FileClosedEvent? _fileClosedEvent;
+    private UserPreferences? _userPreferences;
 
     public ShellViewModel(IViewManagementModel viewManagementModel,
                           IRegionManager regionManager,
@@ -62,7 +65,8 @@ public partial class ShellViewModel : FemViewModelBase
                           IRuntimeAppSettings runtimeAppSettings,
                           IEventAggregator eventAggregator,
                           ISnackbarModel snackbarModel,
-                          IUserPreferencesService userPreferencesService) : base(viewManagementModel)
+                          IUserPreferencesService userPreferencesService,
+                          IDataAccessService dataAccessService) : base(viewManagementModel)
     {
         _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
@@ -74,12 +78,13 @@ public partial class ShellViewModel : FemViewModelBase
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _snackbarModel = snackbarModel ?? throw new ArgumentNullException(nameof(snackbarModel));
         _userPreferencesService = userPreferencesService ?? throw new ArgumentNullException(nameof(userPreferencesService));
+        _dataAccessService = dataAccessService ?? throw new ArgumentNullException(nameof(dataAccessService));
 
         _regionManager.RegisterViewWithRegion(RegionNames.MenuRegion, typeof(MenuView));
         _regionManager.RegisterViewWithRegion(RegionNames.HeaderRegion, typeof(HeaderView));
         _regionManager.RegisterViewWithRegion(RegionNames.ToolbarRegion, typeof(ToolBarView));
-        _regionManager.RegisterViewWithRegion(RegionNames.NavigationRegion, typeof(NavigationView));
-        _regionManager.RegisterViewWithRegion(RegionNames.BrowserRegion, typeof(FileBrowserView));
+        _regionManager.RegisterViewWithRegion(RegionNames.DesignRegion, typeof(DesignView));
+        _regionManager.RegisterViewWithRegion(RegionNames.BrowserRegion, typeof(BrowserView));
 
         _regionManager.RegisterViewWithRegion(RegionNames.RightDrawerContentRegion, typeof(GeneralToolsView));
 
@@ -92,23 +97,18 @@ public partial class ShellViewModel : FemViewModelBase
     [RelayCommand]
     public async Task Loaded()
     {
-        AuthenticateUser();
+        try
+        {
+            if (!await _authenticationService.IsUserValid())
+                throw new Exception("Invalid credentials.");
+        }
+        catch (Exception ex)
+        {
+            _notificationService.ShutdownAfterErrorNotice(new Notification("Authentication Error", $"User authentication failed with error: {ex.Message}. \n\n The application will now close."));
+            return;
+        }
 
         await GetUserPreferences();
-
-        //var certified = _authenticationService.CertifyApplication();
-        //if (certified.IsFailure)
-        //{
-        //    _notificationService.ShutdownAfterErrorNotice(new Notification("Application Certification Error", certified.Message));
-        //    return;
-        //}
-
-        //var authorised = _authenticationService.AuthoriseUser();
-        //if (authorised.IsFailure)
-        //{
-        //    _notificationService.ShutdownAfterErrorNotice(new Notification("Application Authorisation Error", authorised.Message));
-        //    return;
-        //}
 
         _appShutdownEvent = _eventAggregator.GetEvent<AppShutdownEvent>();
 
@@ -120,7 +120,6 @@ public partial class ShellViewModel : FemViewModelBase
         //   _appShutdownEvent.Publish();
 
         _splashService.CloseSplash(false);
-        ShowShell = true;
 
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _fileClosedEvent.Subscribe(BrowserLoaded);
@@ -137,21 +136,25 @@ public partial class ShellViewModel : FemViewModelBase
         _shellResizeResizeEvent = _eventAggregator.GetEvent<ShellResizeEvent>();
 
         BrowserLoaded();
+
+        SetWindowState();
     }
 
     private async Task GetUserPreferences()
     {
-        await _userPreferencesService.SaveUserPreferences(new UserPreferences
+        _userPreferences = await _userPreferencesService.GetUserPreferences("DefaultUser");
+        if (_userPreferences == null)
         {
-            UserName = "DefaultUser",
-            WindowStates = new WindowStates() { HasModelViewDocked = true, HasResultsViewDocked = true }
-        });
-        await _userPreferencesService.GetUserPreferences("DefaultUser");
-    }
+            _userPreferences = new UserPreferences
+            {
+                UserName = "DefaultUser",
+                WindowStates = new WindowStates() { HasModelViewDocked = true, HasResultsViewDocked = true, IsBottomDrawerOpen = true }
+            };
 
-    private void AuthenticateUser()
-    {
+            await _userPreferencesService.SaveUserPreferences(_userPreferences);
+        }
 
+        IsBottomDrawerOpen = _userPreferences.WindowStates?.IsBottomDrawerOpen ?? true;
     }
 
     [RelayCommand]
@@ -171,6 +174,17 @@ public partial class ShellViewModel : FemViewModelBase
     {
         await Task.Delay(500);
         ViewManagementModel.IsDrawerOpen = false;
+    }
+
+    [RelayCommand]
+    public async Task AcknowledgeDisclaimer()
+    {
+        IsBottomDrawerOpen = false;
+        if (_userPreferences == null)
+            _userPreferences = new SD.Core.Shared.Entity.UserPreferences { UserName = "DefaultUser", WindowStates = new SD.Core.Shared.Entity.WindowStates() };
+
+        _userPreferences.WindowStates.IsBottomDrawerOpen = false;
+        await _userPreferencesService.SaveUserPreferences(_userPreferences);
     }
 
     private void DialogClosed()
@@ -195,6 +209,12 @@ public partial class ShellViewModel : FemViewModelBase
     {
         IsFemLoaded = false;
         IsBrowserLoaded = true;
+    }
+
+    private void SetWindowState()
+    {
+        ShowShell = true;
+        IsWindowMaximized = true;
     }
 
     [RelayCommand]

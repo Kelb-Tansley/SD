@@ -61,8 +61,8 @@ public sealed class BeamColumnStepDefinitions
         ArgumentException.ThrowIfNullOrWhiteSpace(thisLocation);
 
         _femModel.FileName = Path.Combine(thisLocation, $@"TestFiles\BeamColumn\{fileName}");
-        _designModel.IsLsa = true;
-        _designModel.IsNla = false;
+        //_designModel.IsLsa = true;
+        //_designModel.IsNla = false;
     }
 
     [Given("the Mathcad test file name is (.*)")]

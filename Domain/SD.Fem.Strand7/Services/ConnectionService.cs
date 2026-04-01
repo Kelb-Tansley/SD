@@ -6,6 +6,7 @@ using System.Net.Http;
 using SD.Core.Shared.Events;
 
 namespace SD.Fem.Strand7.Services;
+
 public class ConnectionService(
     IFemFilePathService femFilePathService,
     IRuntimeAppSettings runtimeAppSettings,
@@ -28,6 +29,30 @@ public class ConnectionService(
             return false;
         }
 
+        // If the default path is not in the system environment variables then the api dll will not be found when attempting to connect, even if strand7 is installed.
+        var defaultPath = appSettings.Strand7Api.Paths.FirstOrDefault(path => !string.IsNullOrEmpty(path.Location) && path.Location.Equals("Default"))?.Value;
+        if (!string.IsNullOrWhiteSpace(defaultPath))
+        {
+            // Get the current PATH
+            var currentPath = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User);
+
+            // Append the new path if it's not already there
+            if (!string.IsNullOrWhiteSpace(currentPath) && !currentPath.Contains(defaultPath))
+            {
+                var updatedPath = currentPath + ";" + defaultPath;
+                try
+                {
+                    // Set the updated PATH for the user
+                    Environment.SetEnvironmentVariable("PATH", updatedPath, EnvironmentVariableTarget.User);
+                }
+                catch (Exception ex)
+                {
+                    splashService.SetMessageInSplash($"Error adding environment variable: {ex.Message}");
+                }
+            }
+        }
+
+        // Check that the api dll exists in at least one of the provided paths before attempting to connect
         splashService.SetMessageInSplash("Locating Strand7 API and licensing information...");
 
         var lastLocation = femFilePathService.GetLastStrandApiPath();
@@ -190,6 +215,7 @@ public class ConnectionService(
 
     public void ReleaseStrand7Api()
     {
-        St7.St7Release().HandleApiError();
+        if (appSettings!.Strand7Api!.ApiInstalled)
+            St7.St7Release().HandleApiError();
     }
 }

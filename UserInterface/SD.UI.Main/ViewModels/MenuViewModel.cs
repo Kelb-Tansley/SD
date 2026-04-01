@@ -1,11 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Prism.Events;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Events;
 using SD.Fem.Strand7.Interfaces;
 using SD.UI.Constants;
-using SD.UI.Enums;
 using SD.UI.Events;
 using SD.UI.ViewModel;
 
@@ -16,8 +14,6 @@ public partial class MenuViewModel : FemViewModelBase
     private readonly IStrandApiService _strandApiService;
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly AppShutdownEvent _appExitEvent;
-    private readonly WindViewLoadEvent _windViewLoadEvent;
-    private readonly GeneralToolsViewChangedEvent _generalToolsViewChangedEvent;
 
     [ObservableProperty]
     private IFemModel _femModel;
@@ -33,8 +29,6 @@ public partial class MenuViewModel : FemViewModelBase
 
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _appExitEvent = _eventAggregator.GetEvent<AppShutdownEvent>();
-        _windViewLoadEvent = _eventAggregator.GetEvent<WindViewLoadEvent>();
-        _generalToolsViewChangedEvent = _eventAggregator.GetEvent<GeneralToolsViewChangedEvent>();
 
         _fileClosedEvent.Subscribe(FileClosed);
     }
@@ -51,29 +45,40 @@ public partial class MenuViewModel : FemViewModelBase
         _appExitEvent.Publish();
     }
 
-    [RelayCommand]
-    public async Task BeamWindLoad()
-    {
-        ViewManagementModel.IsDrawerOpen = true;
+    //[RelayCommand]
+    //public async Task BeamWindLoad()
+    //{
+    //    ViewManagementModel.IsDrawerOpen = true;
 
-        _generalToolsViewChangedEvent.Publish(GeneralToolsView.WindLoading);
-        await Task.Delay(150);
+    //    _generalToolsViewChangedEvent.Publish(GeneralToolsView.WindLoading);
+    //    await Task.Delay(150);
 
-        _windViewLoadEvent.Publish();
+    //    _windViewLoadEvent.Publish();
 
-        ViewManagementModel.IsRightDrawerOpen = true;
-    }
+    //    ViewManagementModel.IsRightDrawerOpen = true;
+    //}
 
-    [RelayCommand]
-    public async Task BucklingAnalysis()
-    {
-        ViewManagementModel.IsDrawerOpen = true;
+    //[RelayCommand]
+    //public async Task BucklingAnalysis()
+    //{
+    //    ViewManagementModel.IsDrawerOpen = true;
 
-        _generalToolsViewChangedEvent.Publish(GeneralToolsView.BucklingAnalysis);
-        await Task.Delay(150);
+    //    _generalToolsViewChangedEvent.Publish(GeneralToolsView.BucklingAnalysis);
+    //    await Task.Delay(150);
 
-        ViewManagementModel.IsRightDrawerOpen = true;
-    }
+    //    ViewManagementModel.IsRightDrawerOpen = true;
+    //}
+
+    //[RelayCommand]
+    //public async Task TankDesign()
+    //{
+    //    ViewManagementModel.IsDrawerOpen = true;
+
+    //    _generalToolsViewChangedEvent.Publish(GeneralToolsView.TankDesign);
+    //    await Task.Delay(150);
+
+    //    ViewManagementModel.IsRightDrawerOpen = true;
+    //}
 
     private void FileClosed()
     {

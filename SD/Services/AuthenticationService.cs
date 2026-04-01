@@ -1,112 +1,75 @@
-﻿using SD.Constants;
-using Microsoft.Identity.Client;
-using Microsoft.Win32;
+﻿using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 using SD.Element.Design.Interfaces;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography;
-using System.Security.Principal;
-using Prism.Events;
-using System.DirectoryServices.AccountManagement;
-using SD.Core.Shared.Models;
-using SD.Core.Shared.Extensions;
-using SD.Core.Shared.Models.Core;
-using SD.Core.Shared.Events;
+using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SD.Services;
+
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly ApiSettings _apiSettings;
+    private readonly string _appRegClientId = "32631303-9274-4bf0-a8bd-4d1877a7f331";
+    private readonly string _appRegTenantId = "2cd924f5-c630-4fca-9460-d4032b489567";
+    private readonly string _apiAppRegClientId = "11c7f14f-3903-4948-8fe0-a106b8b001e2";
+    //private readonly string _apiAppRegClientId = "d26d523e-f16a-42ab-a50f-fb869bc2b2f5";
+
     private readonly ITokenCacheService _tokenCacheService;
-    private readonly ISplashService _splashService;
-    private readonly IEventAggregator _eventAggregator;
-    private readonly IPublicClientApplication _signInClient;
+    private readonly IWebApiHttpClient _webApiHttpClient;
+    private readonly IPublicClientApplication _pca;
 
-    public AuthenticationService(ApiSettings apiSettings, ITokenCacheService tokenCacheService, ISplashService splashService, IEventAggregator eventAggregator)
+    public AuthenticationService(ITokenCacheService tokenCacheService,
+                                 IWebApiHttpClient webApiHttpClient)
     {
-        _apiSettings = apiSettings;
         _tokenCacheService = tokenCacheService;
-        _splashService = splashService;
-        _eventAggregator = eventAggregator;
-        _signInClient = PublicClientApplicationBuilder.Create(_apiSettings.AppRegClientId)
-                            .WithAuthority(AzureCloudInstance.AzurePublic, _apiSettings.AppRegTenantId)
-            .WithClientId(_apiSettings.AppRegClientId)
-            //.WithRedirectUri(@"https://localhost:5003/.auth/login/aad/callback")
-            .WithRedirectUri("http://localhost")
-                            //.WithDefaultRedirectUri()
-                            .Build();
+        _webApiHttpClient = webApiHttpClient;
 
-        _tokenCacheService.EnableSerialization(_signInClient.UserTokenCache);
+        _pca = PublicClientApplicationBuilder.Create(_appRegClientId)
+           .WithAuthority(AzureCloudInstance.AzurePublic, _appRegTenantId)
+           .WithRedirectUri("http://localhost")
+           .Build();
+
+        _tokenCacheService.EnableSerialization(_pca.UserTokenCache);
     }
 
-    private async Task SignOutInvalidAccount()
+    public async Task<bool> IsUserValid()
     {
-        var accounts = await _signInClient.GetAccountsAsync();
-        if (accounts.Any())
-        {
-            try
-            {
-                await _signInClient.RemoveAsync(accounts.FirstOrDefault());
-            }
-            catch (MsalException)
-            {
+        var accessToken = await SignInAndGetTokenAsync();
 
-            }
-        }
+        var response = await _webApiHttpClient.GetUserLicense(accessToken);
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var jwt = tokenHandler.ReadJwtToken(accessToken);
+        var secret = jwt.Claims.FirstOrDefault(c => c.Type == "oid")?.Value
+            ?? throw new SecurityTokenException("Missing oid claim");
+
+        return response.ValidateAndDecodeLicenseToken(secret);
     }
 
-    private async Task<string> GetSignedInUserAccessToken(bool isFirstTimeSignIn = false)
+    private async Task<string> SignInAndGetTokenAsync()
     {
-        var scopes = new List<string>() { $"{_apiSettings.AppRegClientId}/Read" };
-        //var scopes = new string[] { "user.read" };
-        var firstAccount = (await _signInClient.GetAccountsAsync())?.FirstOrDefault();
-
+        var scopes = new[] { $"{_apiAppRegClientId}/.default" };
         try
         {
-            return (await _signInClient.AcquireTokenSilent(scopes, firstAccount)
-                    .ExecuteAsync()).AccessToken;
+            var accounts = await _pca.GetAccountsAsync();
+
+            var result = await _pca.AcquireTokenSilent(scopes, accounts.FirstOrDefault()).ExecuteAsync();
+            return result.AccessToken;
         }
         catch (MsalUiRequiredException)
         {
             try
             {
-                var result = await _signInClient.AcquireTokenInteractive(scopes)
-                    .WithAccount(firstAccount)
-                    //.WithParentActivityOrWindow(new WindowInteropHelper(Application.Current.MainWindow).Handle)
+                var result = await _pca.AcquireTokenInteractive(scopes)
+                    .WithLoginHint(Environment.UserName)
+                    .WithTenantId(_appRegTenantId)
                     .WithPrompt(Prompt.SelectAccount)
                     .ExecuteAsync();
                 return result.AccessToken;
-            }
-            catch (MsalException)
-            {
-                throw;
             }
             catch (Exception)
             {
                 throw;
             }
-            throw;
-        }
-    }
-
-    public async Task<bool> IsUserValid()
-    {
-        try
-        {
-            return true; // TODO: Awaiting approval by Andrew Burt before we can implement this auth method
-            var userSignInToken = await GetSignedInUserAccessToken();
-
-            if (_tokenCacheService.IsTokenEmptyOrInvalid(userSignInToken))
-            {
-                await SignOutInvalidAccount();
-                return await IsUserValid();
-            }
-            else
-                return true;
-        }
-        catch (Exception)
-        {
-            throw;
         }
     }
 }
-

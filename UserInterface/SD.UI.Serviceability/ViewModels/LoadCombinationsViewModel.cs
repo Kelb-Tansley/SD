@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Prism.Events;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
@@ -10,9 +9,11 @@ using SD.UI.Constants;
 using SD.UI.Events;
 using SD.UI.Serviceability.Events;
 using SD.UI.Serviceability.Models;
+using SD.UI.Services;
 using SD.UI.ViewModel;
 
 namespace SD.UI.Serviceability.ViewModels;
+
 public partial class LoadCombinationsViewModel : LoadCasesViewModelBase
 {
     private readonly IDesignCodeAdapter _femDesignAdapter;
@@ -24,6 +25,8 @@ public partial class LoadCombinationsViewModel : LoadCasesViewModelBase
     private readonly INotificationService _notificationService;
     private readonly FemLoadedEvent _femLoadedEvent;
     private readonly SelectedLoadCombinationsChangedEvent _selectedLoadCombinationsChangedEvent;
+
+    private readonly SemaphoreSlim _reloadSemaphore = new(1, 1);
 
     public LoadCombinationsViewModel(IProcessModel processModel,
                                 IDesignModel designModel,
@@ -71,12 +74,13 @@ public partial class LoadCombinationsViewModel : LoadCasesViewModelBase
             if (LoadCaseCombinations == null)
                 return;
 
-            var selectedLoadCaseNumbers = LoadCaseCombinations.Where(sll => sll.Include)?.Select(sll => sll.Number);
-            _femModelDisplayService.ReloadFemDisplayModel(FemModels.ServiceabilityModelId, _femModel.FileName, false);
+            //var selectedLoadCaseNumbers = LoadCaseCombinations.Where(sll => sll.Include)?.Select(sll => sll.Number);
+            //await _reloadSemaphore.RunInBackgroundAsync(() => _femModelDisplayService.ReloadFemDisplayModel(FemModels.ServiceabilityModelId, _femModel.FileName, false));
 
             var designableBeams = _femModelParameters.Beams.Where(beam => beam.CanDesign()).ToList();
             var visibleBeams = _femModelDisplayService.GetDisplayedByGroupBeams(FemModels.ModelId, designableBeams);
-            var deflectionResults = await _femDesignAdapter.GetDeflectionService(_designModel.DesignCode.ToDesignCodeEnum()).GetDeflectionResults(FemModels.ModelId, LoadCaseCombinations, visibleBeams, DeflectionAxisViewModel.Selected, DeflectionMethodViewModel.Selected);
+            var deflectionResults = await _femDesignAdapter.GetDeflectionService(_designModel.DesignCode.ToDesignCodeEnum())
+                .GetDeflectionResults(FemModels.ModelId, LoadCaseCombinations, visibleBeams, DeflectionAxisViewModel.Selected, DeflectionMethodViewModel.Selected);
 
             _selectedLoadCombinationsChangedEvent?.Publish(new CalculateEventModel()
             {

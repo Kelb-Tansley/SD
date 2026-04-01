@@ -1,13 +1,16 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.IO;
+﻿using System.IO;
 using System.Security.Cryptography;
 using Microsoft.Identity.Client;
 using SD.Core.Shared.Contracts;
 using SD.Element.Design.Interfaces;
 
 namespace SD.Services;
+
 public class TokenCacheService : ITokenCacheService
 {
+    public string CacheFilePath { get; private set; }
+    private readonly object FileLock = new object();
+
     public TokenCacheService(IAppSettings appSettings)
     {
         try
@@ -21,8 +24,7 @@ public class TokenCacheService : ITokenCacheService
             CacheFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location + ".msalcache.bin3";
         }
     }
-    public string CacheFilePath { get; private set; }
-    private readonly object FileLock = new object();
+
     public void BeforeAccessNotification(TokenCacheNotificationArgs args)
     {
         lock (FileLock)
@@ -42,24 +44,14 @@ public class TokenCacheService : ITokenCacheService
             lock (FileLock)
             {
                 File.WriteAllBytes(CacheFilePath,
-                                   ProtectedData.Protect(args.TokenCache.SerializeMsalV3(),
-                                                         null,
-                DataProtectionScope.CurrentUser)
-                                  );
+                                   ProtectedData.Protect(args.TokenCache.SerializeMsalV3(), null, DataProtectionScope.CurrentUser));
             }
         }
     }
+
     public void EnableSerialization(ITokenCache tokenCache)
     {
         tokenCache.SetBeforeAccess(BeforeAccessNotification);
         tokenCache.SetAfterAccess(AfterAccessNotification);
-    }
-    public bool IsTokenEmptyOrInvalid(string token)
-    {
-        if (string.IsNullOrEmpty(token))
-            return true;
-
-        var jwtToken = new JwtSecurityToken(token);
-        return jwtToken == null || jwtToken.ValidFrom > DateTime.UtcNow && jwtToken.ValidTo < DateTime.UtcNow;
     }
 }

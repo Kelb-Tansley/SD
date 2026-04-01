@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:ui="clr-namespace:SD.UI.Constants;assembly=SD.UI"
+    Background="{StaticResource BlindWhisperingSage}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -16,7 +17,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="{StaticResource MaterialDesignToolBarBackground}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -32,32 +33,27 @@
             </Grid.ColumnDefinitions>
 
             <!--  Icon  -->
-            <Border>
-                <Button Margin="6" Style="{StaticResource SystemIconButton}">
-                    <Image Source="{Binding Source=bridge_multi_res.ico, Converter={StaticResource IconToImageSourceConverter}}" />
-                </Button>
-            </Border>
+            <Image
+                MaxWidth="32"
+                MaxHeight="32"
+                Margin="6,1,0,0"
+                Source="{StaticResource AppIconSvg}"
+                Stretch="Fill" />
 
-            <!--<TextBlock
-                Grid.Column="1"
-                Margin="8"
-                VerticalAlignment="Center"
-                Style="{StaticResource MaterialDesignBody2TextBlock}">
-                Structural Design
-            </TextBlock>-->
-
+            <!--  Menu's  -->
             <ContentControl
                 Grid.Column="1"
                 Panel.ZIndex="1"
                 prism:RegionManager.RegionName="{x:Static ui:RegionNames.MenuRegion}"
                 FocusVisualStyle="{x:Null}"
+                Visibility="{Binding ProcessModel.IsFemModelLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
                 WindowChrome.IsHitTestVisibleInChrome="True" />
 
+            <!--  TitleBar  -->
             <Border
                 Grid.Column="3"
                 Margin="0,0,0,0"
                 Panel.ZIndex="1">
-                <!--  TitleBar  -->
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

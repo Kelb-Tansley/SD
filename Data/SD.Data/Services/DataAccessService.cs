@@ -2,8 +2,11 @@
 using SD.Data.Interfaces;
 
 namespace SD.Data.Services;
+
 public class DataAccessService : IDataAccessService
 {
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IRepository<FemFileEntity> _femFileRepo;
     private readonly IRepository<DesignSettings> _designSettingsRepo;
     private readonly IRepository<BeamPropertySettings> _beamPropertiesRepo;
 
@@ -15,29 +18,51 @@ public class DataAccessService : IDataAccessService
         IEntityMapper<BeamPropertySettings, Section> beamPropertiesMapper,
         IEntityMapper<DesignSettings, BeamDesignSettings> designSettingsMapper)
     {
-        _ = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _femFileRepo = unitOfWork.GetRepository<FemFileEntity>();
         _designSettingsRepo = unitOfWork.GetRepository<DesignSettings>();
         _beamPropertiesRepo = unitOfWork.GetRepository<BeamPropertySettings>();
 
         _designSettingsMapper = designSettingsMapper ?? throw new ArgumentNullException(nameof(designSettingsMapper));
         _beamPropertiesMapper = beamPropertiesMapper ?? throw new ArgumentNullException(nameof(beamPropertiesMapper));
     }
+
+    public async Task<Guid> SaveFemFileByName(string fileName)
+    {
+        // First check that file does not already exist
+        var existingFile = await GetFemFileIdByName(fileName);
+        if (existingFile != Guid.Empty)
+            return existingFile;
+
+        var femFile = new FemFileEntity() { FileName = fileName };
+        await _femFileRepo.AddAsync(femFile);
+
+        await _unitOfWork.Commit();
+        return femFile.Id;
+    }
+
+    public async Task<Guid> GetFemFileIdByName(string fileName)
+    {
+        return (await _femFileRepo.FirstOrDefault(f => f.FileName.Equals(fileName)))?.Id ?? Guid.Empty;
+    }
+
     public async Task SaveBeamSettings(string fileName, IEnumerable<Section> beamProperties)
     {
         var settings = _beamPropertiesMapper.MapAll(beamProperties);
         foreach (var setting in settings)
-            setting.FileName = fileName;
-
+            setting.FemFile.FileName = fileName;
         await _beamPropertiesRepo.AddAllAsync(settings);
+        await _unitOfWork.Commit();
     }
     public async Task SaveDesignSettings(BeamDesignSettings designSettings)
     {
         var settings = _designSettingsMapper.Map(designSettings);
 
         await _designSettingsRepo.AddAsync(settings);
+        await _unitOfWork.Commit();
     }
-    public async Task<DesignSettings> GetDesignSettings()
+    public async Task<DesignSettings?> GetDesignSettings()
     {
-        return await _designSettingsRepo.GetByIdAsync(0);
+        return await _designSettingsRepo.GetByIdAsync(Guid.NewGuid());
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace SD.Data.Entities;
 public class BeamPropertySettings : EntityBase
 {
-    public required string FileName { get; set; }
+    public required FemFileEntity FemFile { get; set; }
     public int PropertyNumber { get; set; }
     public bool IsLateralRestraint { get; set; }
 }
