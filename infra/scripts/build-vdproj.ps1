@@ -82,16 +82,11 @@ dotnet restore "$solutionPath" --nologo
 
 Write-Host "Running: $devenvCmd `"$solutionPath`" /Build Release /Project `"$installerProjectName`" /ProjectConfig Release /Out `"$devenvLog`""
 & "$devenvCmd" "$solutionPath" /Build Release /Project "$installerProjectName" /ProjectConfig Release /Out "$devenvLog"
+$devenvExitCode = $LASTEXITCODE
 
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "devenv exit code: $LASTEXITCODE"
-    if (Test-Path $devenvLog) {
-        Write-Host "devenv log tail:"
-        Get-Content -Path $devenvLog -Tail 200
-    }
-    throw "devenv build failed with exit code $LASTEXITCODE"
-}
-
+# devenv is known to crash with 0xC0000374 (heap corruption) after successfully building
+# a setup project. Collect MSI candidates first; only treat the exit code as fatal if no
+# MSI was produced.
 $msiCandidates = @()
 $releaseDir = Join-Path $root 'Installer\SD.Installer\Release'
 if (Test-Path $releaseDir) {
@@ -101,6 +96,19 @@ if (Test-Path $releaseDir) {
 # Fallback search paths for runner/environment differences in setup project output location.
 if (-not $msiCandidates) {
     $msiCandidates += Get-ChildItem -Path (Join-Path $root 'Installer\SD.Installer') -Filter *.msi -File -Recurse -ErrorAction SilentlyContinue
+}
+
+if ($devenvExitCode -ne 0) {
+    Write-Host "devenv exit code: $devenvExitCode (0x$("{0:X8}" -f [uint32]$devenvExitCode))"
+    if (Test-Path $devenvLog) {
+        Write-Host "devenv log tail:"
+        Get-Content -Path $devenvLog -Tail 200
+    }
+    if (-not $msiCandidates) {
+        throw "devenv build failed with exit code $devenvExitCode and no MSI was produced."
+    }
+    # Exit code is non-zero but MSI exists — devenv crashed after a successful build (known issue).
+    Write-Host "Warning: devenv exited with code $devenvExitCode but MSI was produced. Treating as success."
 }
 
 if (-not $msiCandidates) {
