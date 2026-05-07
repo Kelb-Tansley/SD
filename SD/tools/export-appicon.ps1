@@ -58,28 +58,72 @@ $pngEncoder.Save($fileStream)
 $fileStream.Dispose()
 
 $icoPath = Join-Path $assetsDir 'appicon.ico'
-$pngBytes = [System.IO.File]::ReadAllBytes($pngPath)
 
-# ICO: ICONDIR header
-$iconDir = [byte[]](0, 0, 1, 0, 1, 0)
+# Build a multi-size ICO so Windows can use proper 16/32/48 taskbar/titlebar icons
+# instead of falling back when only a single 256px image is present.
+$sizes = @(16, 20, 24, 32, 40, 48, 64, 128, 256)
+$frames = @()
 
-# ICONDIRENTRY (single PNG image)
-$entry = New-Object byte[] 16
-$entry[0] = 0   # width 256
-$entry[1] = 0   # height 256
-$entry[2] = 0   # color palette
-$entry[3] = 0   # reserved
-$entry[4] = 1   # color planes
-$entry[5] = 0
-$entry[6] = 32  # bits per pixel
-$entry[7] = 0
-[BitConverter]::GetBytes([int]$pngBytes.Length).CopyTo($entry, 8)
-[BitConverter]::GetBytes([int]22).CopyTo($entry, 12)
+foreach ($sizePx in $sizes) {
+    $scaledBitmap = if ($sizePx -eq $size) {
+        $renderBitmap
+    } else {
+        $scale = $sizePx / [double]$size
+        New-Object System.Windows.Media.Imaging.TransformedBitmap(
+            $renderBitmap,
+            (New-Object System.Windows.Media.ScaleTransform($scale, $scale))
+        )
+    }
+
+    $frameEncoder = New-Object System.Windows.Media.Imaging.PngBitmapEncoder
+    $frameEncoder.Frames.Add([System.Windows.Media.Imaging.BitmapFrame]::Create($scaledBitmap))
+
+    $frameStream = New-Object System.IO.MemoryStream
+    $frameEncoder.Save($frameStream)
+
+    $frames += [PSCustomObject]@{
+        Size = $sizePx
+        Bytes = $frameStream.ToArray()
+    }
+
+    $frameStream.Dispose()
+}
+
+# ICO header: Reserved (2), Type (2), Count (2)
+$iconDir = New-Object byte[] 6
+$iconDir[2] = 1  # icon type
+[BitConverter]::GetBytes([UInt16]$frames.Count).CopyTo($iconDir, 4)
+
+$entryTableLength = 16 * $frames.Count
+$currentOffset = 6 + $entryTableLength
 
 $memoryStream = New-Object System.IO.MemoryStream
 $memoryStream.Write($iconDir, 0, $iconDir.Length)
-$memoryStream.Write($entry, 0, $entry.Length)
-$memoryStream.Write($pngBytes, 0, $pngBytes.Length)
+
+foreach ($frame in $frames) {
+    $entry = New-Object byte[] 16
+
+    # Width/Height: 0 means 256 in ICO format.
+    $entry[0] = if ($frame.Size -ge 256) { 0 } else { [byte]$frame.Size }
+    $entry[1] = if ($frame.Size -ge 256) { 0 } else { [byte]$frame.Size }
+    $entry[2] = 0   # palette colors
+    $entry[3] = 0   # reserved
+    $entry[4] = 1   # color planes (little-endian)
+    $entry[5] = 0
+    $entry[6] = 32  # bits per pixel (little-endian)
+    $entry[7] = 0
+
+    [BitConverter]::GetBytes([int]$frame.Bytes.Length).CopyTo($entry, 8)
+    [BitConverter]::GetBytes([int]$currentOffset).CopyTo($entry, 12)
+
+    $memoryStream.Write($entry, 0, $entry.Length)
+    $currentOffset += $frame.Bytes.Length
+}
+
+foreach ($frame in $frames) {
+    $memoryStream.Write($frame.Bytes, 0, $frame.Bytes.Length)
+}
+
 [System.IO.File]::WriteAllBytes($icoPath, $memoryStream.ToArray())
 $memoryStream.Dispose()
 

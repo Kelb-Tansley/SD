@@ -74,7 +74,13 @@
                     VerticalAlignment="Center"
                     Style="{StaticResource SpinnerTextBox}"
                     Text="{Binding Beam.BeamChain.K2, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
-                    ToolTip="Effective length factor K(2)" />
+                    ToolTip="Effective length factor K(2)">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="KeyUp">
+                            <i:InvokeCommandAction Command="{Binding Delay=3000, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
             </StackPanel>
         </Grid>
         <Grid>
@@ -118,7 +124,13 @@
                     VerticalAlignment="Center"
                     Style="{StaticResource SpinnerTextBox}"
                     Text="{Binding Beam.BeamChain.K1, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
-                    ToolTip="Effective length factor K(1)" />
+                    ToolTip="Effective length factor K(1)">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="KeyUp">
+                            <i:InvokeCommandAction Command="{Binding Delay=3000, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
             </StackPanel>
         </Grid>
         <Grid>
@@ -162,7 +174,13 @@
                     VerticalAlignment="Center"
                     Style="{StaticResource SpinnerTextBox}"
                     Text="{Binding Beam.BeamChain.Kz, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
-                    ToolTip="Effective length factor K(z)" />
+                    ToolTip="Effective length factor K(z)">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="KeyUp">
+                            <i:InvokeCommandAction Command="{Binding Delay=3000, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
             </StackPanel>
         </Grid>
         <Grid>
@@ -206,7 +224,13 @@
                     VerticalAlignment="Center"
                     Style="{StaticResource SpinnerTextBox}"
                     Text="{Binding Beam.BeamChain.KeTop, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
-                    ToolTip="Effective length factor K(e)" />
+                    ToolTip="Effective length factor K(e)">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="KeyUp">
+                            <i:InvokeCommandAction Command="{Binding Delay=3000, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
             </StackPanel>
         </Grid>
     </StackPanel>

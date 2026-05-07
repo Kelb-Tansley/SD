@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Fragment>
+    <!--
+      WiX v5+ <Files> element recursively harvests all files under PublishDir at build time.
+      Directory="INSTALLFOLDER" installs everything into C:\Program Files\Aurestruct\Aurestruct\.
+      Sub-directory structure from the publish output is preserved automatically.
+    -->
+    <ComponentGroup Id="AppFiles" Directory="INSTALLFOLDER">
+      <!--
+        !(bindpath.AppPublish) resolves to the AppPublishDir passed at build time.
+        ** harvests all files recursively, preserving subdirectory structure.
+      -->
+      <Files Include="!(bindpath.AppPublish)**" />
+    </ComponentGroup>
+  </Fragment>
+
+</Wix>

@@ -97,3 +97,80 @@ No functional behavior was changed.
 ## Notes
 
 The project appears to be under active evolution (UI modules, code-specific tooling, and integration-heavy services). For larger dead-code elimination, the safest approach is staged cleanup backed by strict test coverage and feature-level validation.
+
+---
+
+## Installer command cheat sheet
+
+Run all commands from the repository root (`D:\mine\SD`).
+
+### 0) Preferred: run the single helper script
+
+```powershell
+pwsh -File infra/scripts/build-installer.ps1
+```
+
+Optional examples:
+
+```powershell
+pwsh -File infra/scripts/build-installer.ps1 -MsiVersion 1.2.3 -BundleVersion 1.2.3
+pwsh -File infra/scripts/build-installer.ps1 -PublishDir "D:\build\publish\"
+pwsh -File infra/scripts/build-installer.ps1 -SkipToolRestore
+```
+
+### 1) Publish the desktop app (required before MSI build)
+
+```powershell
+dotnet publish SD/SD.csproj -c Release -r win-x64 --self-contained true
+```
+
+### 2) Build MSI (WiX package project)
+
+```powershell
+dotnet build Installer/SD.WiX/SD.WiX.wixproj -c Release
+```
+
+### 3) Build bootstrapper EXE (WiX bundle project)
+
+```powershell
+dotnet build Installer/SD.Bundle/SD.Bundle.wixproj -c Release
+```
+
+### 4) Rebuild everything in one go
+
+```powershell
+dotnet publish SD/SD.csproj -c Release -r win-x64 --self-contained true
+dotnet build Installer/SD.WiX/SD.WiX.wixproj -c Release
+dotnet build Installer/SD.Bundle/SD.Bundle.wixproj -c Release
+```
+
+### 5) Override publish path if needed (advanced)
+
+```powershell
+dotnet build Installer/SD.WiX/SD.WiX.wixproj -c Release -p:AppPublishDir="D:\custom\publish\path\"
+```
+
+### 6) Override MSI path when building bundle (advanced)
+
+```powershell
+dotnet build Installer/SD.Bundle/SD.Bundle.wixproj -c Release -p:MsiPath="D:\custom\Aurestruct.msi"
+```
+
+### 7) Outputs
+
+```text
+Installer/SD.WiX/bin/Release/Aurestruct.msi
+Installer/SD.Bundle/bin/Release/AurestructSetup.exe
+```
+
+### 8) Verify install/uninstall manually (silent)
+
+```powershell
+msiexec /i Installer/SD.WiX/bin/Release/Aurestruct.msi /qn /l*v install.log
+msiexec /x Installer/SD.WiX/bin/Release/Aurestruct.msi /qn /l*v uninstall.log
+```
+
+### 9) If MSI builds but contains no app files
+
+This means the publish folder was missing when harvesting files.
+Run Step 1 first, then rebuild Steps 2 and 3.

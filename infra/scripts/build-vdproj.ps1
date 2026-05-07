@@ -120,5 +120,24 @@ if (-not $msiCandidates) {
 }
 
 $latestMsi = $msiCandidates | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1
+
+# Post-process: move RemoveExistingProducts after InstallFinalize (seq 6600) so that
+# failed custom actions in old product uninstalls (e.g. managed InstallUtil actions from
+# .NET Framework-era setups) become post-commit actions and do not roll back the new install.
+Write-Host "Post-processing MSI: resequencing RemoveExistingProducts after InstallFinalize..."
+try {
+    $msiInstaller = New-Object -ComObject WindowsInstaller.Installer
+    $msiDb = $msiInstaller.OpenDatabase($latestMsi.FullName, 1)
+    $msiView = $msiDb.OpenView("UPDATE InstallExecuteSequence SET Sequence=7000 WHERE Action='RemoveExistingProducts'")
+    $msiView.Execute()
+    $msiDb.Commit()
+    [System.Runtime.InteropServices.Marshal]::ReleaseComObject($msiView) | Out-Null
+    [System.Runtime.InteropServices.Marshal]::ReleaseComObject($msiDb)   | Out-Null
+    [System.Runtime.InteropServices.Marshal]::ReleaseComObject($msiInstaller) | Out-Null
+    Write-Host "RemoveExistingProducts moved to sequence 7000 (after InstallFinalize)."
+} catch {
+    Write-Host "Warning: failed to resequence RemoveExistingProducts: $($_.Exception.Message)"
+}
+
 Copy-Item -Path $latestMsi.FullName -Destination (Join-Path $artifactsDir $latestMsi.Name) -Force
 Write-Host "MSI copied to $artifactsDir\$($latestMsi.Name)"

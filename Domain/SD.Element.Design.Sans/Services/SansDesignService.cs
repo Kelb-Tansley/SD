@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using Microsoft.VisualBasic;
 
 namespace SD.Element.Design.Sans.Services;
+
 public class SansDesignService : SansService, IElementDesignService
 {
     private readonly IDesignModel _designModel;
@@ -95,7 +96,7 @@ public class SansDesignService : SansService, IElementDesignService
         // We collect the beam results along the entire chain for SANS ULS checks
         foreach (var beam in chain)
         {
-            var connected = beamResults.FirstOrDefault(br => br.Beam.Number == beam.Number);
+            var connected = beamResults.FirstOrDefault(br => br.LoadCaseId == beamResult.LoadCaseId && br.Beam.Number == beam.Number);
             if (connected != null)
                 connectedResults.Add(connected);
         }

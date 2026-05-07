@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Fragment>
+    <ComponentGroup Id="ManualComponents" Directory="INSTALLFOLDER">
+
+      <!--
+        Start Menu and Desktop shortcuts.
+        Per-machine install: HKLM registry value used as component KeyPath so the
+        component is tracked machine-wide rather than per-user.
+      -->
+      <Component Id="CompShortcuts" Guid="{8A1C5B3D-F204-4E7F-A9B2-3D6C81F0E42A}">
+        <!--
+          Shortcuts are per-user data. ICE43/ICE57 require the KeyPath for a component
+          containing non-advertised shortcuts to fall under HKCU (not HKLM).
+        -->
+        <RegistryValue Root="HKCU"
+                       Key="Software\Aurestruct\Shortcuts"
+                       Name="Installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+        <Shortcut Id="StartMenuShortcut"
+                  Directory="ProgramMenuFolder"
+                  Name="Aurestruct"
+                  Description="Structural design tool."
+                  Target="[INSTALLFOLDER]SD.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon.ico"
+                  IconIndex="0" />
+        <Shortcut Id="DesktopShortcut"
+                  Directory="DesktopFolder"
+                  Name="Aurestruct"
+                  Description="Structural design tool."
+                  Target="[INSTALLFOLDER]SD.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon.ico"
+                  IconIndex="0" />
+      </Component>
+
+      <!-- HKLM\Software\Aurestruct presence marker (mirrors original .vdproj registry entry) -->
+      <Component Id="CompRegHKLM" Guid="{D7F3E2B5-A614-4C9D-8E1B-5F0A2D3C4E67}">
+        <RegistryValue Root="HKLM"
+                       Key="Software\Aurestruct"
+                       Name="Installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+
+      <!-- HKCU\Software\Aurestruct presence marker (mirrors original .vdproj registry entry) -->
+      <Component Id="CompRegHKCU" Guid="{B2D5A1F8-3C7E-4B9A-D6F2-8E4C0A1B3456}">
+        <RegistryValue Root="HKCU"
+                       Key="Software\Aurestruct"
+                       Name="Installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+
+    </ComponentGroup>
+  </Fragment>
+
+</Wix>

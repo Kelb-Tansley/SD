@@ -21,7 +21,7 @@ public partial class ToolBarViewModel : ViewModelBase
     private readonly RefreshEvent _refreshEvent;
 
     [ObservableProperty]
-    public required IDesignModel _designModel;
+    public required partial IDesignModel DesignModel { get; set; }
 
     [ObservableProperty]
     public required IFemModelParameters _femModelParameters;
@@ -51,7 +51,7 @@ public partial class ToolBarViewModel : ViewModelBase
         _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _viewManagementModel = viewManagementModel ?? throw new ArgumentNullException(nameof(viewManagementModel));
         _femModel = femModel ?? throw new ArgumentNullException(nameof(femModel));
-        _designModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
+        DesignModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
         _femModelParameters = femModelParameters ?? throw new ArgumentNullException(nameof(femModelParameters));
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));

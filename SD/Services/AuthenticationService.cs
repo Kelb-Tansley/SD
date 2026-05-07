@@ -39,7 +39,7 @@ public class AuthenticationService : IAuthenticationService
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var jwt = tokenHandler.ReadJwtToken(accessToken);
-        var secret = jwt.Claims.FirstOrDefault(c => c.Type == "oid")?.Value
+        var secret = jwt.Claims.FirstOrDefault(c => c.Type == "sub")?.Value
             ?? throw new SecurityTokenException("Missing oid claim");
 
         return response.ValidateAndDecodeLicenseToken(secret);

@@ -51,11 +51,11 @@
         "InstallerBootstrapper" = "3:2"
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
-            "Enabled" = "11:FALSE"
-            "PromptEnabled" = "11:FALSE"
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
-            "ComponentsUrl" = "8:"
+            "ComponentsUrl" = "8:D:\\mine\\SD\\Installer\\SD.Installer\\Prerequisites"
                 "Items"
                 {
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.8.0.x64"
@@ -134,6 +134,16 @@
         {
             "LaunchCondition"
             {
+                "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_4D183164B42248B6AC8777E5AC7AAE99"
+                {
+                "Name" = "8:.NET Core"
+                "Message" = "8:[VSDNETCOREMSG]"
+                "AllowLaterVersions" = "11:FALSE"
+                "InstallUrl" = "8:https://dotnet.microsoft.com/download/dotnet-core/[NetCoreVerMajorDotMinor]"
+                "IsNETCore" = "11:TRUE"
+                "Architecture" = "2:0"
+                "Runtime" = "2:0"
+                }
             }
         }
         "File"
@@ -235,7 +245,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Aurestruct"
         "ProductCode" = "8:{56A2958B-7416-4AA1-8623-F8DBE47B0A9C}"
-        "PackageCode" = "8:{40994173-A9CF-4E2C-9B09-8FC0658DE321}"
+        "PackageCode" = "8:{6D070CD7-AACD-4B5C-82F8-485BA613B008}"
         "UpgradeCode" = "8:{09678F1B-2FD9-462F-B255-0033F13873B6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -784,7 +794,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_886F55E16B3D44AC83CB31B0D47BD64D"
             {
-            "SourcePath" = "8:..\\..\\SD\\obj\\Debug\\net8.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\..\\SD\\obj\\Debug\\net8.0-windows\\win-x64\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DA05756420E94AEA96DD50F65121B27C"

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="Aurestruct"
+           Manufacturer="Aurestruct"
+           Version="$(ProductVersion)"
+           UpgradeCode="{09678F1B-2FD9-462F-B255-0033F13873B6}"
+           Language="1033"
+           Codepage="1252"
+           Scope="perMachine"
+           InstallerVersion="500">
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <!--
+      MajorUpgrade automatically removes the previous version.
+      Schedule="afterInstallInitialize" is equivalent to moving RemoveExistingProducts
+      to sequence 7000 — the same fix that build-vdproj.ps1 previously applied via COM
+      post-processing. No manual resequencing needed with WiX.
+    -->
+    <MajorUpgrade Schedule="afterInstallInitialize"
+                  DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+    <Icon Id="AppIcon.ico" SourceFile="..\..\SD\Assets\Icons\appicon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+
+    <WixVariable Id="WixUIBannerBmp" Value="Assets\WixUIBanner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="Assets\WixUIDialog.bmp" />
+
+    <Feature Id="Main" Title="Aurestruct" Level="1">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentGroupRef Id="ManualComponents" />
+    </Feature>
+
+    <!-- WixUI_InstallDir: welcome → pick install folder → progress → finish -->
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+
+  </Package>
+
+</Wix>

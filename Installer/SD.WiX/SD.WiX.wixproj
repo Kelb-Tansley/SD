@@ -1,0 +1,38 @@
+<Project Sdk="WixToolset.Sdk/6.0.2">
+
+  <PropertyGroup>
+    <OutputName>Aurestruct</OutputName>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <!--
+      3-part MSI ProductVersion (max 255.255.65535).
+      Stamped by infra/scripts/set-release-version.ps1 as Major.Minor.Revision.
+    -->
+    <MsiVersion>1.0.0</MsiVersion>
+    <!--
+      Expose ProductVersion and PublishDir as WiX preprocessor variables ($(var.X) in .wxs).
+      EnsureTrailingSlash guarantees AppFiles.wxs can glob with Files Include="$(var.PublishDir)**".
+    -->
+    <DefineConstants>ProductVersion=$(MsiVersion)</DefineConstants>
+    <!--
+      Absolute or repo-relative path to the 'dotnet publish' output of the SD project.
+      Override on the command line: -p:AppPublishDir=<path>
+    -->
+    <AppPublishDir Condition="'$(AppPublishDir)' == ''">$([MSBuild]::EnsureTrailingSlash($([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)\..\..\SD\bin\Release\net10.0-windows\win-x64\publish'))))</AppPublishDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Named BindPath: WiX resolves !(bindpath.AppPublish) in .wxs files to this directory.
+      Because BindPath items are tracked as build inputs, changes to files in the publish
+      directory correctly invalidate the incremental build.
+    -->
+    <BindPath Include="$(AppPublishDir)">
+      <BindName>AppPublish</BindName>
+    </BindPath>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="6.0.2" />
+  </ItemGroup>
+
+</Project>

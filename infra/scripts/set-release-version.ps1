@@ -43,29 +43,26 @@ foreach ($file in $csprojFiles) {
     }
 }
 
-$vdproj = Join-Path $root 'Installer\SD.Installer\SD.Installer.vdproj'
-if (-not (Test-Path $vdproj)) {
-    throw "Installer project file was not found at $vdproj"
-}
-
-$vdprojContent = Get-Content -Path $vdproj -Raw
-$newVdprojContent = $vdprojContent
-
-# Windows Installer ProductVersion supports three numeric components.
-$newVdprojContent = [regex]::Replace(
-    $newVdprojContent,
-    '"ProductVersion"\s*=\s*"8:[^"]*"',
-    ('"ProductVersion" = "8:{0}"' -f $msiVersion)
+# Stamp MsiVersion in SD.WiX.wixproj and BundleVersion in SD.Bundle.wixproj.
+$wixProjects = @(
+    (Join-Path $root 'Installer\SD.WiX\SD.WiX.wixproj'),
+    (Join-Path $root 'Installer\SD.Bundle\SD.Bundle.wixproj')
 )
 
-$newVdprojContent = [regex]::Replace(
-    $newVdprojContent,
-    '"OutputFilename"\s*=\s*"8:Release\\\\[^"]*\.msi"',
-    ('"OutputFilename" = "8:Release\\{0}.msi"' -f $Version)
-)
-
-if ($newVdprojContent -ne $vdprojContent) {
-    Set-Content -Path $vdproj -Value $newVdprojContent -NoNewline
+foreach ($proj in $wixProjects) {
+    if (-not (Test-Path $proj)) {
+        Write-Host "Warning: WiX project not found at $proj — skipping version stamp."
+        continue
+    }
+    $content    = Get-Content -Path $proj -Raw
+    $newContent = [regex]::Replace(
+        $content,
+        '(<(?:MsiVersion|BundleVersion)>)[^<]*(</(?:MsiVersion|BundleVersion)>)',
+        "`${1}$msiVersion`${2}"
+    )
+    if ($newContent -ne $content) {
+        Set-Content -Path $proj -Value $newContent -NoNewline
+    }
 }
 
 Write-Host "Release version stamped: $Version"

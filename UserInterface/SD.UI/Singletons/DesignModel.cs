@@ -28,7 +28,8 @@ public partial class DesignModel : ObservableObject, IDesignModel
     [ObservableProperty]
     public SolverType solverType = SolverType.LSA;
     [ObservableProperty]
-    public bool isDesignLengthCalculated = true;
+    public partial bool IsDesignLengthCalculated { get; set; } = true;
+
     [ObservableProperty]
     public required LoadCaseCombination? loadCaseCombination;
     [ObservableProperty]

@@ -1,0 +1,23 @@
+<Project Sdk="WixToolset.Sdk/6.0.2">
+
+  <PropertyGroup>
+    <OutputType>Bundle</OutputType>
+    <OutputName>AurestructSetup</OutputName>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <!--
+      Must match the MSI version stamped by infra/scripts/set-release-version.ps1.
+    -->
+    <BundleVersion>1.0.0</BundleVersion>
+    <!--
+      Path to the MSI produced by SD.WiX.
+      Override on the command line: -p:MsiPath=<absolute path>
+    -->
+    <MsiPath Condition="'$(MsiPath)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)\..\SD.WiX\bin\Release\Aurestruct.msi'))</MsiPath>
+    <DefineConstants>BundleVersion=$(BundleVersion);MsiPath=$(MsiPath)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Bal.wixext" Version="6.0.2" />
+  </ItemGroup>
+
+</Project>

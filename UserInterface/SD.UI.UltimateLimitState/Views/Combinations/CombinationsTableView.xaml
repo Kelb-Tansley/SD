@@ -33,6 +33,11 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="DataGridCell">
                             <Grid Background="{TemplateBinding Background}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectedItemChangedCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                                 <ContentPresenter
                                     Margin="{TemplateBinding Padding}"
                                     HorizontalAlignment="Left"
@@ -43,11 +48,11 @@
                 </Setter>
             </Style>
         </DataGrid.Resources>
-        <i:Interaction.Triggers>
+        <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseLeftButtonUp">
                 <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}" />
             </i:EventTrigger>
-        </i:Interaction.Triggers>
+        </i:Interaction.Triggers>-->
         <DataGrid.Columns>
             <DataGridCheckBoxColumn Binding="{Binding Include, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <DataGridCheckBoxColumn.Header>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+
+    <Bundle Name="Aurestruct"
+          Version="$(BundleVersion)"
+          Manufacturer="Aurestruct"
+          UpgradeCode="{1F2A3B4C-5D6E-7F8A-9B0C-1D2E3F4A5B6C}"
+      IconSourceFile="..\..\SD\Assets\Icons\appicon.ico"
+          Compressed="yes">
+
+    <BootstrapperApplication>
+      <!--
+        WixStandardBootstrapperApplication (WixStdBA) with hyperlinkLicense theme:
+        no RTF licence file required — shows a clickable hyperlink instead.
+        Set LicenseUrl to your product licence page URL when available.
+      -->
+      <bal:WixStandardBootstrapperApplication
+        LicenseUrl=""
+        Theme="hyperlinkSidebarLicense"
+        ThemeFile="Assets\AurestructTheme.xml"
+        LocalizationFile="Assets\AurestructTheme.en-us.wxl"
+        LogoFile="Assets\BootstrapperLogo64.png"
+        LogoSideFile="Assets\BootstrapperSide.png"
+        ShowVersion="yes"
+        SuppressOptionsUI="no" />
+    </BootstrapperApplication>
+
+    <Chain>
+      <!--
+        NOTE: The SD project is built with SelfContained=true, so the .NET 8
+        Desktop Runtime is embedded inside the application publish output and
+        does not need to be installed separately.
+        Add an ExePackage here if the app is ever changed to framework-dependent.
+      -->
+      <MsiPackage SourceFile="$(MsiPath)"
+                  DisplayName="Aurestruct"
+                  Description="Installs the Aurestruct structural design tool." />
+    </Chain>
+
+  </Bundle>
+
+</Wix>

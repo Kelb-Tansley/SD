@@ -1082,7 +1082,7 @@ public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
         var beamPos = new double[St7.kMaxBeamResult];
         var stressRes = new double[St7.kMaxBeamResult];
 
-        var stations = 3;
+        var stations = 6;
         var numStations = 0;
         var numColumns = 0;
 

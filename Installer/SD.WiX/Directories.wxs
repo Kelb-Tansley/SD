@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Fragment>
+
+    <!-- C:\Program Files\Aurestruct\Aurestruct\ -->
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="AurestructManufacturerDir" Name="Aurestruct">
+        <Directory Id="INSTALLFOLDER" Name="Aurestruct" />
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Standard shortcut parent directories (StandardDirectory avoids WIX5437) -->
+    <StandardDirectory Id="ProgramMenuFolder" />
+    <StandardDirectory Id="DesktopFolder" />
+
+  </Fragment>
+
+</Wix>
