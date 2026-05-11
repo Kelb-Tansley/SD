@@ -1,0 +1,142 @@
+name: Build WiX MSI and upload to Azure Blob
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: Release version in format Major.Minor.Patch.Revision (e.g., 1.0.0.4)
+        required: true
+        type: string
+
+jobs:
+  build-and-upload:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate release version input
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ github.event.inputs.release_version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not $env:RELEASE_VERSION) {
+            throw 'release_version input is required.'
+          }
+          if ($env:RELEASE_VERSION -notmatch '^\d+\.\d+\.\d+\.\d+$') {
+            throw "Invalid release_version '$env:RELEASE_VERSION'. Expected format: Major.Minor.Patch.Revision (for example 1.0.0.4)."
+          }
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
+
+      - name: Guard against duplicate release version
+        shell: pwsh
+        env:
+          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+          AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
+          RELEASE_VERSION: ${{ github.event.inputs.release_version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue)) {
+            $PSNativeCommandUseErrorActionPreference = $false
+          }
+          $prefix = "msi/$env:RELEASE_VERSION/"
+          $azArgs = @(
+            'storage', 'blob', 'list',
+            '--auth-mode', 'login',
+            '--account-name', $env:AZURE_STORAGE_ACCOUNT,
+            '--container-name', $env:AZURE_STORAGE_CONTAINER,
+            '--prefix', $prefix,
+            '--num-results', '1',
+            '--output', 'json'
+          )
+          $raw = & az @azArgs 2>&1 | ForEach-Object { $_.ToString() }
+          $azExit = $LASTEXITCODE
+          if ($azExit -ne 0) {
+            Write-Host 'az storage blob list output:'
+            $raw | ForEach-Object { Write-Host $_ }
+            throw "az storage blob list failed with exit code $azExit"
+          }
+
+          $rawText = ($raw -join [Environment]::NewLine)
+          $jsonStart = $rawText.IndexOf('[')
+          if ($jsonStart -lt 0) {
+            Write-Host 'az storage blob list raw output:'
+            $raw | ForEach-Object { Write-Host $_ }
+            throw 'Could not locate JSON payload in az output.'
+          }
+
+          $jsonPayload = $rawText.Substring($jsonStart)
+          $items = $jsonPayload | ConvertFrom-Json
+          $existingCount = @($items).Count
+
+          if ($existingCount -gt 0) {
+            throw "Release version '$env:RELEASE_VERSION' already exists in blob folder '$prefix'. Use a new version number."
+          }
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Stamp release version across projects and installer
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ github.event.inputs.release_version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          ./infra/scripts/set-release-version.ps1 -Version $env:RELEASE_VERSION
+
+      - name: Build WiX installer
+        shell: pwsh
+        run: ./infra/scripts/build-wix.ps1
+
+      - name: Upload MSI as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wix-msi-${{ github.event.inputs.release_version }}
+          path: artifacts/msi/*.msi
+
+      - name: Upload MSI to blob storage
+        shell: pwsh
+        env:
+          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+          AZURE_STORAGE_CONTAINER: ${{ secrets.AZURE_STORAGE_CONTAINER }}
+          RELEASE_VERSION: ${{ github.event.inputs.release_version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue)) {
+            $PSNativeCommandUseErrorActionPreference = $false
+          }
+          $msiFiles = Get-ChildItem -Path 'artifacts/msi' -Filter *.msi -File
+          if (-not $msiFiles) { throw 'No MSI files found in artifacts/msi' }
+
+          foreach ($file in $msiFiles) {
+            $blobName = "msi/$env:RELEASE_VERSION/$($file.Name)"
+            $azArgs = @(
+              'storage', 'blob', 'upload',
+              '--auth-mode', 'login',
+              '--account-name', $env:AZURE_STORAGE_ACCOUNT,
+              '--container-name', $env:AZURE_STORAGE_CONTAINER,
+              '--name', $blobName,
+              '--file', $file.FullName,
+              '--overwrite', 'true'
+            )
+            $raw = & az @azArgs 2>&1 | ForEach-Object { $_.ToString() }
+            $azExit = $LASTEXITCODE
+            if ($azExit -ne 0) {
+              Write-Host "az storage blob upload output for $($file.Name):"
+              $raw | ForEach-Object { Write-Host $_ }
+              throw "az storage blob upload failed for $($file.Name) with exit code $azExit"
+            }
+          }

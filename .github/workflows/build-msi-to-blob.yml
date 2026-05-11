@@ -1,4 +1,4 @@
-name: Build MSI and upload to Azure Blob
+name: DISABLED - Build MSI and upload to Azure Blob (legacy VDPROJ)
 
 on:
   workflow_dispatch:
@@ -10,12 +10,16 @@ on:
 
 jobs:
   build-and-upload:
+    if: ${{ false }}
     runs-on: windows-latest
     permissions:
       contents: read
       id-token: write
 
     steps:
+      - name: Legacy workflow disabled
+        run: echo "This legacy VDPROJ workflow is intentionally disabled. Use the WiX workflow instead."
+
       - name: Checkout
         uses: actions/checkout@v4
 
