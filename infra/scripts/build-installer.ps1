@@ -41,8 +41,8 @@ if (-not $publishDirResolved.EndsWith([System.IO.Path]::DirectorySeparatorChar))
     $publishDirResolved += [System.IO.Path]::DirectorySeparatorChar
 }
 
-$msiOut = Join-Path $root 'Installer\SD.WiX\bin\Release\Aurestruct.msi'
-$bundleOut = Join-Path $root 'Installer\SD.Bundle\bin\Release\AurestructSetup.exe'
+$msiOut = Join-Path $root 'Installer\SD.WiX\bin\x64\Release\Aurestruct.msi'
+$bundleOut = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release\AurestructSetup.exe'
 $artifacts = Join-Path $root 'artifacts\msi'
 
 New-Item -Path $publishDirResolved -ItemType Directory -Force | Out-Null

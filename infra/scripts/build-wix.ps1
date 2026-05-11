@@ -9,8 +9,8 @@ $sdProj     = Join-Path $root 'SD\SD.csproj'
 $publishDir = Join-Path $root 'build-output\publish'
 $msiProj    = Join-Path $root 'Installer\SD.WiX\SD.WiX.wixproj'
 $bundleProj = Join-Path $root 'Installer\SD.Bundle\SD.Bundle.wixproj'
-$msiOut     = Join-Path $root 'Installer\SD.WiX\bin\Release\Aurestruct.msi'
-$bundleOut  = Join-Path $root 'Installer\SD.Bundle\bin\Release\AurestructSetup.exe'
+$msiOut     = Join-Path $root 'Installer\SD.WiX\bin\x64\Release\Aurestruct.msi'
+$bundleOut  = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release\AurestructSetup.exe'
 $artifacts  = Join-Path $root 'artifacts\msi'
 
 New-Item -Path $publishDir -ItemType Directory -Force | Out-Null

@@ -12,7 +12,7 @@
       Path to the MSI produced by SD.WiX.
       Override on the command line: -p:MsiPath=<absolute path>
     -->
-    <MsiPath Condition="'$(MsiPath)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)\..\SD.WiX\bin\Release\Aurestruct.msi'))</MsiPath>
+    <MsiPath Condition="'$(MsiPath)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)\..\SD.WiX\bin\x64\Release\Aurestruct.msi'))</MsiPath>
     <DefineConstants>BundleVersion=$(BundleVersion);MsiPath=$(MsiPath)</DefineConstants>
   </PropertyGroup>
 
