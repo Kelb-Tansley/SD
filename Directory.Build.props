@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup Condition="'$(FileVersion)' != ''">
+    <InformationalVersion>$(FileVersion)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+</Project>
