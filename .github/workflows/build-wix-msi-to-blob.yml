@@ -120,7 +120,8 @@ jobs:
           if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue)) {
             $PSNativeCommandUseErrorActionPreference = $false
           }
-          $msiFiles = Get-ChildItem -Path 'artifacts/msi' -Include *.msi, *.exe -File
+          $msiFiles = @(Get-ChildItem -Path 'artifacts/msi' -Filter *.msi -File) +
+                      @(Get-ChildItem -Path 'artifacts/msi' -Filter *.exe -File)
           if (-not $msiFiles) { throw 'No installer files found in artifacts/msi' }
 
           foreach ($file in $msiFiles) {
