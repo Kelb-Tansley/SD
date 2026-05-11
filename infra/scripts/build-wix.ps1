@@ -39,16 +39,16 @@ Write-Host "==> dotnet clean (SD.WiX)"
 Remove-Item -Recurse -Force (Join-Path $root 'Installer\SD.WiX\obj') -ErrorAction SilentlyContinue
 Remove-Item -Recurse -Force (Join-Path $root 'Installer\SD.WiX\bin') -ErrorAction SilentlyContinue
 
-Write-Host "==> dotnet build (SD.WiX, Release)"
-& dotnet build $msiProj --configuration Release "-p:AppPublishDir=$publishDir" --nologo
+Write-Host "==> dotnet build (SD.WiX, Release, x64)"
+& dotnet build $msiProj --configuration Release -p:Platform=x64 "-p:AppPublishDir=$publishDir" --nologo
 if ($LASTEXITCODE -ne 0) { throw "SD.WiX MSI build failed" }
 if (-not (Test-Path $msiOut)) { throw "Expected MSI not found: $msiOut" }
 
 # ---------------------------------------------------------------------------
 # 4. Build the Bundle bootstrapper (SD.Bundle)
 # ---------------------------------------------------------------------------
-Write-Host "==> dotnet build (SD.Bundle, Release)"
-& dotnet build $bundleProj --configuration Release "-p:MsiPath=$msiOut" --nologo
+Write-Host "==> dotnet build (SD.Bundle, Release, x64)"
+& dotnet build $bundleProj --configuration Release -p:Platform=x64 "-p:MsiPath=$msiOut" --nologo
 if ($LASTEXITCODE -ne 0) { throw "SD.Bundle build failed" }
 if (-not (Test-Path $bundleOut)) { throw "Expected bundle EXE not found: $bundleOut" }
 

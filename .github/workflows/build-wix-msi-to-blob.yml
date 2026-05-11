@@ -101,11 +101,13 @@ jobs:
         shell: pwsh
         run: ./infra/scripts/build-wix.ps1
 
-      - name: Upload MSI as workflow artifact
+      - name: Upload installers as workflow artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wix-msi-${{ github.event.inputs.release_version }}
-          path: artifacts/msi/*.msi
+          name: wix-installer-${{ github.event.inputs.release_version }}
+          path: |
+            artifacts/msi/*.msi
+            artifacts/msi/*.exe
 
       - name: Upload MSI to blob storage
         shell: pwsh
@@ -118,8 +120,8 @@ jobs:
           if ($null -ne (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue)) {
             $PSNativeCommandUseErrorActionPreference = $false
           }
-          $msiFiles = Get-ChildItem -Path 'artifacts/msi' -Filter *.msi -File
-          if (-not $msiFiles) { throw 'No MSI files found in artifacts/msi' }
+          $msiFiles = Get-ChildItem -Path 'artifacts/msi' -Include *.msi, *.exe -File
+          if (-not $msiFiles) { throw 'No installer files found in artifacts/msi' }
 
           foreach ($file in $msiFiles) {
             $blobName = "msi/$env:RELEASE_VERSION/$($file.Name)"
