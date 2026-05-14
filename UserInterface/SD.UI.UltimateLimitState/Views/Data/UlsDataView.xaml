@@ -1,0 +1,643 @@
+<UserControl
+    x:Class="SD.UI.UltimateLimitState.Views.UlsDataView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:SD.UI.Behaviors;assembly=SD.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:SD.UI.UltimateLimitState.Helpers"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodels="clr-namespace:SD.UI.UltimateLimitState.ViewModels"
+    x:Name="UlsDataViewRoot"
+    d:DataContext="{d:DesignInstance Type=viewmodels:UlsDataViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <helpers:BindingProxy x:Key="VmProxy" Data="{Binding}" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <Style x:Key="FilterToggleStyle" TargetType="ToggleButton">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="1" />
+                <Setter Property="Width" Value="22" />
+                <Setter Property="Height" Value="22" />
+                <Setter Property="Margin" Value="4,0,0,0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <Border
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="2">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#28000000" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Background" Value="#38000000" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style
+                x:Key="FilterChecklistButton"
+                BasedOn="{StaticResource MaterialDesignOutlinedButton}"
+                TargetType="Button">
+                <Setter Property="MinWidth" Value="52" />
+                <Setter Property="Margin" Value="0,0,8,0" />
+            </Style>
+        </Grid.Resources>
+
+        <DataGrid
+            Grid.Row="1"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserSortColumns="True"
+            ClipboardCopyMode="IncludeHeader"
+            ColumnWidth="120"
+            EnableColumnVirtualization="True"
+            EnableRowVirtualization="True"
+            FrozenColumnCount="4"
+            IsReadOnly="False"
+            ItemsSource="{Binding SansRowsView}"
+            RowHeight="32"
+            ScrollViewer.CanContentScroll="True"
+            SelectionMode="Extended"
+            SelectionUnit="Cell"
+            Style="{StaticResource MaterialDesignDataGrid}"
+            VirtualizingPanel.IsVirtualizing="True"
+            VirtualizingPanel.ScrollUnit="Pixel"
+            VirtualizingPanel.VirtualizationMode="Recycling"
+            Visibility="{Binding HasData, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <i:Interaction.Behaviors>
+                <behaviors:ExcelPasteBehavior />
+                <behaviors:ExcelSingleClickEditBehavior />
+                <behaviors:UlsDataGridKeyboardBehavior />
+            </i:Interaction.Behaviors>
+            <DataGrid.Columns>
+
+                <DataGridTextColumn
+                    Width="90"
+                    Binding="{Binding Beam.Number}"
+                    IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="Beam" />
+                            <ToggleButton
+                                x:Name="SansBeamFilterToggle"
+                                IsChecked="{Binding Data.IsBeamFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                Style="{StaticResource FilterToggleStyle}">
+                                <materialDesign:PackIcon Width="16" Height="16">
+                                    <materialDesign:PackIcon.Style>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Setter Property="Kind" Value="Filter" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Data.HasBeamFilter, Source={StaticResource VmProxy}}" Value="True">
+                                                    <Setter Property="Kind" Value="FilterCheck" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </materialDesign:PackIcon.Style>
+                                </materialDesign:PackIcon>
+                            </ToggleButton>
+                            <Popup
+                                AllowsTransparency="True"
+                                IsOpen="{Binding Data.IsBeamFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                Placement="Bottom"
+                                PlacementTarget="{Binding ElementName=SansBeamFilterToggle}"
+                                StaysOpen="False">
+                                <materialDesign:Card Padding="8" UniformCornerRadius="4">
+                                    <StackPanel MinWidth="220">
+                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                            <Button
+                                                Command="{Binding Data.SelectAllBeamFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="All"
+                                                Style="{StaticResource FilterChecklistButton}" />
+                                            <Button
+                                                Command="{Binding Data.ClearBeamFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="None"
+                                                Style="{StaticResource FilterChecklistButton}" />
+                                            <Button
+                                                Command="{Binding Data.ApplyFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="Apply"
+                                                Style="{StaticResource MaterialDesignRaisedButton}" />
+                                        </StackPanel>
+                                        <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl ItemsSource="{Binding Data.BeamFilterOptions, Source={StaticResource VmProxy}}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Popup>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn
+                    Width="75"
+                    Binding="{Binding LoadCaseNumber}"
+                    IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="LCC" />
+                            <ToggleButton
+                                x:Name="SansLccFilterToggle"
+                                IsChecked="{Binding Data.IsLoadCaseFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                Style="{StaticResource FilterToggleStyle}">
+                                <materialDesign:PackIcon Width="16" Height="16">
+                                    <materialDesign:PackIcon.Style>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Setter Property="Kind" Value="Filter" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Data.HasLoadCaseFilter, Source={StaticResource VmProxy}}" Value="True">
+                                                    <Setter Property="Kind" Value="FilterCheck" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </materialDesign:PackIcon.Style>
+                                </materialDesign:PackIcon>
+                            </ToggleButton>
+                            <Popup
+                                AllowsTransparency="True"
+                                IsOpen="{Binding Data.IsLoadCaseFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                Placement="Bottom"
+                                PlacementTarget="{Binding ElementName=SansLccFilterToggle}"
+                                StaysOpen="False">
+                                <materialDesign:Card Padding="8" UniformCornerRadius="4">
+                                    <StackPanel MinWidth="220">
+                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                            <Button
+                                                Command="{Binding Data.SelectAllLoadCaseFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="All"
+                                                Style="{StaticResource FilterChecklistButton}" />
+                                            <Button
+                                                Command="{Binding Data.ClearLoadCaseFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="None"
+                                                Style="{StaticResource FilterChecklistButton}" />
+                                            <Button
+                                                Command="{Binding Data.ApplyFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="Apply"
+                                                Style="{StaticResource MaterialDesignRaisedButton}" />
+                                        </StackPanel>
+                                        <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl ItemsSource="{Binding Data.LoadCaseFilterOptions, Source={StaticResource VmProxy}}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Popup>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn
+                    Width="130"
+                    Binding="{Binding Beam.Section.DisplayName}"
+                    IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="Section" />
+                            <ToggleButton
+                                x:Name="SansSectionFilterToggle"
+                                IsChecked="{Binding Data.IsSectionFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                Style="{StaticResource FilterToggleStyle}">
+                                <materialDesign:PackIcon Width="16" Height="16">
+                                    <materialDesign:PackIcon.Style>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Setter Property="Kind" Value="Filter" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Data.HasSectionFilter, Source={StaticResource VmProxy}}" Value="True">
+                                                    <Setter Property="Kind" Value="FilterCheck" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </materialDesign:PackIcon.Style>
+                                </materialDesign:PackIcon>
+                            </ToggleButton>
+                            <Popup
+                                AllowsTransparency="True"
+                                IsOpen="{Binding Data.IsSectionFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                Placement="Bottom"
+                                PlacementTarget="{Binding ElementName=SansSectionFilterToggle}"
+                                StaysOpen="False">
+                                <materialDesign:Card Padding="8" UniformCornerRadius="4">
+                                    <StackPanel MinWidth="260">
+                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                            <Button
+                                                Command="{Binding Data.SelectAllSectionFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="All"
+                                                Style="{StaticResource FilterChecklistButton}" />
+                                            <Button
+                                                Command="{Binding Data.ClearSectionFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="None"
+                                                Style="{StaticResource FilterChecklistButton}" />
+                                            <Button
+                                                Command="{Binding Data.ApplyFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="Apply"
+                                                Style="{StaticResource MaterialDesignRaisedButton}" />
+                                        </StackPanel>
+                                        <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl ItemsSource="{Binding Data.SectionFilterOptions, Source={StaticResource VmProxy}}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Popup>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn
+                    Width="75"
+                    Binding="{Binding Utilization.MaxUtilizationPercentage, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Peak %"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn Binding="{Binding Utilization.MaxUtilizationDescription}" IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center" Text="Reason" />
+                            <ToggleButton
+                                x:Name="SansReasonFilterToggle"
+                                IsChecked="{Binding Data.IsReasonFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                Style="{StaticResource FilterToggleStyle}">
+                                <materialDesign:PackIcon Width="16" Height="16">
+                                    <materialDesign:PackIcon.Style>
+                                        <Style TargetType="materialDesign:PackIcon">
+                                            <Setter Property="Kind" Value="Filter" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Data.HasReasonFilter, Source={StaticResource VmProxy}}" Value="True">
+                                                    <Setter Property="Kind" Value="FilterCheck" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </materialDesign:PackIcon.Style>
+                                </materialDesign:PackIcon>
+                            </ToggleButton>
+                            <Popup
+                                AllowsTransparency="True"
+                                IsOpen="{Binding Data.IsReasonFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                Placement="Bottom"
+                                PlacementTarget="{Binding ElementName=SansReasonFilterToggle}"
+                                StaysOpen="False">
+                                <materialDesign:Card Padding="8" UniformCornerRadius="4">
+                                    <StackPanel MinWidth="260">
+                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                            <Button
+                                                Command="{Binding Data.SelectAllReasonFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="All"
+                                                Style="{StaticResource FilterChecklistButton}" />
+                                            <Button
+                                                Command="{Binding Data.ClearReasonFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="None"
+                                                Style="{StaticResource FilterChecklistButton}" />
+                                            <Button
+                                                Command="{Binding Data.ApplyFiltersCommand, Source={StaticResource VmProxy}}"
+                                                Content="Apply"
+                                                Style="{StaticResource MaterialDesignRaisedButton}" />
+                                        </StackPanel>
+                                        <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl ItemsSource="{Binding Data.ReasonFilterOptions, Source={StaticResource VmProxy}}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Popup>
+                        </StackPanel>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn
+                    Width="70"
+                    Binding="{Binding Beam.BeamChain.L2}"
+                    Header="L2"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="70"
+                    Binding="{Binding Beam.BeamChain.L1}"
+                    Header="L1"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="70"
+                    Binding="{Binding Beam.BeamChain.Lz}"
+                    Header="Lz"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Width="70"
+                    Binding="{Binding Beam.BeamChain.LeTop}"
+                    Header="Le"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn
+                    Width="56"
+                    Binding="{Binding Beam.BeamChain.K2}"
+                    Header="K2" />
+                <DataGridTextColumn
+                    Width="56"
+                    Binding="{Binding Beam.BeamChain.K1}"
+                    Header="K1" />
+                <DataGridTextColumn
+                    Width="56"
+                    Binding="{Binding Beam.BeamChain.Kz}"
+                    Header="Kz" />
+                <DataGridTextColumn
+                    Width="56"
+                    Binding="{Binding Beam.BeamChain.KeTop}"
+                    Header="Ke" />
+                <DataGridTextColumn
+                    Width="56"
+                    Binding="{Binding Beam.BeamChain.KeBottom}"
+                    Header="KeB" />
+
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Beta_m, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Beta_m"
+                    IsReadOnly="True" />
+                <DataGridCheckBoxColumn
+                    Binding="{Binding Beam.IsSelected}"
+                    Header="Beam Selected"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.Name}"
+                    Header="Section Name"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.TypeDisplay}"
+                    Header="Section Type"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.Agr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Ag"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.SectionMass, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Mass"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.J, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="J"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.Cw, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Cw"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.IMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="I Major"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.IMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="I Minor"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.ZeMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Ze Major"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.ZeMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Ze Minor"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.ZplMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Zpl Major"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.ZplMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Zpl Minor"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.RMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="r Major"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.RMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="r Minor"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.Material.SteelGrade}"
+                    Header="Steel Grade"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.Material.MinFy, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Min Fy"
+                    IsReadOnly="True" />
+                <DataGridCheckBoxColumn
+                    Binding="{Binding Beam.Section.IsPlateGirder}"
+                    Header="Plate Girder"
+                    IsReadOnly="True" />
+                <DataGridCheckBoxColumn
+                    Binding="{Binding Beam.Section.IsBracedFrame}"
+                    Header="Braced Frame"
+                    IsReadOnly="True" />
+                <DataGridCheckBoxColumn
+                    Binding="{Binding Beam.Section.IsLateralRestraint}"
+                    Header="Lateral Restraint"
+                    IsReadOnly="True" />
+                <DataGridCheckBoxColumn
+                    Binding="{Binding Beam.Section.IsTorsionalRestraint}"
+                    Header="Torsional Restraint"
+                    IsReadOnly="True" />
+                <DataGridCheckBoxColumn
+                    Binding="{Binding Beam.Section.IsTopFlangeRestraint}"
+                    Header="Top Flange Restraint"
+                    IsReadOnly="True" />
+                <DataGridCheckBoxColumn
+                    Binding="{Binding Beam.Section.IsBottomFlangeRestraint}"
+                    Header="Bottom Flange Restraint"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.WebStiffenerSpacing, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Stiffener Spacing"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.NetAreaFactor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Net Area Factor"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.Cr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Nc"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.Tr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Nt"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.VrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Vvx"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.VrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Vvy"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.MrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Mbx"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.MrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Msy"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn
+                    Binding="{Binding Utilization.Tension, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Header="Tension"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Utilization.Compression, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Header="Compression"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Utilization.MajorAxisBending, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Header="Major Bend"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Utilization.MinorAxisBending, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Header="Minor Bend"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Utilization.MajorAxisShear, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Header="Major Shear"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Utilization.MinorAxisShear, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Header="Minor Shear"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Utilization.BiaxialBending, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Header="Biaxial"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Utilization.BiaxialBendingAxial, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Header="Biaxial+Axial"
+                    IsReadOnly="True" />
+
+                <DataGridTextColumn
+                    Binding="{Binding Forces.VonMises, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Von Mises"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Forces.Tension, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Tension"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Forces.Compression, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Compression"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Forces.MaxAbsMuMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Mu Major"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Forces.MaxAbsMuMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Mu Minor"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Forces.MaxAbsVuMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Vu Major"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Forces.MaxAbsVuMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Vu Minor"
+                    IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border
+            Grid.Row="0"
+            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BorderThickness="0,0,0,1"
+            Visibility="{Binding HasData, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel
+                Margin="0,4,12,4"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <TextBlock
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource MaterialDesignBody}"
+                    Text="{Binding DisplayedRowCount, StringFormat=Rows displayed: {0}}" />
+                <Button
+                    VerticalAlignment="Center"
+                    Command="{Binding ClearAllFilterIconsCommand}"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    ToolTip="Clear Filter Icons">
+                    <materialDesign:PackIcon Kind="FilterRemove" />
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+            Text="Run a ULS calculation to view data."
+            Visibility="{Binding HasData, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+
+        <Border
+            Grid.RowSpan="2"
+            Background="#7FFFFFFF"
+            Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar
+                    Width="220"
+                    Height="6"
+                    IsIndeterminate="True" />
+                <TextBlock
+                    Margin="0,12,0,0"
+                    HorizontalAlignment="Center"
+                    Text="Loading data..." />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

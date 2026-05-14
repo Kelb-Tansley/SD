@@ -87,6 +87,19 @@
                 </TabItem.Header>
                 <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.SingleElementDesignRegionTabbed}" />
             </TabItem>
+            <TabItem IsEnabled="{Binding HasUlsData}">
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center"
+                            Kind="TableLarge" />
+                        <TextBlock HorizontalAlignment="Center" Text="Data" />
+                    </StackPanel>
+                </TabItem.Header>
+                <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.UlsDataRegion}" />
+            </TabItem>
             <!--  The SLS view will be excluded from MVP  -->
             <!--<TabItem>
                 <TabItem.Header>

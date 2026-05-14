@@ -24,6 +24,7 @@ public static class RegionNames
     public const string BeamPropertiesRegion = "BeamPropertiesRegion";
     public const string DesignSettingsRegion = "DesignSettingsRegion";
     public const string SingleElementDesignRegionTabbed = "SingleElementDesignRegionTabbed";
+    public const string UlsDataRegion = "UlsDataRegion";
     public const string ServiceabilityDesignRegionTabbed = "ServiceabilityDesignRegionTabbed";
     public const string BeamFemModelRegion = "BeamFemModelRegion";
     public const string SlsLoadCombinationsViewRegion = "SlsLoadCombinationsViewRegion";
