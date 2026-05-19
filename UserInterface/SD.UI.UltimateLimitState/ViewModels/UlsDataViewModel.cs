@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Contracts;
+using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.Sans;
 using SD.UI.Events;
 using System.Collections.ObjectModel;
@@ -13,6 +14,7 @@ namespace SD.UI.UltimateLimitState.ViewModels;
 public partial class UlsDataViewModel : ObservableObject
 {
     private readonly IUlsDesignResults _ulsDesignResults;
+    private readonly IUlsDataExportService _ulsDdataExportService;
 
     private readonly LoadCaseChangedEvent _loadCaseChangedEvent;
     private readonly FileClosedEvent _fileClosedEvent;
@@ -81,9 +83,10 @@ public partial class UlsDataViewModel : ObservableObject
     public bool HasData => SansRows.Count > 0;
     public int DisplayedRowCount => SansRowsView?.Cast<object>().Count() ?? 0;
 
-    public UlsDataViewModel(IUlsDesignResults ulsDesignResults, IEventAggregator eventAggregator)
+    public UlsDataViewModel(IUlsDesignResults ulsDesignResults, IEventAggregator eventAggregator, IUlsDataExportService ulsDdataExportService)
     {
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
+        _ulsDdataExportService = ulsDdataExportService ?? throw new ArgumentNullException(nameof(ulsDdataExportService));
 
         _loadCaseChangedEvent = eventAggregator.GetEvent<LoadCaseChangedEvent>();
         _fileClosedEvent = eventAggregator.GetEvent<FileClosedEvent>();
@@ -212,6 +215,15 @@ public partial class UlsDataViewModel : ObservableObject
         IsLoadCaseFilterOpen = false;
         IsSectionFilterOpen = false;
         IsReasonFilterOpen = false;
+    }
+
+    [RelayCommand]
+    private void ExportToExcel()
+    {
+        if (SansRowsView == null)
+            return;
+
+        _ulsDdataExportService.ExportToExcel(SansRowsView.Cast<SansUlsResult>());
     }
 
     [RelayCommand]

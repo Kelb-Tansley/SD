@@ -2,6 +2,7 @@
 using SD.Adapters;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Infrastructure.Logging;
+using SD.Core.Infrastructure.Services;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Events;
 using SD.Core.Shared.Models;
@@ -140,6 +141,8 @@ public partial class App : PrismApplication
         containerRegistry.Register<IBeamChainService, BeamChainService>();
         containerRegistry.Register<IEffectiveLengthService, StrandEffectiveLengthService>();
         containerRegistry.Register<IBucklingAnalysisService, BucklingAnalysisService>();
+
+    containerRegistry.Register<IUlsDataExportService, UlsDataExportService>();
 
         containerRegistry.Register<ITokenCacheService, TokenCacheService>();
         containerRegistry.Register<IAuthenticationService, AuthenticationService>();

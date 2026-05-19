@@ -68,6 +68,25 @@
                 <Setter Property="MinWidth" Value="52" />
                 <Setter Property="Margin" Value="0,0,8,0" />
             </Style>
+
+            <Style x:Key="FilterPopupCardStyle" TargetType="materialDesign:Card">
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="UniformCornerRadius" Value="4" />
+            </Style>
+
+            <Style x:Key="FilterPopupActionsStyle" TargetType="StackPanel">
+                <Setter Property="Margin" Value="0,0,0,8" />
+                <Setter Property="Orientation" Value="Horizontal" />
+            </Style>
+
+            <Style x:Key="FilterPopupScrollViewerStyle" TargetType="ScrollViewer">
+                <Setter Property="MaxHeight" Value="260" />
+                <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+            </Style>
+
+            <DataTemplate x:Key="FilterOptionTemplate">
+                <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+            </DataTemplate>
         </Grid.Resources>
 
         <DataGrid
@@ -77,7 +96,7 @@
             CanUserDeleteRows="False"
             CanUserSortColumns="True"
             ClipboardCopyMode="IncludeHeader"
-            ColumnWidth="120"
+            ColumnWidth="Auto"
             EnableColumnVirtualization="True"
             EnableRowVirtualization="True"
             FrozenColumnCount="4"
@@ -99,10 +118,7 @@
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
 
-                <DataGridTextColumn
-                    Width="90"
-                    Binding="{Binding Beam.Number}"
-                    IsReadOnly="True">
+                <DataGridTextColumn Binding="{Binding Beam.Number}" IsReadOnly="True">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center" Text="Beam" />
@@ -130,9 +146,9 @@
                                 Placement="Bottom"
                                 PlacementTarget="{Binding ElementName=SansBeamFilterToggle}"
                                 StaysOpen="False">
-                                <materialDesign:Card Padding="8" UniformCornerRadius="4">
+                                <materialDesign:Card Style="{StaticResource FilterPopupCardStyle}">
                                     <StackPanel MinWidth="220">
-                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                        <StackPanel Style="{StaticResource FilterPopupActionsStyle}">
                                             <Button
                                                 Command="{Binding Data.SelectAllBeamFiltersCommand, Source={StaticResource VmProxy}}"
                                                 Content="All"
@@ -146,14 +162,8 @@
                                                 Content="Apply"
                                                 Style="{StaticResource MaterialDesignRaisedButton}" />
                                         </StackPanel>
-                                        <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
-                                            <ItemsControl ItemsSource="{Binding Data.BeamFilterOptions, Source={StaticResource VmProxy}}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
+                                        <ScrollViewer Style="{StaticResource FilterPopupScrollViewerStyle}">
+                                            <ItemsControl ItemTemplate="{StaticResource FilterOptionTemplate}" ItemsSource="{Binding Data.BeamFilterOptions, Source={StaticResource VmProxy}}" />
                                         </ScrollViewer>
                                     </StackPanel>
                                 </materialDesign:Card>
@@ -162,10 +172,7 @@
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn
-                    Width="75"
-                    Binding="{Binding LoadCaseNumber}"
-                    IsReadOnly="True">
+                <DataGridTextColumn Binding="{Binding LoadCaseNumber}" IsReadOnly="True">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center" Text="LCC" />
@@ -193,9 +200,9 @@
                                 Placement="Bottom"
                                 PlacementTarget="{Binding ElementName=SansLccFilterToggle}"
                                 StaysOpen="False">
-                                <materialDesign:Card Padding="8" UniformCornerRadius="4">
+                                <materialDesign:Card Style="{StaticResource FilterPopupCardStyle}">
                                     <StackPanel MinWidth="220">
-                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                        <StackPanel Style="{StaticResource FilterPopupActionsStyle}">
                                             <Button
                                                 Command="{Binding Data.SelectAllLoadCaseFiltersCommand, Source={StaticResource VmProxy}}"
                                                 Content="All"
@@ -209,14 +216,8 @@
                                                 Content="Apply"
                                                 Style="{StaticResource MaterialDesignRaisedButton}" />
                                         </StackPanel>
-                                        <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
-                                            <ItemsControl ItemsSource="{Binding Data.LoadCaseFilterOptions, Source={StaticResource VmProxy}}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
+                                        <ScrollViewer Style="{StaticResource FilterPopupScrollViewerStyle}">
+                                            <ItemsControl ItemTemplate="{StaticResource FilterOptionTemplate}" ItemsSource="{Binding Data.LoadCaseFilterOptions, Source={StaticResource VmProxy}}" />
                                         </ScrollViewer>
                                     </StackPanel>
                                 </materialDesign:Card>
@@ -225,10 +226,7 @@
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn
-                    Width="130"
-                    Binding="{Binding Beam.Section.DisplayName}"
-                    IsReadOnly="True">
+                <DataGridTextColumn Binding="{Binding Beam.Section.DisplayName}" IsReadOnly="True">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center" Text="Section" />
@@ -256,9 +254,9 @@
                                 Placement="Bottom"
                                 PlacementTarget="{Binding ElementName=SansSectionFilterToggle}"
                                 StaysOpen="False">
-                                <materialDesign:Card Padding="8" UniformCornerRadius="4">
+                                <materialDesign:Card Style="{StaticResource FilterPopupCardStyle}">
                                     <StackPanel MinWidth="260">
-                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                        <StackPanel Style="{StaticResource FilterPopupActionsStyle}">
                                             <Button
                                                 Command="{Binding Data.SelectAllSectionFiltersCommand, Source={StaticResource VmProxy}}"
                                                 Content="All"
@@ -272,14 +270,8 @@
                                                 Content="Apply"
                                                 Style="{StaticResource MaterialDesignRaisedButton}" />
                                         </StackPanel>
-                                        <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
-                                            <ItemsControl ItemsSource="{Binding Data.SectionFilterOptions, Source={StaticResource VmProxy}}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
+                                        <ScrollViewer Style="{StaticResource FilterPopupScrollViewerStyle}">
+                                            <ItemsControl ItemTemplate="{StaticResource FilterOptionTemplate}" ItemsSource="{Binding Data.SectionFilterOptions, Source={StaticResource VmProxy}}" />
                                         </ScrollViewer>
                                     </StackPanel>
                                 </materialDesign:Card>
@@ -294,7 +286,10 @@
                     Header="Peak %"
                     IsReadOnly="True" />
 
-                <DataGridTextColumn Binding="{Binding Utilization.MaxUtilizationDescription}" IsReadOnly="True">
+                <DataGridTextColumn
+                    MinWidth="120"
+                    Binding="{Binding Utilization.MaxUtilizationDescription}"
+                    IsReadOnly="True">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center" Text="Reason" />
@@ -322,9 +317,9 @@
                                 Placement="Bottom"
                                 PlacementTarget="{Binding ElementName=SansReasonFilterToggle}"
                                 StaysOpen="False">
-                                <materialDesign:Card Padding="8" UniformCornerRadius="4">
+                                <materialDesign:Card Style="{StaticResource FilterPopupCardStyle}">
                                     <StackPanel MinWidth="260">
-                                        <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                                        <StackPanel Style="{StaticResource FilterPopupActionsStyle}">
                                             <Button
                                                 Command="{Binding Data.SelectAllReasonFiltersCommand, Source={StaticResource VmProxy}}"
                                                 Content="All"
@@ -338,14 +333,8 @@
                                                 Content="Apply"
                                                 Style="{StaticResource MaterialDesignRaisedButton}" />
                                         </StackPanel>
-                                        <ScrollViewer MaxHeight="260" VerticalScrollBarVisibility="Auto">
-                                            <ItemsControl ItemsSource="{Binding Data.ReasonFilterOptions, Source={StaticResource VmProxy}}">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox Content="{Binding Display}" IsChecked="{Binding IsSelected, Mode=TwoWay}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
+                                        <ScrollViewer Style="{StaticResource FilterPopupScrollViewerStyle}">
+                                            <ItemsControl ItemTemplate="{StaticResource FilterOptionTemplate}" ItemsSource="{Binding Data.ReasonFilterOptions, Source={StaticResource VmProxy}}" />
                                         </ScrollViewer>
                                     </StackPanel>
                                 </materialDesign:Card>
@@ -355,59 +344,31 @@
                 </DataGridTextColumn>
 
                 <DataGridTextColumn
-                    Width="70"
                     Binding="{Binding Beam.BeamChain.L2}"
-                    Header="L2"
+                    Header="L(2) [mm]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Width="70"
                     Binding="{Binding Beam.BeamChain.L1}"
-                    Header="L1"
+                    Header="L(1) [mm]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Width="70"
                     Binding="{Binding Beam.BeamChain.Lz}"
-                    Header="Lz"
+                    Header="L(z) [mm]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Width="70"
                     Binding="{Binding Beam.BeamChain.LeTop}"
-                    Header="Le"
+                    Header="L(e) [mm]"
                     IsReadOnly="True" />
 
-                <DataGridTextColumn
-                    Width="56"
-                    Binding="{Binding Beam.BeamChain.K2}"
-                    Header="K2" />
-                <DataGridTextColumn
-                    Width="56"
-                    Binding="{Binding Beam.BeamChain.K1}"
-                    Header="K1" />
-                <DataGridTextColumn
-                    Width="56"
-                    Binding="{Binding Beam.BeamChain.Kz}"
-                    Header="Kz" />
-                <DataGridTextColumn
-                    Width="56"
-                    Binding="{Binding Beam.BeamChain.KeTop}"
-                    Header="Ke" />
-                <DataGridTextColumn
-                    Width="56"
-                    Binding="{Binding Beam.BeamChain.KeBottom}"
-                    Header="KeB" />
-
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Beta_m, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Beta_m"
-                    IsReadOnly="True" />
-                <DataGridCheckBoxColumn
-                    Binding="{Binding Beam.IsSelected}"
-                    Header="Beam Selected"
-                    IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K2}" Header="K2" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K1}" Header="K1" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.Kz}" Header="Kz" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeTop}" Header="Ke" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeBottom}" Header="KeB" />
 
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.Name}"
-                    Header="Section Name"
+                    Header="Property Name"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.TypeDisplay}"
@@ -415,116 +376,68 @@
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.Agr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Ag"
+                    Header="Ag [mm²]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.SectionMass, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Mass"
+                    Header="Mass [kg/m]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.J, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="J"
+                    Header="J [mm⁴]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.Cw, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Cw"
+                    Header="Cw [mm⁶]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.IMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="I Major"
+                    Header="I Major [mm⁴]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.IMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="I Minor"
+                    Header="I Minor [mm⁴]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.ZeMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Ze Major"
+                    Header="Ze Major [mm³]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.ZeMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Ze Minor"
+                    Header="Ze Minor [mm³]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.ZplMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Zpl Major"
+                    Header="Zpl Major [mm³]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.ZplMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Zpl Minor"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.RMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="r Major"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.RMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="r Minor"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.Material.SteelGrade}"
-                    Header="Steel Grade"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.Material.MinFy, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Min Fy"
-                    IsReadOnly="True" />
-                <DataGridCheckBoxColumn
-                    Binding="{Binding Beam.Section.IsPlateGirder}"
-                    Header="Plate Girder"
-                    IsReadOnly="True" />
-                <DataGridCheckBoxColumn
-                    Binding="{Binding Beam.Section.IsBracedFrame}"
-                    Header="Braced Frame"
-                    IsReadOnly="True" />
-                <DataGridCheckBoxColumn
-                    Binding="{Binding Beam.Section.IsLateralRestraint}"
-                    Header="Lateral Restraint"
-                    IsReadOnly="True" />
-                <DataGridCheckBoxColumn
-                    Binding="{Binding Beam.Section.IsTorsionalRestraint}"
-                    Header="Torsional Restraint"
-                    IsReadOnly="True" />
-                <DataGridCheckBoxColumn
-                    Binding="{Binding Beam.Section.IsTopFlangeRestraint}"
-                    Header="Top Flange Restraint"
-                    IsReadOnly="True" />
-                <DataGridCheckBoxColumn
-                    Binding="{Binding Beam.Section.IsBottomFlangeRestraint}"
-                    Header="Bottom Flange Restraint"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.WebStiffenerSpacing, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Stiffener Spacing"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.NetAreaFactor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Net Area Factor"
+                    Header="Zpl Minor [mm³]"
                     IsReadOnly="True" />
 
                 <DataGridTextColumn
                     Binding="{Binding Capacity.Cr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Nc"
+                    Header="Cr [kN]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Capacity.Tr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Nt"
+                    Header="Tr [kN]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Capacity.VrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Vvx"
+                    Header="Vrx-x [kN]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Capacity.VrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Vvy"
+                    Header="Vry-y [kN]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Capacity.MrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Mbx"
+                    Header="Mrx-x [kN.m]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Capacity.MrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Msy"
+                    Header="Mry-y [kN.m]"
                     IsReadOnly="True" />
 
                 <DataGridTextColumn
@@ -536,58 +449,65 @@
                     Header="Compression"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Binding="{Binding Utilization.MajorAxisBending, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Binding="{Binding Utilization.BendingMajor, Converter={StaticResource DoubleToPercentageConverter}}"
                     Header="Major Bend"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Binding="{Binding Utilization.MinorAxisBending, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Binding="{Binding Utilization.BendingMinor, Converter={StaticResource DoubleToPercentageConverter}}"
                     Header="Minor Bend"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Binding="{Binding Utilization.MajorAxisShear, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Binding="{Binding Utilization.ShearMajor, Converter={StaticResource DoubleToPercentageConverter}}"
                     Header="Major Shear"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Binding="{Binding Utilization.MinorAxisShear, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Binding="{Binding Utilization.ShearMinor, Converter={StaticResource DoubleToPercentageConverter}}"
                     Header="Minor Shear"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Binding="{Binding Utilization.BiaxialBending, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Binding="{Binding Utilization.BiAxialBending, Converter={StaticResource DoubleToPercentageConverter}}"
                     Header="Biaxial"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Binding="{Binding Utilization.BiaxialBendingAxial, Converter={StaticResource DoubleToPercentageConverter}}"
+                    Binding="{Binding Utilization.CompressionAndBendingMemberStrength, Converter={StaticResource DoubleToPercentageConverter}}"
                     Header="Biaxial+Axial"
                     IsReadOnly="True" />
 
-                <DataGridTextColumn
-                    Binding="{Binding Forces.VonMises, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Von Mises"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Forces.Tension, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Tension"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Forces.Compression, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Compression"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Forces.MaxAbsMuMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Mu Major"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Forces.MaxAbsMuMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Mu Minor"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Forces.MaxAbsVuMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Vu Major"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Forces.MaxAbsVuMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Vu Minor"
-                    IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Forces.VonMises, Converter={StaticResource DoubleTwoDecimalsConverter}}" IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="Von Mises [MPa]" ToolTip="Applied Forces" />
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Forces.Tension, Converter={StaticResource DoubleTwoDecimalsConverter}}" IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="Tension [N]" ToolTip="Applied Forces" />
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Forces.Compression, Converter={StaticResource DoubleTwoDecimalsConverter}}" IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="Compression [N]" ToolTip="Applied Forces" />
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Forces.MaxAbsMuMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="Mu Major [kN.m]" ToolTip="Applied Forces" />
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Forces.MaxAbsMuMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="Mu Minor [kN.m]" ToolTip="Applied Forces" />
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Forces.MaxAbsVuMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="Vu Major [kN]" ToolTip="Applied Forces" />
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Forces.MaxAbsVuMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" IsReadOnly="True">
+                    <DataGridTextColumn.Header>
+                        <TextBlock Text="Vu Minor [kN]" ToolTip="Applied Forces" />
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -606,6 +526,14 @@
                     FontSize="12"
                     Foreground="{DynamicResource MaterialDesignBody}"
                     Text="{Binding DisplayedRowCount, StringFormat=Rows displayed: {0}}" />
+                <Button
+                    Margin="0,0,4,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding ExportToExcelCommand}"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    ToolTip="Export visible rows to Excel">
+                    <materialDesign:PackIcon Kind="TableArrowRight" />
+                </Button>
                 <Button
                     VerticalAlignment="Center"
                     Command="{Binding ClearAllFilterIconsCommand}"
