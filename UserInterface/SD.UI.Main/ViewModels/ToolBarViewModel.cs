@@ -8,13 +8,11 @@ namespace SD.UI.Main.ViewModels;
 
 public partial class ToolBarViewModel : ViewModelBase
 {
-    private readonly IRegionManager _regionManager;
     private readonly IViewManagementModel _viewManagementModel;
     private readonly IFemModel _femModel;
     private readonly IEventAggregator _eventAggregator;
     private readonly IUlsDesignResults _ulsDesignResults;
 
-    private readonly FileOpenedEvent _fileOpenedEvent;
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
     private readonly CalculateEvent _calculateEvent;
@@ -24,22 +22,21 @@ public partial class ToolBarViewModel : ViewModelBase
     public required partial IDesignModel DesignModel { get; set; }
 
     [ObservableProperty]
-    public required IFemModelParameters _femModelParameters;
+    public required partial IFemModelParameters FemModelParameters { get; set; }
 
     [ObservableProperty]
-    public required IBeamAxisDisplay _beamAxisDisplay;
+    public required partial IBeamAxisDisplay BeamAxisDisplay { get; set; }
 
     [ObservableProperty]
-    public bool _femModelOpened;
+    public partial bool FemModelOpened { get; set; }
 
     [ObservableProperty]
-    public int _nonDesignableSectionsCount;
+    public partial int NonDesignableSectionsCount { get; set; }
 
     [ObservableProperty]
-    public bool _useEnvelopeLoadCase;
+    public partial bool UseEnvelopeLoadCase { get; set; }
 
-    public ToolBarViewModel(IRegionManager regionManager,
-                            IViewManagementModel viewManagementModel,
+    public ToolBarViewModel(IViewManagementModel viewManagementModel,
                             IFemModel femModel,
                             IDesignModel designModel,
                             IProcessModel processModel,
@@ -48,16 +45,14 @@ public partial class ToolBarViewModel : ViewModelBase
                             IEventAggregator eventAggregator,
                             IBeamAxisDisplay beamAxisDisplay) : base(processModel)
     {
-        _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _viewManagementModel = viewManagementModel ?? throw new ArgumentNullException(nameof(viewManagementModel));
         _femModel = femModel ?? throw new ArgumentNullException(nameof(femModel));
         DesignModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
-        _femModelParameters = femModelParameters ?? throw new ArgumentNullException(nameof(femModelParameters));
+        FemModelParameters = femModelParameters ?? throw new ArgumentNullException(nameof(femModelParameters));
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
-        _beamAxisDisplay = beamAxisDisplay ?? throw new ArgumentNullException(nameof(beamAxisDisplay));
+        BeamAxisDisplay = beamAxisDisplay ?? throw new ArgumentNullException(nameof(beamAxisDisplay));
 
-        _fileOpenedEvent = _eventAggregator.GetEvent<FileOpenedEvent>();
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _refreshEvent = _eventAggregator.GetEvent<RefreshEvent>();
         _designCodeChangedEvent = _eventAggregator.GetEvent<DesignCodeChangedEvent>();

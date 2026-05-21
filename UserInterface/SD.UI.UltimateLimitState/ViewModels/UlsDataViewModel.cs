@@ -20,11 +20,12 @@ public partial class UlsDataViewModel : ObservableObject
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
     private readonly RefreshCalculationEvent _refreshCalculationEvent;
+
     private bool _isRefreshing;
-
-
-    [ObservableProperty]
-    private IList<SansUlsResult> sansRows = [];
+    private HashSet<int> _selectedBeamNumbers = [];
+    private HashSet<int> _selectedLoadCases = [];
+    private HashSet<string> _selectedSections = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> _selectedReasons = new(StringComparer.OrdinalIgnoreCase);
 
     private ICollectionView? _sansRowsView;
     public ICollectionView? SansRowsView
@@ -34,53 +35,46 @@ public partial class UlsDataViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private bool isLoading;
+    private partial List<SansUlsResult> SansRows { get; set; } = [];
 
     // Filter popup open states
     [ObservableProperty]
-    private bool isBeamFilterOpen;
+    public partial bool IsBeamFilterOpen { get; set; }
 
     [ObservableProperty]
-    private bool isLoadCaseFilterOpen;
+    public partial bool IsLoadCaseFilterOpen { get; set; }
 
     [ObservableProperty]
-    private bool isSectionFilterOpen;
+    public partial bool IsSectionFilterOpen { get; set; }
 
     [ObservableProperty]
-    private bool isReasonFilterOpen;
+    public partial bool IsReasonFilterOpen { get; set; }
 
     // Active filter indicators (true = filter is narrowing results)
     [ObservableProperty]
-    private bool hasBeamFilter;
+    public partial bool HasBeamFilter { get; set; }
+    [ObservableProperty]
+    public partial bool HasLoadCaseFilter { get; set; }
 
     [ObservableProperty]
-    private bool hasLoadCaseFilter;
+    public partial bool HasSectionFilter { get; set; }
 
     [ObservableProperty]
-    private bool hasSectionFilter;
+    public partial bool HasReasonFilter { get; set; }
 
     [ObservableProperty]
-    private bool hasReasonFilter;
-
-
-    [ObservableProperty]
-    private ObservableCollection<ColumnFilterOption<int>> beamFilterOptions = [];
+    public partial ObservableCollection<ColumnFilterOption<int>> BeamFilterOptions { get; set; } = [];
 
     [ObservableProperty]
-    private ObservableCollection<ColumnFilterOption<int>> loadCaseFilterOptions = [];
+    public partial ObservableCollection<ColumnFilterOption<int>> LoadCaseFilterOptions { get; set; } = [];
 
     [ObservableProperty]
-    private ObservableCollection<ColumnFilterOption<string>> sectionFilterOptions = [];
+    public partial ObservableCollection<ColumnFilterOption<string>> SectionFilterOptions { get; set; } = [];
 
     [ObservableProperty]
-    private ObservableCollection<ColumnFilterOption<string>> reasonFilterOptions = [];
+    public partial ObservableCollection<ColumnFilterOption<string>> ReasonFilterOptions { get; set; } = [];
 
-    private HashSet<int> _selectedBeamNumbers = [];
-    private HashSet<int> _selectedLoadCases = [];
-    private HashSet<string> _selectedSections = new(StringComparer.OrdinalIgnoreCase);
-    private HashSet<string> _selectedReasons = new(StringComparer.OrdinalIgnoreCase);
-
-    public bool HasData => SansRows.Count > 0;
+    public bool HasData => SansRows is not null && SansRows.Count > 0;
     public int DisplayedRowCount => SansRowsView?.Cast<object>().Count() ?? 0;
 
     public UlsDataViewModel(IUlsDesignResults ulsDesignResults, IEventAggregator eventAggregator, IUlsDataExportService ulsDdataExportService)
@@ -93,15 +87,15 @@ public partial class UlsDataViewModel : ObservableObject
         _designCodeChangedEvent = eventAggregator.GetEvent<DesignCodeChangedEvent>();
         _refreshCalculationEvent = eventAggregator.GetEvent<RefreshCalculationEvent>();
 
-        _loadCaseChangedEvent.Subscribe(() => RefreshRowsAsync());
-        _designCodeChangedEvent.Subscribe(() => RefreshRowsAsync());
-        _refreshCalculationEvent.Subscribe(() => RefreshRowsAsync());
+        _loadCaseChangedEvent.Subscribe(RefreshRowsAsync);
+        _designCodeChangedEvent.Subscribe(RefreshRowsAsync);
+        _refreshCalculationEvent.Subscribe(RefreshRowsAsync);
         _fileClosedEvent.Subscribe(ClearRows);
 
         RefreshRowsAsync();
     }
 
-    partial void OnSansRowsChanged(IList<SansUlsResult> value)
+    partial void OnSansRowsChanged(List<SansUlsResult> value)
     {
         SansRowsView = CollectionViewSource.GetDefaultView(value);
         if (SansRowsView != null)
@@ -115,8 +109,13 @@ public partial class UlsDataViewModel : ObservableObject
 
     private void RefreshFilters()
     {
+        OnSansRowsChanged(SansRows);
         SansRowsView?.Refresh();
-        OnPropertyChanged(nameof(DisplayedRowCount));
+
+        HasBeamFilter = BeamFilterOptions.Any(o => !o.IsSelected);
+        HasLoadCaseFilter = LoadCaseFilterOptions.Any(o => !o.IsSelected);
+        HasSectionFilter = SectionFilterOptions.Any(o => !o.IsSelected);
+        HasReasonFilter = ReasonFilterOptions.Any(o => !o.IsSelected);
     }
 
     private void RebuildSelectedSets()
@@ -130,19 +129,19 @@ public partial class UlsDataViewModel : ObservableObject
     private void BuildFilterOptions()
     {
         var beams = SansRows.Select(r => r.Beam.Number).Distinct().OrderBy(v => v)
-            .Select(v => new ColumnFilterOption<int>(v, v.ToString()) { IsSelected = _selectedBeamNumbers.Count == 0 || _selectedBeamNumbers.Contains(v) })
+            .Select(v => new ColumnFilterOption<int>(v, v.ToString()) { IsSelected = !HasBeamFilter || _selectedBeamNumbers.Count == 0 || _selectedBeamNumbers.Contains(v) })
             .ToList();
 
         var loadCases = SansRows.Select(r => r.LoadCaseNumber).Distinct().OrderBy(v => v)
-            .Select(v => new ColumnFilterOption<int>(v, v.ToString()) { IsSelected = _selectedLoadCases.Count == 0 || _selectedLoadCases.Contains(v) })
+            .Select(v => new ColumnFilterOption<int>(v, v.ToString()) { IsSelected = !HasLoadCaseFilter || _selectedLoadCases.Count == 0 || _selectedLoadCases.Contains(v) })
             .ToList();
 
         var sections = SansRows.Select(r => r.Beam.Section.DisplayName).Where(v => !string.IsNullOrWhiteSpace(v)).Distinct().OrderBy(v => v)
-            .Select(v => new ColumnFilterOption<string>(v, v) { IsSelected = _selectedSections.Count == 0 || _selectedSections.Contains(v) })
+            .Select(v => new ColumnFilterOption<string>(v, v) { IsSelected = !HasSectionFilter || _selectedSections.Count == 0 || _selectedSections.Contains(v) })
             .ToList();
 
         var reasons = SansRows.Select(r => r.Utilization.MaxUtilizationDescription).Where(v => !string.IsNullOrWhiteSpace(v)).Distinct().OrderBy(v => v)
-            .Select(v => new ColumnFilterOption<string>(v, v) { IsSelected = _selectedReasons.Count == 0 || _selectedReasons.Contains(v) })
+            .Select(v => new ColumnFilterOption<string>(v, v) { IsSelected = !HasReasonFilter || _selectedReasons.Count == 0 || _selectedReasons.Contains(v) })
             .ToList();
 
         BeamFilterOptions = [.. beams];
@@ -205,11 +204,6 @@ public partial class UlsDataViewModel : ObservableObject
         RebuildSelectedSets();
         RefreshFilters();
 
-        HasBeamFilter = BeamFilterOptions.Any(o => !o.IsSelected);
-        HasLoadCaseFilter = LoadCaseFilterOptions.Any(o => !o.IsSelected);
-        HasSectionFilter = SectionFilterOptions.Any(o => !o.IsSelected);
-        HasReasonFilter = ReasonFilterOptions.Any(o => !o.IsSelected);
-
         // Close all filter popups
         IsBeamFilterOpen = false;
         IsLoadCaseFilterOpen = false;
@@ -237,11 +231,6 @@ public partial class UlsDataViewModel : ObservableObject
         RebuildSelectedSets();
         RefreshFilters();
 
-        HasBeamFilter = false;
-        HasLoadCaseFilter = false;
-        HasSectionFilter = false;
-        HasReasonFilter = false;
-
         IsBeamFilterOpen = false;
         IsLoadCaseFilterOpen = false;
         IsSectionFilterOpen = false;
@@ -267,12 +256,9 @@ public partial class UlsDataViewModel : ObservableObject
         _isRefreshing = true;
         try
         {
-            IsLoading = true;
             await Task.Yield();
 
-            var sansResults = _ulsDesignResults.SansUlsResults ?? [];
-
-            SansRows = sansResults;
+            SansRows = _ulsDesignResults?.SansUlsResults ?? [];
 
             BuildFilterOptions();
             RebuildSelectedSets();
@@ -281,7 +267,6 @@ public partial class UlsDataViewModel : ObservableObject
         }
         finally
         {
-            IsLoading = false;
             _isRefreshing = false;
         }
     }
@@ -293,7 +278,6 @@ public partial class UlsDataViewModel : ObservableObject
         LoadCaseFilterOptions = [];
         SectionFilterOptions = [];
         ReasonFilterOptions = [];
-        IsLoading = false;
         IsBeamFilterOpen = false;
         IsLoadCaseFilterOpen = false;
         IsSectionFilterOpen = false;
@@ -315,5 +299,5 @@ public partial class ColumnFilterOption<T>(T value, string display) : Observable
     public string Display { get; } = display;
 
     [ObservableProperty]
-    private bool isSelected = true;
+    public partial bool IsSelected { get; set; } = true;
 }

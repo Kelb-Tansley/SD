@@ -22,8 +22,9 @@
         Margin="-8,0,-8,0"
         AutoGenerateColumns="False"
         CanUserAddRows="False"
+        ColumnHeaderHeight="41"
         ItemsSource="{Binding LoadCaseCombinations}"
-        MinRowHeight="42"
+        RowHeight="43"
         SelectedItem="{Binding SelectedLoadCaseCombination, Mode=TwoWay}"
         SelectionMode="Single"
         SelectionUnit="FullRow">

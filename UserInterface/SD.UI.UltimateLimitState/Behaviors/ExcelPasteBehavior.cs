@@ -2,7 +2,7 @@
 using System.Text;
 using System.Windows.Input;
 
-namespace SD.UI.Behaviors;
+namespace SD.UI.UltimateLimitState.Behaviors;
 
 public class ExcelPasteBehavior : Behavior<System.Windows.Controls.DataGrid>
 {

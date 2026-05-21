@@ -2,7 +2,7 @@
     x:Class="SD.UI.UltimateLimitState.Views.UlsDataView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="clr-namespace:SD.UI.Behaviors;assembly=SD.UI"
+    xmlns:behaviors="clr-namespace:SD.UI.UltimateLimitState.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="clr-namespace:SD.UI.UltimateLimitState.Helpers"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -286,6 +286,12 @@
                     Header="Peak %"
                     IsReadOnly="True" />
 
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K2}" Header="K2" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K1}" Header="K1" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.Kz}" Header="Kz" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeTop}" Header="Ke" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeBottom}" Header="KeB" />
+
                 <DataGridTextColumn
                     MinWidth="120"
                     Binding="{Binding Utilization.MaxUtilizationDescription}"
@@ -359,12 +365,6 @@
                     Binding="{Binding Beam.BeamChain.LeTop}"
                     Header="L(e) [mm]"
                     IsReadOnly="True" />
-
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K2}" Header="K2" />
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K1}" Header="K1" />
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.Kz}" Header="Kz" />
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeTop}" Header="Ke" />
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeBottom}" Header="KeB" />
 
                 <DataGridTextColumn
                     Binding="{Binding Beam.Section.Name}"
@@ -525,21 +525,27 @@
                     VerticalAlignment="Center"
                     FontSize="12"
                     Foreground="{DynamicResource MaterialDesignBody}"
-                    Text="{Binding DisplayedRowCount, StringFormat=Rows displayed: {0}}" />
+                    Text="{Binding DisplayedRowCount, StringFormat=Results displayed: {0}}" />
                 <Button
                     Margin="0,0,4,0"
                     VerticalAlignment="Center"
                     Command="{Binding ExportToExcelCommand}"
-                    Style="{StaticResource MaterialDesignIconButton}"
+                    Style="{StaticResource MaterialDesignFlatButton}"
                     ToolTip="Export visible rows to Excel">
-                    <materialDesign:PackIcon Kind="TableArrowRight" />
+                    <materialDesign:PackIcon
+                        Width="{StaticResource IconSize}"
+                        Height="{StaticResource IconSize}"
+                        Kind="TableArrowRight" />
                 </Button>
                 <Button
                     VerticalAlignment="Center"
                     Command="{Binding ClearAllFilterIconsCommand}"
-                    Style="{StaticResource MaterialDesignIconButton}"
+                    Style="{StaticResource MaterialDesignFlatButton}"
                     ToolTip="Clear Filter Icons">
-                    <materialDesign:PackIcon Kind="FilterRemove" />
+                    <materialDesign:PackIcon
+                        Width="{StaticResource IconSize}"
+                        Height="{StaticResource IconSize}"
+                        Kind="FilterRemove" />
                 </Button>
             </StackPanel>
         </Border>
@@ -551,21 +557,5 @@
             Style="{StaticResource MaterialDesignHeadline5TextBlock}"
             Text="Run a ULS calculation to view data."
             Visibility="{Binding HasData, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
-
-        <Border
-            Grid.RowSpan="2"
-            Background="#7FFFFFFF"
-            Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <ProgressBar
-                    Width="220"
-                    Height="6"
-                    IsIndeterminate="True" />
-                <TextBlock
-                    Margin="0,12,0,0"
-                    HorizontalAlignment="Center"
-                    Text="Loading data..." />
-            </StackPanel>
-        </Border>
     </Grid>
 </UserControl>

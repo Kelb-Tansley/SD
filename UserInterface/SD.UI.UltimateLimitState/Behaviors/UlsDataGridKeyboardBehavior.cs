@@ -3,7 +3,7 @@ using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.BeamModels;
 using System.Globalization;
 
-namespace SD.UI.Behaviors;
+namespace SD.UI.UltimateLimitState.Behaviors;
 
 public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.DataGrid>
 {

@@ -149,14 +149,17 @@
                     Margin="-8,0,-4,0"
                     AutoGenerateColumns="False"
                     CanUserAddRows="false"
-                    ColumnHeaderHeight="38"
+                    ColumnHeaderHeight="41"
                     ColumnWidth="Auto"
                     ItemsSource="{Binding DisplayedResults}"
-                    RowHeight="34.5"
+                    RowHeight="32"
                     SelectedItem="{Binding SelectedBeamResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionMode="Single"
                     SelectionUnit="FullRow"
-                    Style="{StaticResource MaterialDesignDataGrid}">
+                    Style="{StaticResource MaterialDesignDataGrid}"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.ScrollUnit="Pixel"
+                    VirtualizingPanel.VirtualizationMode="Recycling">
                     <DataGrid.Resources>
                         <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
                             <Setter Property="Template">

@@ -10,7 +10,6 @@
     xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
     d:DataContext="{d:DesignInstance Type=viewmodels:FemModelViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    Background="LightGray"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

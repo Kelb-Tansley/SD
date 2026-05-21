@@ -4,9 +4,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace SD.UI.Behaviors;
+namespace SD.UI.UltimateLimitState.Behaviors;
 
-public class ExcelSingleClickEditBehavior : Behavior<System.Windows.Controls.DataGrid>
+public class ExcelSingleClickEditBehavior : Behavior<DataGrid>
 {
     private System.Windows.Controls.DataGridCell mouseDownCell;
     private System.Windows.Point mouseDownPoint;
