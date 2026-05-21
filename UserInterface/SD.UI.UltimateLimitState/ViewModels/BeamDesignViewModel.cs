@@ -19,6 +19,7 @@ using System.Windows;
 using System.Windows.Threading;
 
 namespace SD.UI.UltimateLimitState.ViewModels;
+
 public partial class BeamDesignViewModel : ViewModelBase
 {
     private readonly IDesignCodeAdapter _femDesignAdapter;
@@ -39,6 +40,7 @@ public partial class BeamDesignViewModel : ViewModelBase
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly RunUlsSolverEvent _runUlsSolverEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
+    private readonly SelectDataTabEvent _selectDataTabEvent;
     private BackgroundWorker _exportWorker;
 
     [ObservableProperty]
@@ -100,26 +102,27 @@ public partial class BeamDesignViewModel : ViewModelBase
         _femDesignAdapter = femDesignAdapter ?? throw new ArgumentNullException(nameof(femDesignAdapter));
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
 
-        _beamDesignWindowClosedEvent = _eventAggregator.GetEvent<BeamDesignWindowClosedEvent>();
-        _selectedBeamChangedEvent = _eventAggregator.GetEvent<SelectedBeamChangedEvent>();
-        _loadCaseChangedEvent = _eventAggregator.GetEvent<LoadCaseChangedEvent>();
-        _designFemResizeEvent = _eventAggregator.GetEvent<DesignFemResizeEvent>();
-        _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
-        _runUlsSolverEvent = _eventAggregator.GetEvent<RunUlsSolverEvent>();
-        _designCodeChangedEvent = _eventAggregator.GetEvent<DesignCodeChangedEvent>();
+        _beamDesignWindowClosedEvent = eventAggregator.GetEvent<BeamDesignWindowClosedEvent>();
+        _selectedBeamChangedEvent = eventAggregator.GetEvent<SelectedBeamChangedEvent>();
+        _loadCaseChangedEvent = eventAggregator.GetEvent<LoadCaseChangedEvent>();
+        _designFemResizeEvent = eventAggregator.GetEvent<DesignFemResizeEvent>();
+        _fileClosedEvent = eventAggregator.GetEvent<FileClosedEvent>();
+        _runUlsSolverEvent = eventAggregator.GetEvent<RunUlsSolverEvent>();
+        _designCodeChangedEvent = eventAggregator.GetEvent<DesignCodeChangedEvent>();
+        _selectDataTabEvent = eventAggregator.GetEvent<SelectDataTabEvent>();
 
         _beamDesignWindowClosedEvent.Subscribe(BeamDesignWindowClosed);
         _loadCaseChangedEvent.Subscribe(async () => await LoadCaseChanged());
         _fileClosedEvent.Subscribe(ClearProperties);
         _designCodeChangedEvent.Subscribe(DesignCodeChanged);
-        
-        eventAggregator.GetEvent<SelectTabEvent>().Subscribe(SelectTab);
+
+        eventAggregator.GetEvent<SelectUlsTabEvent>().Subscribe(SetBeamResult);
 
         InitializeSelectedBeamTimer();
         InitializeBackgroundWorker();
     }
 
-    private void SelectTab(UlsResult result)
+    private void SetBeamResult(UlsResult result)
     {
         if (result != null)
             SelectedBeamResult = DisplayedResults.FirstOrDefault(res => res.Beam.Number == result.Beam.Number && res.LoadCaseNumber == result.LoadCaseNumber);
@@ -135,6 +138,13 @@ public partial class BeamDesignViewModel : ViewModelBase
     {
         _beamDesignWindowClosedEvent.Unsubscribe(BeamDesignWindowClosed);
         _loadCaseChangedEvent.Unsubscribe(async () => await LoadCaseChanged());
+    }
+
+    [RelayCommand]
+    private void ShowInAnotherView()
+    {
+        if (SelectedBeamResult != null)
+            _selectDataTabEvent.Publish(SelectedBeamResult);
     }
 
     [RelayCommand]

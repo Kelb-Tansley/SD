@@ -19,9 +19,7 @@ public class DataGridScrollIntoViewBehavior : Behavior<DataGrid>
 
     private void AssociatedObject_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (AssociatedObject.SelectedItem != null)
-        {
+        if (AssociatedObject.SelectedItem is not null)
             AssociatedObject.ScrollIntoView(AssociatedObject.SelectedItem);
-        }
     }
 }

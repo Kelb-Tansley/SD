@@ -5,15 +5,42 @@ using System.Windows.Input;
 
 namespace SD.UI.UltimateLimitState.Behaviors
 {
-    public class UlsDataGridContextMenuBehavior : Behavior<DataGrid>
+    public class NavigateDataGridContextMenuBehavior : Behavior<DataGrid>
     {
-        public static readonly DependencyProperty ShowInUlsViewCommandProperty = DependencyProperty.Register(
-            nameof(ShowInUlsViewCommand), typeof(ICommand), typeof(UlsDataGridContextMenuBehavior), new PropertyMetadata(null));
+        public static readonly DependencyProperty ShowInAnotherViewCommandProperty = DependencyProperty.Register(
+            nameof(ShowInAnotherViewCommand),
+            typeof(ICommand),
+            typeof(NavigateDataGridContextMenuBehavior),
+            new PropertyMetadata(null));
 
-        public ICommand ShowInUlsViewCommand
+        public ICommand ShowInAnotherViewCommand
         {
-            get => (ICommand)GetValue(ShowInUlsViewCommandProperty);
-            set => SetValue(ShowInUlsViewCommandProperty, value);
+            get => (ICommand)GetValue(ShowInAnotherViewCommandProperty);
+            set => SetValue(ShowInAnotherViewCommandProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowInAnotherViewTextProperty = DependencyProperty.Register(
+            nameof(ShowInAnotherViewText),
+            typeof(string),
+            typeof(NavigateDataGridContextMenuBehavior),
+            new PropertyMetadata(null));
+
+        public string ShowInAnotherViewText
+        {
+            get => (string)GetValue(ShowInAnotherViewTextProperty);
+            set => SetValue(ShowInAnotherViewTextProperty, value);
+        }
+
+        public static readonly DependencyProperty CanCopyCellsProperty = DependencyProperty.Register(
+            nameof(CanCopyCells),
+            typeof(bool),
+            typeof(NavigateDataGridContextMenuBehavior),
+            new PropertyMetadata(true));
+
+        public bool CanCopyCells
+        {
+            get => (bool)GetValue(CanCopyCellsProperty);
+            set => SetValue(CanCopyCellsProperty, value);
         }
 
         protected override void OnAttached()
@@ -33,13 +60,18 @@ namespace SD.UI.UltimateLimitState.Behaviors
             if (AssociatedObject.ContextMenu != null) return;
 
             var contextMenu = new ContextMenu();
-            var copyMenuItem = new MenuItem { Header = "Copy" };
-            copyMenuItem.Click += CopyMenuItem_Click; 
-            var showInUlsMenuItem = new MenuItem { Header = "Show in ULS view" };
+
+            if (CanCopyCells)
+            {
+                var copyMenuItem = new MenuItem { Header = "Copy" };
+                copyMenuItem.Click += CopyMenuItem_Click;
+                contextMenu.Items.Add(copyMenuItem);
+                contextMenu.Items.Add(new Separator());
+            }
+
+            var showInUlsMenuItem = new MenuItem { Header = ShowInAnotherViewText };
             showInUlsMenuItem.Click += ShowInUlsMenuItem_Click;
 
-            contextMenu.Items.Add(copyMenuItem);
-            contextMenu.Items.Add(new Separator());
             contextMenu.Items.Add(showInUlsMenuItem);
 
             AssociatedObject.ContextMenu = contextMenu;
@@ -72,8 +104,8 @@ namespace SD.UI.UltimateLimitState.Behaviors
         private void ShowInUlsMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var item = AssociatedObject.SelectedItem ?? AssociatedObject.CurrentItem;
-            if (item != null && ShowInUlsViewCommand != null && ShowInUlsViewCommand.CanExecute(item))
-                ShowInUlsViewCommand.Execute(item);
+            if (item != null && ShowInAnotherViewCommand != null && ShowInAnotherViewCommand.CanExecute(item))
+                ShowInAnotherViewCommand.Execute(item);
         }
     }
 }

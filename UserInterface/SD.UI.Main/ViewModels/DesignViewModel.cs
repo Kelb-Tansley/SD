@@ -39,7 +39,8 @@ public partial class DesignViewModel : ObservableObject
         eventAggregator.GetEvent<RefreshCalculationEvent>().Subscribe(UpdateHasUlsData);
         eventAggregator.GetEvent<DesignCodeChangedEvent>().Subscribe(UpdateHasUlsData);
         eventAggregator.GetEvent<FileClosedEvent>().Subscribe(() => HasUlsData = false);
-        eventAggregator.GetEvent<SelectTabEvent>().Subscribe(SelectTab);
+        eventAggregator.GetEvent<SelectUlsTabEvent>().Subscribe(SelectUlsTab);
+        eventAggregator.GetEvent<SelectDataTabEvent>().Subscribe(SelectDataTab);
 
         containerProvider.Resolve<FemModelViewModel>();
         containerProvider.Resolve<CombinationsTableViewModel>();
@@ -50,9 +51,15 @@ public partial class DesignViewModel : ObservableObject
         UpdateHasUlsData();
     }
 
-    private void SelectTab(UlsResult result)
+    private void SelectDataTab(UlsResult result)
     {
-        if (result != null)
+        if (result is not null)
+            SelectedTabIndex = 2;
+    }
+
+    private void SelectUlsTab(UlsResult result)
+    {
+        if (result is not null)
             SelectedTabIndex = 1;
     }
 

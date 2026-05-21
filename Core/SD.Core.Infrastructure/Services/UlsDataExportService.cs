@@ -44,15 +44,16 @@ public class UlsDataExportService : IUlsDataExportService
 
         var headers = new[]
         {
-            "Beam", "LCC", "Section", "Peak %", "Reason",
-            "L(2) [mm]", "L(1) [mm]", "L(z) [mm]", "L(e) [mm]", "K2", "K1", "Kz", "Ke", "KeB",
-            "Section Name", "Section Type", "Ag [mm²]", "Mass [kg/m]", "J [mm⁴]", "Cw [mm⁶]",
-            "I Major [mm⁴]", "I Minor [mm⁴]", "Ze Major [mm³]", "Ze Minor [mm³]", "Zpl Major [mm³]", "Zpl Minor [mm³]",
-            "r Major [mm]", "r Minor [mm]", "Cr [kN]", "Tr [kN]", "Vrx-x [kN]", "Vry-y [kN]", "Mrx-x [kN.m]", "Mry-y [kN.m]",
+            "Beam", "LCC", "Section", "Peak %",
+            "K2", "K1", "Kz", "Ke", "KeB", "Reason",
+            "L(2) [mm]", "L(1) [mm]", "L(z) [mm]", "L(e) [mm]",
+            "Cr [kN]", "Tr [kN]", "Vrx-x [kN]", "Vry-y [kN]", "Mrx-x [kN.m]", "Mry-y [kN.m]",
             "Tension", "Compression", "Major Bend", "Minor Bend",
-            "Major Shear", "Minor Shear", "Biaxial",
+            "Major Shear", "Minor Shear", "Biaxial", "Biaxial+Axial",
             "Von Mises [MPa]", "Tension [N]", "Compression [N]",
-            "Mu Major [kN.m]", "Mu Minor [kN.m]", "Vu Major [kN]", "Vu Minor [kN]"
+            "Mu Major [kN.m]", "Mu Minor [kN.m]", "Vu Major [kN]", "Vu Minor [kN]",
+            "Section Name", "Section Type", "Ag [mm²]", "Mass [kg/m]", "J [mm⁴]", "Cw [mm⁶]",
+            "I Major [mm⁴]", "I Minor [mm⁴]", "Ze Major [mm³]", "Ze Minor [mm³]", "Zpl Major [mm³]", "Zpl Minor [mm³]"
         };
 
         for (int col = 0; col < headers.Length; col++)
@@ -68,32 +69,18 @@ public class UlsDataExportService : IUlsDataExportService
             ws.Cells[row, col++].Value = r.LoadCaseNumber;
             ws.Cells[row, col++].Value = r.Beam.Section.DisplayName;
             ws.Cells[row, col++].Value = Math.Round(r.Utilization.MaxUtilizationPercentage, 2);
+
+            ws.Cells[row, col++].Value = r.Beam.BeamChain.K2;
+            ws.Cells[row, col++].Value = r.Beam.BeamChain.K1;
+            ws.Cells[row, col++].Value = r.Beam.BeamChain.Kz;
+            ws.Cells[row, col++].Value = r.Beam.BeamChain.KeTop;
+            ws.Cells[row, col++].Value = r.Beam.BeamChain.KeBottom;
             ws.Cells[row, col++].Value = r.Utilization.MaxUtilizationDescription;
 
             ws.Cells[row, col++].Value = r.Beam.BeamChain.L2;
             ws.Cells[row, col++].Value = r.Beam.BeamChain.L1;
             ws.Cells[row, col++].Value = r.Beam.BeamChain.Lz;
             ws.Cells[row, col++].Value = r.Beam.BeamChain.LeTop;
-            ws.Cells[row, col++].Value = r.Beam.BeamChain.K2;
-            ws.Cells[row, col++].Value = r.Beam.BeamChain.K1;
-            ws.Cells[row, col++].Value = r.Beam.BeamChain.Kz;
-            ws.Cells[row, col++].Value = r.Beam.BeamChain.KeTop;
-            ws.Cells[row, col++].Value = r.Beam.BeamChain.KeBottom;
-
-            ws.Cells[row, col++].Value = r.Beam.Section.Name;
-            ws.Cells[row, col++].Value = r.Beam.Section.TypeDisplay;
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.Agr, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.SectionMass, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.J, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.Cw, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.IMajor, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.IMinor, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.ZeMajor, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.ZeMinor, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.ZplMajor, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.ZplMinor, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.RMajor, 2);
-            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.RMinor, 2);
 
             ws.Cells[row, col++].Value = Math.Round(r.Capacity.Cr, 2);
             ws.Cells[row, col++].Value = Math.Round(r.Capacity.Tr, 2);
@@ -109,6 +96,7 @@ public class UlsDataExportService : IUlsDataExportService
             ws.Cells[row, col++].Value = Math.Round(r.Utilization.ShearMajor * 100, 2);
             ws.Cells[row, col++].Value = Math.Round(r.Utilization.ShearMinor * 100, 2);
             ws.Cells[row, col++].Value = Math.Round(r.Utilization.BiAxialBending * 100, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Utilization.CompressionAndBendingMemberStrength * 100, 2);
 
             ws.Cells[row, col++].Value = Math.Round(r.Forces.VonMises, 2);
             ws.Cells[row, col++].Value = Math.Round(r.Forces.Tension, 2);
@@ -116,7 +104,21 @@ public class UlsDataExportService : IUlsDataExportService
             ws.Cells[row, col++].Value = Math.Round(r.Forces.MaxAbsMuMajor, 2);
             ws.Cells[row, col++].Value = Math.Round(r.Forces.MaxAbsMuMinor, 2);
             ws.Cells[row, col++].Value = Math.Round(r.Forces.MaxAbsVuMajor, 2);
-            ws.Cells[row, col].Value = Math.Round(r.Forces.MaxAbsVuMinor, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Forces.MaxAbsVuMinor, 2);
+
+            ws.Cells[row, col++].Value = r.Beam.Section.Name;
+            ws.Cells[row, col++].Value = r.Beam.Section.TypeDisplay;
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.Agr, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.SectionMass, 3);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.J, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.Cw, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.IMajor, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.IMinor, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.ZeMajor, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.ZeMinor, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.ZplMajor, 2);
+            ws.Cells[row, col++].Value = Math.Round(r.Beam.Section.ZplMinor, 2);
+
         }
 
         package.SaveAs(new FileInfo(saveFileDialog.FileName));

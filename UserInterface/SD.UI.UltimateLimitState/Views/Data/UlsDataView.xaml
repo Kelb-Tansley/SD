@@ -104,6 +104,8 @@
             ItemsSource="{Binding SansRowsView}"
             RowHeight="32"
             ScrollViewer.CanContentScroll="True"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.PanningMode="Both"
             SelectionMode="Extended"
             SelectionUnit="Cell"
             Style="{StaticResource MaterialDesignDataGrid}"
@@ -112,10 +114,13 @@
             VirtualizingPanel.VirtualizationMode="Recycling"
             Visibility="{Binding HasData, Converter={StaticResource BooleanToVisibilityConverter}}">
             <i:Interaction.Behaviors>
+                <behaviors:DataGridHorizontalScrollBehavior />
+                <behaviors:DataGridScrollIntoViewBehavior />
+                <behaviors:DataGridSelectedCellBehavior SelectedCell="{Binding SelectedSansRow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <behaviors:ExcelPasteBehavior />
                 <behaviors:ExcelSingleClickEditBehavior />
                 <behaviors:UlsDataGridKeyboardBehavior />
-                <behaviors:UlsDataGridContextMenuBehavior ShowInUlsViewCommand="{Binding ShowInUlsViewCommand}" />
+                <behaviors:NavigateDataGridContextMenuBehavior ShowInAnotherViewCommand="{Binding ShowInUlsViewCommand}" ShowInAnotherViewText="Show in ULS view" />
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
 
@@ -475,7 +480,7 @@
                     Header="Ag [mm²]"
                     IsReadOnly="True" />
                 <DataGridTextColumn
-                    Binding="{Binding Beam.Section.SectionMass, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Binding="{Binding Beam.Section.SectionMass, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=3}"
                     Header="Mass [kg/m]"
                     IsReadOnly="True" />
                 <DataGridTextColumn

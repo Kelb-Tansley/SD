@@ -20,7 +20,7 @@ public partial class UlsDataViewModel : ObservableObject
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
     private readonly RefreshCalculationEvent _refreshCalculationEvent;
-    private readonly SelectTabEvent _selectTabEvent;
+    private readonly SelectUlsTabEvent _selectTabEvent;
 
     private bool _isRefreshing;
     private HashSet<int> _selectedBeamNumbers = [];
@@ -34,6 +34,9 @@ public partial class UlsDataViewModel : ObservableObject
         get => _sansRowsView;
         private set => SetProperty(ref _sansRowsView, value);
     }
+
+    [ObservableProperty]
+    public partial SansUlsResult? SelectedSansRow { get; set; }
 
     [ObservableProperty]
     private partial List<SansUlsResult> SansRows { get; set; } = [];
@@ -87,14 +90,22 @@ public partial class UlsDataViewModel : ObservableObject
         _fileClosedEvent = eventAggregator.GetEvent<FileClosedEvent>();
         _designCodeChangedEvent = eventAggregator.GetEvent<DesignCodeChangedEvent>();
         _refreshCalculationEvent = eventAggregator.GetEvent<RefreshCalculationEvent>();
-        _selectTabEvent = eventAggregator.GetEvent<SelectTabEvent>();
+        _selectTabEvent = eventAggregator.GetEvent<SelectUlsTabEvent>();
 
         _loadCaseChangedEvent.Subscribe(RefreshRowsAsync);
         _designCodeChangedEvent.Subscribe(RefreshRowsAsync);
         _refreshCalculationEvent.Subscribe(RefreshRowsAsync);
         _fileClosedEvent.Subscribe(ClearRows);
 
+        eventAggregator.GetEvent<SelectDataTabEvent>().Subscribe(SetBeamResult);
+
         RefreshRowsAsync();
+    }
+
+    private void SetBeamResult(UlsResult result)
+    {
+        if (result is not null)
+            SelectedSansRow = SansRows?.FirstOrDefault(r => r.Beam.Number == result.Beam.Number && r.LoadCaseNumber == result.LoadCaseNumber);
     }
 
     partial void OnSansRowsChanged(List<SansUlsResult> value)

@@ -163,6 +163,10 @@
                     VirtualizingPanel.VirtualizationMode="Recycling">
                     <i:Interaction.Behaviors>
                         <behaviors:DataGridScrollIntoViewBehavior />
+                        <behaviors:NavigateDataGridContextMenuBehavior
+                            CanCopyCells="False"
+                            ShowInAnotherViewCommand="{Binding ShowInAnotherViewCommand}"
+                            ShowInAnotherViewText="Show in Data view" />
                     </i:Interaction.Behaviors>
                     <DataGrid.Resources>
                         <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
