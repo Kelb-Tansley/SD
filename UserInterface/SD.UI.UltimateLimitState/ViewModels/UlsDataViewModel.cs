@@ -20,6 +20,7 @@ public partial class UlsDataViewModel : ObservableObject
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
     private readonly RefreshCalculationEvent _refreshCalculationEvent;
+    private readonly SelectTabEvent _selectTabEvent;
 
     private bool _isRefreshing;
     private HashSet<int> _selectedBeamNumbers = [];
@@ -86,6 +87,7 @@ public partial class UlsDataViewModel : ObservableObject
         _fileClosedEvent = eventAggregator.GetEvent<FileClosedEvent>();
         _designCodeChangedEvent = eventAggregator.GetEvent<DesignCodeChangedEvent>();
         _refreshCalculationEvent = eventAggregator.GetEvent<RefreshCalculationEvent>();
+        _selectTabEvent = eventAggregator.GetEvent<SelectTabEvent>();
 
         _loadCaseChangedEvent.Subscribe(RefreshRowsAsync);
         _designCodeChangedEvent.Subscribe(RefreshRowsAsync);
@@ -235,6 +237,12 @@ public partial class UlsDataViewModel : ObservableObject
         IsLoadCaseFilterOpen = false;
         IsSectionFilterOpen = false;
         IsReasonFilterOpen = false;
+    }
+
+    [RelayCommand]
+    private void ShowInUlsView(SansUlsResult result)
+    {
+        _selectTabEvent.Publish(result);
     }
 
     private bool FilterSansRow(object obj)

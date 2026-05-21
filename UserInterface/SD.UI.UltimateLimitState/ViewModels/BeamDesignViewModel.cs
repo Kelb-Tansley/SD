@@ -112,9 +112,17 @@ public partial class BeamDesignViewModel : ViewModelBase
         _loadCaseChangedEvent.Subscribe(async () => await LoadCaseChanged());
         _fileClosedEvent.Subscribe(ClearProperties);
         _designCodeChangedEvent.Subscribe(DesignCodeChanged);
+        
+        eventAggregator.GetEvent<SelectTabEvent>().Subscribe(SelectTab);
 
         InitializeSelectedBeamTimer();
         InitializeBackgroundWorker();
+    }
+
+    private void SelectTab(UlsResult result)
+    {
+        if (result != null)
+            SelectedBeamResult = DisplayedResults.FirstOrDefault(res => res.Beam.Number == result.Beam.Number && res.LoadCaseNumber == result.LoadCaseNumber);
     }
 
     private void DesignCodeChanged()

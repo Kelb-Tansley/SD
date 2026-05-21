@@ -59,6 +59,7 @@
 
         <TabControl
             Grid.Column="2"
+            SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"
             Style="{StaticResource MaterialDesignNavigationRailTabControl}"
             TabStripPlacement="Right">
             <TabItem>

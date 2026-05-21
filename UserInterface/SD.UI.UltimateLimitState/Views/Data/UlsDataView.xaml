@@ -95,7 +95,7 @@
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             CanUserSortColumns="True"
-            ClipboardCopyMode="IncludeHeader"
+            ClipboardCopyMode="ExcludeHeader"
             ColumnWidth="Auto"
             EnableColumnVirtualization="True"
             EnableRowVirtualization="True"
@@ -115,6 +115,7 @@
                 <behaviors:ExcelPasteBehavior />
                 <behaviors:ExcelSingleClickEditBehavior />
                 <behaviors:UlsDataGridKeyboardBehavior />
+                <behaviors:UlsDataGridContextMenuBehavior ShowInUlsViewCommand="{Binding ShowInUlsViewCommand}" />
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
 
@@ -367,55 +368,6 @@
                     IsReadOnly="True" />
 
                 <DataGridTextColumn
-                    Binding="{Binding Beam.Section.Name}"
-                    Header="Property Name"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.TypeDisplay}"
-                    Header="Section Type"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.Agr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Ag [mm²]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.SectionMass, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Mass [kg/m]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.J, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="J [mm⁴]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.Cw, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Cw [mm⁶]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.IMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="I Major [mm⁴]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.IMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="I Minor [mm⁴]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.ZeMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Ze Major [mm³]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.ZeMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Ze Minor [mm³]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.ZplMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Zpl Major [mm³]"
-                    IsReadOnly="True" />
-                <DataGridTextColumn
-                    Binding="{Binding Beam.Section.ZplMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
-                    Header="Zpl Minor [mm³]"
-                    IsReadOnly="True" />
-
-                <DataGridTextColumn
                     Binding="{Binding Capacity.Cr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
                     Header="Cr [kN]"
                     IsReadOnly="True" />
@@ -508,6 +460,57 @@
                         <TextBlock Text="Vu Minor [kN]" ToolTip="Applied Forces" />
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
+
+
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.Name}"
+                    Header="Property Name"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.TypeDisplay}"
+                    Header="Section Type"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.Agr, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Ag [mm²]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.SectionMass, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Mass [kg/m]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.J, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="J [mm⁴]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.Cw, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Cw [mm⁶]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.IMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="I Major [mm⁴]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.IMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="I Minor [mm⁴]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.ZeMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Ze Major [mm³]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.ZeMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Ze Minor [mm³]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.ZplMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Zpl Major [mm³]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.Section.ZplMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="Zpl Minor [mm³]"
+                    IsReadOnly="True" />
+
             </DataGrid.Columns>
         </DataGrid>
 

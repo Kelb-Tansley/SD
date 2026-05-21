@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Contracts;
+using SD.Core.Shared.Models;
 using SD.UI.Constants;
 using SD.UI.Events;
 using SD.UI.UltimateLimitState.ViewModels;
@@ -13,10 +14,13 @@ public partial class DesignViewModel : ObservableObject
     private readonly IUlsDesignResults _ulsDesignResults;
 
     [ObservableProperty]
-    private bool isNavigationPanelCollapsed;
+    public partial bool IsNavigationPanelCollapsed { get; set; }
 
     [ObservableProperty]
-    private bool hasUlsData;
+    public partial bool HasUlsData { get; set; }
+
+    [ObservableProperty]
+    public partial int SelectedTabIndex { get; set; }
 
     public DesignViewModel(IRegionManager regionManager,
                            IContainerProvider containerProvider,
@@ -35,6 +39,7 @@ public partial class DesignViewModel : ObservableObject
         eventAggregator.GetEvent<RefreshCalculationEvent>().Subscribe(UpdateHasUlsData);
         eventAggregator.GetEvent<DesignCodeChangedEvent>().Subscribe(UpdateHasUlsData);
         eventAggregator.GetEvent<FileClosedEvent>().Subscribe(() => HasUlsData = false);
+        eventAggregator.GetEvent<SelectTabEvent>().Subscribe(SelectTab);
 
         containerProvider.Resolve<FemModelViewModel>();
         containerProvider.Resolve<CombinationsTableViewModel>();
@@ -43,6 +48,12 @@ public partial class DesignViewModel : ObservableObject
         containerProvider.Resolve<UlsDataViewModel>();
 
         UpdateHasUlsData();
+    }
+
+    private void SelectTab(UlsResult result)
+    {
+        if (result != null)
+            SelectedTabIndex = 1;
     }
 
     private void UpdateHasUlsData()
