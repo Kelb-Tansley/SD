@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Models;
 using SD.UI.Constants;
@@ -46,7 +45,6 @@ public partial class DesignViewModel : ObservableObject
         containerProvider.Resolve<CombinationsTableViewModel>();
         containerProvider.Resolve<BeamFemModelViewModel>();
         containerProvider.Resolve<BeamDesignViewModel>();
-        containerProvider.Resolve<UlsDataViewModel>();
 
         UpdateHasUlsData();
     }

@@ -21,91 +21,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/SD.UI;component/Styles/Global.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate x:Key="DesignLengthPopupTemplate">
-                <StackPanel Margin="0,-8" DataContext="{Binding DataContext, ElementName=BeamDesignViewUserControl}">
-                    <RadioButton
-                        Margin="12"
-                        Command="{Binding AllBeamsChangedCommand}"
-                        IsChecked="{Binding AllBeamsChecked}"
-                        ToolTip="Display all beams.">
-                        <TextBlock
-                            Margin="4,0"
-                            VerticalAlignment="Center"
-                            Text="All Beams" />
-                    </RadioButton>
-                    <RadioButton
-                        Margin="12"
-                        Command="{Binding DisplayedGroupChangedCommand}"
-                        IsChecked="{Binding DisplayedGroupChecked}"
-                        ToolTip="Show displayed groups.">
-                        <TextBlock
-                            Margin="4,0"
-                            VerticalAlignment="Center"
-                            Text="Displayed Group" />
-                    </RadioButton>
-                    <RadioButton
-                        Margin="12"
-                        Command="{Binding SelectedBeamsChangedCommand}"
-                        IsChecked="{Binding SelectedBeamsChecked}"
-                        IsEnabled="{Binding HasSelectedBeams}"
-                        ToolTip="Display selected beams in primary model.">
-                        <TextBlock
-                            Margin="4,0"
-                            VerticalAlignment="Center"
-                            Text="Selected Beams" />
-                    </RadioButton>
-                    <RadioButton
-                        Margin="12"
-                        Command="{Binding FailedBeamsChangedCommand}"
-                        IsChecked="{Binding FailedBeamsChecked}"
-                        ToolTip="Display failed beams only. Based on the allowable ULS design capacity.">
-                        <TextBlock
-                            Margin="4,0"
-                            VerticalAlignment="Center"
-                            Text="Failed Beams" />
-                    </RadioButton>
-                    <Grid MinWidth="150" Margin="12">
-                        <TextBox
-                            Margin="8,0"
-                            VerticalAlignment="Center"
-                            materialDesign:HintAssist.Hint="ULS Design Capacity"
-                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                            Text="{Binding AllowableUlsDesignCapacity}" />
-                        <Button
-                            Width="16"
-                            Height="16"
-                            Margin="8,0"
-                            HorizontalAlignment="Right"
-                            Command="{Binding FailedBeamsChangedCommand}"
-                            Style="{StaticResource MaterialDesignIconButton}">
-                            <materialDesign:PackIcon
-                                Width="12"
-                                Height="12"
-                                Kind="Magnify" />
-                        </Button>
-                    </Grid>
-                    <Grid MinWidth="155" Margin="12">
-                        <TextBox
-                            Margin="8,0"
-                            VerticalAlignment="Center"
-                            materialDesign:HintAssist.Hint="Filter by beam number."
-                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                            Text="{Binding BeamNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <Button
-                            Width="16"
-                            Height="16"
-                            Margin="8,0"
-                            HorizontalAlignment="Right"
-                            Command="{Binding SetBeamNumberCommand}"
-                            Style="{StaticResource MaterialDesignIconButton}">
-                            <materialDesign:PackIcon
-                                Width="12"
-                                Height="12"
-                                Kind="Magnify" />
-                        </Button>
-                    </Grid>
-                </StackPanel>
-            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
     <i:Interaction.Triggers>
@@ -133,9 +48,9 @@
                     <materialDesign:PopupBox
                         IsEnabled="{Binding ProcessModel.IsFemModelLoaded}"
                         PlacementMode="RightAndAlignTopEdges"
-                        PopupContentTemplate="{StaticResource DesignLengthPopupTemplate}"
+                        PopupContentTemplate="{StaticResource BeamSelectionPopupTemplate}"
                         StaysOpen="True"
-                        ToolTip="Select a design length, for the beam element contour.">
+                        ToolTip="Select a beam filter method.">
                         <materialDesign:PopupBox.ToggleContent>
                             <materialDesign:PackIcon
                                 Width="{StaticResource IconSize}"

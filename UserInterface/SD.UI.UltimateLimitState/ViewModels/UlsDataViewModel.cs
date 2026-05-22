@@ -2,9 +2,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Contracts;
+using SD.Core.Shared.Extensions;
 using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.Sans;
+using SD.Element.Design.Interfaces;
 using SD.UI.Events;
+using SD.UI.ViewModel;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
@@ -66,8 +69,7 @@ public partial class UlsDataViewModel : ObservableObject
     [ObservableProperty]
     public partial bool HasReasonFilter { get; set; }
 
-    [ObservableProperty]
-    public partial ObservableCollection<ColumnFilterOption<int>> BeamFilterOptions { get; set; } = [];
+    private List<ColumnFilterOption<int>> BeamFilterOptions { get; set; } = [];
 
     [ObservableProperty]
     public partial ObservableCollection<ColumnFilterOption<int>> LoadCaseFilterOptions { get; set; } = [];
@@ -78,10 +80,19 @@ public partial class UlsDataViewModel : ObservableObject
     [ObservableProperty]
     public partial ObservableCollection<ColumnFilterOption<string>> ReasonFilterOptions { get; set; } = [];
 
+    [ObservableProperty]
+    public partial BeamFilterViewModel BeamFilterViewModel { get; set; }
+
     public bool HasData => SansRows is not null && SansRows.Count > 0;
     public int DisplayedRowCount => SansRowsView?.Cast<object>().Count() ?? 0;
 
-    public UlsDataViewModel(IUlsDesignResults ulsDesignResults, IEventAggregator eventAggregator, IUlsDataExportService ulsDdataExportService)
+    public UlsDataViewModel(IFemModel femModel,
+                            IFemModelDisplayService femModelDisplayService,
+                            IFemModelParameters femModelParameters,
+                            INotificationService notificationService,
+                            IUlsDesignResults ulsDesignResults,
+                            IEventAggregator eventAggregator,
+                            IUlsDataExportService ulsDdataExportService)
     {
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
         _ulsDdataExportService = ulsDdataExportService ?? throw new ArgumentNullException(nameof(ulsDdataExportService));
@@ -92,14 +103,22 @@ public partial class UlsDataViewModel : ObservableObject
         _refreshCalculationEvent = eventAggregator.GetEvent<RefreshCalculationEvent>();
         _selectTabEvent = eventAggregator.GetEvent<SelectUlsTabEvent>();
 
-        _loadCaseChangedEvent.Subscribe(RefreshRowsAsync);
-        _designCodeChangedEvent.Subscribe(RefreshRowsAsync);
-        _refreshCalculationEvent.Subscribe(RefreshRowsAsync);
+        _loadCaseChangedEvent.Subscribe(async () => await RefreshRowsAsync());
+        _designCodeChangedEvent.Subscribe(async () => await RefreshRowsAsync());
+        _refreshCalculationEvent.Subscribe(async () => await RefreshRowsAsync());
         _fileClosedEvent.Subscribe(ClearRows);
 
         eventAggregator.GetEvent<SelectDataTabEvent>().Subscribe(SetBeamResult);
 
-        RefreshRowsAsync();
+        BeamFilterViewModel = new BeamFilterViewModel(femModel,
+                                                      femModelDisplayService,
+                                                      notificationService,
+                                                      ulsDesignResults,
+                                                      femModelParameters,
+                                                      SetBeamNumberCommand,
+                                                      BeamSelectionTypeChangedCommand);
+
+        Task.Run(RefreshRowsAsync).Await();
     }
 
     private void SetBeamResult(UlsResult result)
@@ -141,10 +160,6 @@ public partial class UlsDataViewModel : ObservableObject
 
     private void BuildFilterOptions()
     {
-        var beams = SansRows.Select(r => r.Beam.Number).Distinct().OrderBy(v => v)
-            .Select(v => new ColumnFilterOption<int>(v, v.ToString()) { IsSelected = !HasBeamFilter || _selectedBeamNumbers.Count == 0 || _selectedBeamNumbers.Contains(v) })
-            .ToList();
-
         var loadCases = SansRows.Select(r => r.LoadCaseNumber).Distinct().OrderBy(v => v)
             .Select(v => new ColumnFilterOption<int>(v, v.ToString()) { IsSelected = !HasLoadCaseFilter || _selectedLoadCases.Count == 0 || _selectedLoadCases.Contains(v) })
             .ToList();
@@ -157,22 +172,41 @@ public partial class UlsDataViewModel : ObservableObject
             .Select(v => new ColumnFilterOption<string>(v, v) { IsSelected = !HasReasonFilter || _selectedReasons.Count == 0 || _selectedReasons.Contains(v) })
             .ToList();
 
-        BeamFilterOptions = [.. beams];
+        SetBeamFilterOptions();
         LoadCaseFilterOptions = [.. loadCases];
         SectionFilterOptions = [.. sections];
         ReasonFilterOptions = [.. reasons];
     }
 
     [RelayCommand]
-    private void SelectAllBeamFilters()
+    private async Task SetBeamNumber(double beamNumber)
     {
-        BeamFilterOptions.ToList().ForEach(o => o.IsSelected = true);
+        BeamFilterOptions.ForEach(o => o.IsSelected = false);
+        BeamFilterOptions.FirstOrDefault(o => o.Value == beamNumber)?.IsSelected = true;
+
+        ApplyFilters();
     }
 
     [RelayCommand]
-    private void ClearBeamFilters()
+    private async Task BeamSelectionTypeChanged(bool showLoader = true)
     {
-        BeamFilterOptions.ToList().ForEach(o => o.IsSelected = false);
+        SetBeamFilterOptions();
+
+        ApplyFilters();
+    }
+
+    private void SetBeamFilterOptions()
+    {
+        var displayedBeams = BeamFilterViewModel.FilterUlsDisplayedResults()
+                                                .Select(r => r.Beam.Number)
+                                                .Distinct()
+                                                .ToHashSet();
+
+        var beams = SansRows.Select(r => r.Beam.Number).Distinct().OrderBy(v => v)
+            .Select(v => new ColumnFilterOption<int>(v, v.ToString()) { IsSelected = displayedBeams.Contains(v) })
+            .ToList();
+
+        BeamFilterOptions.SetRange(beams);
     }
 
     [RelayCommand]
@@ -267,7 +301,7 @@ public partial class UlsDataViewModel : ObservableObject
                && _selectedReasons.Contains(row.Utilization.MaxUtilizationDescription ?? string.Empty);
     }
 
-    private async void RefreshRowsAsync()
+    private async Task RefreshRowsAsync()
     {
         if (_isRefreshing)
             return;
@@ -275,14 +309,14 @@ public partial class UlsDataViewModel : ObservableObject
         _isRefreshing = true;
         try
         {
-            await Task.Yield();
-
             SansRows = _ulsDesignResults?.SansUlsResults ?? [];
 
             BuildFilterOptions();
             RebuildSelectedSets();
 
             RefreshFilters();
+
+            await Task.Yield();
         }
         finally
         {

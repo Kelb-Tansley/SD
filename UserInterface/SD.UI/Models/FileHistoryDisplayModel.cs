@@ -4,9 +4,11 @@ namespace SD.UI.Models;
 public partial class FileHistoryDisplayModel(string fileName, string fileCode, string filePath) : ObservableObject
 {
     [ObservableProperty]
-    public string _fileName = fileName;
+    public partial string FileName { get; set; } = fileName;
+
     [ObservableProperty]
-    public string _fileCode = fileCode;
+    public partial string FileCode { get; set; } = fileCode;
+
     [ObservableProperty]
-    public string _filePath = filePath;
+    public partial string FilePath { get; set; } = filePath;
 }

@@ -12,6 +12,17 @@ public static class LinqExtensions
                      select part.AsEnumerable().ToList();
         return [.. splits];
     }
+    public static void SetRange<T>(this IList<T>? items, IList<T>? collection)
+    {
+        if (collection == null)
+            return;
+
+        ArgumentNullException.ThrowIfNull(items);
+
+        items.Clear();
+
+        items.AddRange(collection);
+    }
     public static void SetRange<T>(this ObservableCollection<T>? items, IList<T>? collection)
     {
         if (collection == null)
@@ -23,7 +34,7 @@ public static class LinqExtensions
 
         items.AddRange(collection);
     }
-    public static void AddRange<T>(this ObservableCollection<T> items, IList<T>? collection)
+    public static void AddRange<T>(this IList<T> items, IList<T>? collection)
     {
         if (collection == null)
             return;

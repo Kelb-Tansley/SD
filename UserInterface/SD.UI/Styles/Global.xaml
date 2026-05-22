@@ -15,5 +15,6 @@
         <ResourceDictionary Source="Label\Label.xaml" />
         <ResourceDictionary Source="Custom\ExpandingCard.xaml" />
         <ResourceDictionary Source="ScrollBar\ScrollBar.xaml" />
+        <ResourceDictionary Source="DataTemplates\BeamDisplayPopupTemplate.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -123,12 +123,11 @@
                 <behaviors:NavigateDataGridContextMenuBehavior ShowInAnotherViewCommand="{Binding ShowInUlsViewCommand}" ShowInAnotherViewText="Show in ULS view" />
             </i:Interaction.Behaviors>
             <DataGrid.Columns>
-
                 <DataGridTextColumn Binding="{Binding Beam.Number}" IsReadOnly="True">
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center" Text="Beam" />
-                            <ToggleButton
+                            <!--<ToggleButton
                                 x:Name="SansBeamFilterToggle"
                                 IsChecked="{Binding Data.IsBeamFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
                                 Style="{StaticResource FilterToggleStyle}">
@@ -145,8 +144,30 @@
                                         </Style>
                                     </materialDesign:PackIcon.Style>
                                 </materialDesign:PackIcon>
-                            </ToggleButton>
-                            <Popup
+                            </ToggleButton>-->
+                            <materialDesign:PopupBox
+                                IsPopupOpen="{Binding Data.IsBeamFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
+                                PlacementMode="RightAndAlignTopEdges"
+                                PopupContentTemplate="{StaticResource BeamSelectionPopupTemplate}"
+                                StaysOpen="True"
+                                ToolTip="Select a beam filter method.">
+                                <materialDesign:PopupBox.ToggleContent>
+                                    <materialDesign:PackIcon Width="16" Height="16">
+                                        <materialDesign:PackIcon.Style>
+                                            <Style TargetType="materialDesign:PackIcon">
+                                                <Setter Property="Kind" Value="Filter" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Data.HasBeamFilter, Source={StaticResource VmProxy}}" Value="True">
+                                                        <Setter Property="Kind" Value="FilterCheck" />
+                                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </materialDesign:PackIcon.Style>
+                                    </materialDesign:PackIcon>
+                                </materialDesign:PopupBox.ToggleContent>
+                            </materialDesign:PopupBox>
+                            <!--<Popup
                                 AllowsTransparency="True"
                                 IsOpen="{Binding Data.IsBeamFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
                                 Placement="Bottom"
@@ -173,7 +194,7 @@
                                         </ScrollViewer>
                                     </StackPanel>
                                 </materialDesign:Card>
-                            </Popup>
+                            </Popup>-->
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
