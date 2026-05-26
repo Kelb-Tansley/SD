@@ -32,6 +32,7 @@
         <Grid.Resources>
             <Style x:Key="FilterToggleStyle" TargetType="ToggleButton">
                 <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Padding" Value="1" />
                 <Setter Property="Width" Value="22" />
@@ -127,32 +128,18 @@
                     <DataGridTextColumn.Header>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock VerticalAlignment="Center" Text="Beam" />
-                            <!--<ToggleButton
-                                x:Name="SansBeamFilterToggle"
-                                IsChecked="{Binding Data.IsBeamFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
-                                Style="{StaticResource FilterToggleStyle}">
-                                <materialDesign:PackIcon Width="16" Height="16">
-                                    <materialDesign:PackIcon.Style>
-                                        <Style TargetType="materialDesign:PackIcon">
-                                            <Setter Property="Kind" Value="Filter" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Data.HasBeamFilter, Source={StaticResource VmProxy}}" Value="True">
-                                                    <Setter Property="Kind" Value="FilterCheck" />
-                                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </materialDesign:PackIcon.Style>
-                                </materialDesign:PackIcon>
-                            </ToggleButton>-->
                             <materialDesign:PopupBox
+                                Margin="4,0,0,0"
                                 IsPopupOpen="{Binding Data.IsBeamFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
                                 PlacementMode="RightAndAlignTopEdges"
                                 PopupContentTemplate="{StaticResource BeamSelectionPopupTemplate}"
                                 StaysOpen="True"
                                 ToolTip="Select a beam filter method.">
                                 <materialDesign:PopupBox.ToggleContent>
-                                    <materialDesign:PackIcon Width="16" Height="16">
+                                    <materialDesign:PackIcon
+                                        Width="16"
+                                        Height="16"
+                                        Margin="3">
                                         <materialDesign:PackIcon.Style>
                                             <Style TargetType="materialDesign:PackIcon">
                                                 <Setter Property="Kind" Value="Filter" />
@@ -167,34 +154,6 @@
                                     </materialDesign:PackIcon>
                                 </materialDesign:PopupBox.ToggleContent>
                             </materialDesign:PopupBox>
-                            <!--<Popup
-                                AllowsTransparency="True"
-                                IsOpen="{Binding Data.IsBeamFilterOpen, Source={StaticResource VmProxy}, Mode=TwoWay}"
-                                Placement="Bottom"
-                                PlacementTarget="{Binding ElementName=SansBeamFilterToggle}"
-                                StaysOpen="False">
-                                <materialDesign:Card Style="{StaticResource FilterPopupCardStyle}">
-                                    <StackPanel MinWidth="220">
-                                        <StackPanel Style="{StaticResource FilterPopupActionsStyle}">
-                                            <Button
-                                                Command="{Binding Data.SelectAllBeamFiltersCommand, Source={StaticResource VmProxy}}"
-                                                Content="All"
-                                                Style="{StaticResource FilterChecklistButton}" />
-                                            <Button
-                                                Command="{Binding Data.ClearBeamFiltersCommand, Source={StaticResource VmProxy}}"
-                                                Content="None"
-                                                Style="{StaticResource FilterChecklistButton}" />
-                                            <Button
-                                                Command="{Binding Data.ApplyFiltersCommand, Source={StaticResource VmProxy}}"
-                                                Content="Apply"
-                                                Style="{StaticResource MaterialDesignRaisedButton}" />
-                                        </StackPanel>
-                                        <ScrollViewer Style="{StaticResource FilterPopupScrollViewerStyle}">
-                                            <ItemsControl ItemTemplate="{StaticResource FilterOptionTemplate}" ItemsSource="{Binding Data.BeamFilterOptions, Source={StaticResource VmProxy}}" />
-                                        </ScrollViewer>
-                                    </StackPanel>
-                                </materialDesign:Card>
-                            </Popup>-->
                         </StackPanel>
                     </DataGridTextColumn.Header>
                 </DataGridTextColumn>
@@ -313,11 +272,11 @@
                     Header="Peak %"
                     IsReadOnly="True" />
 
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K2}" Header="K2" />
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K1}" Header="K1" />
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.Kz}" Header="Kz" />
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeTop}" Header="Ke" />
-                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeBottom}" Header="KeB" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="K2" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.K1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="K1" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.Kz, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Kz" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeTop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Ke" />
+                <DataGridTextColumn Binding="{Binding Beam.BeamChain.KeBottom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="KeB" />
 
                 <DataGridTextColumn
                     MinWidth="120"

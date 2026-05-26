@@ -2,21 +2,40 @@ using Microsoft.Xaml.Behaviors;
 using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.BeamModels;
 using System.Globalization;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace SD.UI.UltimateLimitState.Behaviors;
 
-public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.DataGrid>
+public class UlsDataGridKeyboardBehavior : Behavior<DataGrid>
 {
     protected override void OnAttached()
     {
         AssociatedObject.PreviewKeyDown += OnPreviewKeyDown;
-        AssociatedObject.CellEditEnding += OnCellEditEnding;
+        AssociatedObject.PreparingCellForEdit += PreparingCellForEdit;
+        AssociatedObject.CurrentCellChanged += OnCurrentCellChanged;
+    }
+
+    private string? _editingHeader;
+    private TextBox? _editingTextBox;
+    private UlsResult? _editingRowItem;
+
+    private void PreparingCellForEdit(object? sender, DataGridPreparingCellForEditEventArgs e)
+    {
+        if (e.Column.Header is string header && IsKColumn(header))
+            _editingHeader = header;
+        else
+            _editingHeader = null;
+
+        _editingTextBox = e.EditingElement as TextBox;
+        _editingRowItem = e.Row.Item as UlsResult;
     }
 
     protected override void OnDetaching()
     {
         AssociatedObject.PreviewKeyDown -= OnPreviewKeyDown;
-        AssociatedObject.CellEditEnding -= OnCellEditEnding;
+        AssociatedObject.CurrentCellChanged -= OnCurrentCellChanged;
+        AssociatedObject.PreparingCellForEdit -= PreparingCellForEdit;
     }
 
     private void OnPreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -42,37 +61,33 @@ public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.Data
         }
     }
 
-    private void OnCellEditEnding(object? sender, System.Windows.Controls.DataGridCellEditEndingEventArgs e)
+    private void OnCurrentCellChanged(object? sender, EventArgs e)
     {
-        if (e.EditAction != System.Windows.Controls.DataGridEditAction.Commit)
+        // If we didn’t capture a valid edit context, ignore
+        if (_editingHeader is null ||
+            _editingTextBox is null ||
+            _editingRowItem?.Beam?.BeamChain is not BeamChain editedChain)
             return;
 
-        if (e.Column?.Header is not string header || !IsKColumn(header))
+        // Parse the new value
+        if (!TryParseDouble(_editingTextBox.Text, out var newValue))
             return;
 
-        if (e.EditingElement is not System.Windows.Controls.TextBox textBox)
-            return;
-
-        if (!TryParseDouble(textBox.Text, out var newValue))
-            return;
-
-        if (e.Row?.Item is not UlsResult ulsResult || ulsResult.Beam?.BeamChain is not BeamChain editedChain)
-            return;
-
+        // Find all editable columns with the same header
         var editableColumns = AssociatedObject.Columns
-            .Where(c => c.Header is string h && IsKColumn(h))
+            .Where(c => c.Header is string h && h == _editingHeader)
             .ToList();
 
         var touchedChains = new HashSet<BeamChain> { editedChain };
 
-        // Defer until after the DataGrid commits the value
-        AssociatedObject.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, () =>
-        {
-            RefreshRowsSharingChains(AssociatedObject, editableColumns, touchedChains);
-        });
+        // Defer until DataGrid has fully committed the edit
+        AssociatedObject.Dispatcher.BeginInvoke(
+            DispatcherPriority.Background,
+            () => RefreshRowsSharingChains(AssociatedObject, editableColumns, touchedChains)
+        );
     }
 
-    private static bool PasteKValues(System.Windows.Controls.DataGrid dataGrid)
+    private static bool PasteKValues(DataGrid dataGrid)
     {
         if (!System.Windows.Clipboard.ContainsText())
             return false;
@@ -176,8 +191,8 @@ public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.Data
 
         if (anyValueApplied)
         {
-            dataGrid.CommitEdit(System.Windows.Controls.DataGridEditingUnit.Cell, true);
-            dataGrid.CommitEdit(System.Windows.Controls.DataGridEditingUnit.Row, true);
+            dataGrid.CommitEdit(DataGridEditingUnit.Cell, true);
+            dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
 
             var touchedChains = pendingUpdates.Keys.Select(k => k.Chain).ToHashSet();
             RefreshRowsSharingChains(dataGrid, editableColumns, touchedChains);
@@ -186,7 +201,7 @@ public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.Data
         return anyValueApplied;
     }
 
-    private static void RefreshRowsSharingChains(System.Windows.Controls.DataGrid dataGrid, List<System.Windows.Controls.DataGridColumn> editableColumns, HashSet<BeamChain> touchedChains)
+    private static void RefreshRowsSharingChains(DataGrid dataGrid, List<DataGridColumn> editableColumns, HashSet<BeamChain> touchedChains)
     {
         for (var i = 0; i < dataGrid.Items.Count; i++)
         {
@@ -196,22 +211,21 @@ public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.Data
             if (ulsResult.Beam?.BeamChain is not BeamChain chain || !touchedChains.Contains(chain))
                 continue;
 
-            var row = dataGrid.ItemContainerGenerator.ContainerFromIndex(i) as System.Windows.Controls.DataGridRow;
-            if (row == null)
+            if (dataGrid.ItemContainerGenerator.ContainerFromIndex(i) is not DataGridRow row)
                 continue;
 
             foreach (var column in editableColumns)
             {
                 var cellContent = column.GetCellContent(row);
-                if (cellContent is System.Windows.Controls.TextBlock textBlock)
-                    System.Windows.Data.BindingOperations.GetBindingExpression(textBlock, System.Windows.Controls.TextBlock.TextProperty)?.UpdateTarget();
-                else if (cellContent is System.Windows.Controls.TextBox textBox)
-                    System.Windows.Data.BindingOperations.GetBindingExpression(textBox, System.Windows.Controls.TextBox.TextProperty)?.UpdateTarget();
+                if (cellContent is TextBlock textBlock)
+                    System.Windows.Data.BindingOperations.GetBindingExpression(textBlock, TextBlock.TextProperty)?.UpdateTarget();
+                else if (cellContent is TextBox textBox)
+                    System.Windows.Data.BindingOperations.GetBindingExpression(textBox, TextBox.TextProperty)?.UpdateTarget();
             }
         }
     }
 
-    private static bool FillDown(System.Windows.Controls.DataGrid dataGrid)
+    private static bool FillDown(DataGrid dataGrid)
     {
         if (dataGrid.CurrentCell.Item is not UlsResult sourceResult)
             return false;
@@ -249,15 +263,15 @@ public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.Data
 
         if (anyValueApplied)
         {
-            dataGrid.CommitEdit(System.Windows.Controls.DataGridEditingUnit.Cell, true);
-            dataGrid.CommitEdit(System.Windows.Controls.DataGridEditingUnit.Row, true);
+            dataGrid.CommitEdit(DataGridEditingUnit.Cell, true);
+            dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
             dataGrid.Items.Refresh();
         }
 
         return anyValueApplied;
     }
 
-    private static bool FillRight(System.Windows.Controls.DataGrid dataGrid)
+    private static bool FillRight(DataGrid dataGrid)
     {
         if (dataGrid.CurrentCell.Item is not UlsResult sourceResult)
             return false;
@@ -302,8 +316,8 @@ public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.Data
 
         if (anyValueApplied)
         {
-            dataGrid.CommitEdit(System.Windows.Controls.DataGridEditingUnit.Cell, true);
-            dataGrid.CommitEdit(System.Windows.Controls.DataGridEditingUnit.Row, true);
+            dataGrid.CommitEdit(DataGridEditingUnit.Cell, true);
+            dataGrid.CommitEdit(DataGridEditingUnit.Row, true);
             dataGrid.Items.Refresh();
         }
 
@@ -377,4 +391,3 @@ public class UlsDataGridKeyboardBehavior : Behavior<System.Windows.Controls.Data
                || double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out result);
     }
 }
-

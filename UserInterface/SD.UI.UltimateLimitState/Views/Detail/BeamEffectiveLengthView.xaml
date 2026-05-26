@@ -28,6 +28,11 @@
                 <Setter Property="HorizontalContentAlignment" Value="Right" />
                 <Setter Property="behaviors:SelectAllTextOnFocusBehavior.IsEnabled" Value="True" />
             </Style>
+            <Style x:Key="LengthTextBlock" TargetType="TextBlock">
+                <Setter Property="Width" Value="32" />
+                <Setter Property="FontSize" Value="{StaticResource ControlSmallFontSize}" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -44,10 +49,7 @@
                 VerticalAlignment="Center"
                 Orientation="Horizontal"
                 ToolTip="Un-braced length of major axis.">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource ControlSmallFontSize}"
-                    Text="L(2)" />
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="L(2)" />
                 <TextBlock
                     Margin="8,0,8,0"
                     Padding="6,4"
@@ -66,10 +68,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource ControlSmallFontSize}"
-                    Text="K(2)" />
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="K(2)" />
                 <TextBox
                     VerticalAlignment="Center"
                     Style="{StaticResource SpinnerTextBox}"
@@ -94,10 +93,7 @@
                 VerticalAlignment="Center"
                 Orientation="Horizontal"
                 ToolTip="Un-braced length of minor axis.">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource ControlSmallFontSize}"
-                    Text="L(1)" />
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="L(1)" />
                 <TextBlock
                     Margin="8,0,8,0"
                     Padding="6,4"
@@ -116,10 +112,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource ControlSmallFontSize}"
-                    Text="K(1)" />
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="K(1)" />
                 <TextBox
                     VerticalAlignment="Center"
                     Style="{StaticResource SpinnerTextBox}"
@@ -144,10 +137,7 @@
                 VerticalAlignment="Center"
                 Orientation="Horizontal"
                 ToolTip="Un-braced torsional length, 13.3.2.">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource ControlSmallFontSize}"
-                    Text="L(z)" />
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="L(z)" />
                 <TextBlock
                     Margin="8,0,8,0"
                     Padding="6,4"
@@ -166,10 +156,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource ControlSmallFontSize}"
-                    Text="K(z)" />
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="K(z)" />
                 <TextBox
                     VerticalAlignment="Center"
                     Style="{StaticResource SpinnerTextBox}"
@@ -194,10 +181,7 @@
                 VerticalAlignment="Center"
                 Orientation="Horizontal"
                 ToolTip="Un-braced length (Above Neutral Axis), 13.6.">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource ControlSmallFontSize}"
-                    Text="L(e)" />
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="L(e-t)" />
                 <TextBlock
                     Margin="8,0,8,0"
                     Padding="6,4"
@@ -210,21 +194,62 @@
                     </TextBlock.Text>
                 </TextBlock>
             </StackPanel>
-            <!--  K(e) numeric spinner (visual)  -->
+            <!--  K(e-top) numeric spinner (visual)  -->
             <StackPanel
                 Grid.Column="1"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="{StaticResource ControlSmallFontSize}"
-                    Text="K(e)" />
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="K(e-t)" />
                 <TextBox
                     VerticalAlignment="Center"
                     Style="{StaticResource SpinnerTextBox}"
                     Text="{Binding Beam.BeamChain.KeTop, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
-                    ToolTip="Effective length factor K(e)">
+                    ToolTip="Effective length factor K(e-top)">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="KeyUp">
+                            <i:InvokeCommandAction Command="{Binding Delay=3000, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+            </StackPanel>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel
+                Margin="0,2,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                ToolTip="Un-braced length (Below Neutral Axis), 13.6.">
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="L(e-b)" />
+                <TextBlock
+                    Margin="8,0,8,0"
+                    Padding="6,4"
+                    FontSize="{StaticResource ControlSmallFontSize}"
+                    Foreground="{StaticResource PrimaryDark1}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0:F2}  mm">
+                            <Binding Path="Beam.BeamChain.LeTop" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            <!--  K(e-bottom) numeric spinner (visual)  -->
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <TextBlock Style="{StaticResource LengthTextBlock}" Text="K(e-b)" />
+                <TextBox
+                    VerticalAlignment="Center"
+                    Style="{StaticResource SpinnerTextBox}"
+                    Text="{Binding Beam.BeamChain.KeBottom, StringFormat=N1, Mode=TwoWay, FallbackValue=1}"
+                    ToolTip="Effective length factor K(e-bottom)">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="KeyUp">
                             <i:InvokeCommandAction Command="{Binding Delay=3000, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
@@ -234,219 +259,4 @@
             </StackPanel>
         </Grid>
     </StackPanel>
-    <!--<Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" MinWidth="30" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" MinWidth="70" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <Label
-            Grid.Row="1"
-            Margin="8,0,8,2"
-            HorizontalAlignment="Right"
-            Content="K(2)" />
-        <Label
-            Grid.Row="3"
-            Margin="8,0,8,2"
-            HorizontalAlignment="Right"
-            Content="K(1)" />
-        <Label
-            Grid.Row="5"
-            Margin="8,0,8,2"
-            HorizontalAlignment="Right"
-            Content="K_z" />
-        <Label
-            Grid.Row="7"
-            Margin="8,0,8,2"
-            HorizontalAlignment="Right"
-            Content="K_e(Top)" />
-        <Label
-            Grid.Row="9"
-            Margin="8,0,8,2"
-            HorizontalAlignment="Right"
-            Content="K_e(Bottom)" />
-
-        <TextBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,0,0,8"
-            Text="{Binding Beam.BeamChain.K2}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="KeyUp">
-                    <i:InvokeCommandAction Command="{Binding Delay=3000, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </TextBox>
-        <TextBox
-            Grid.Row="3"
-            Grid.Column="1"
-            Margin="0,0,0,8"
-            Text="{Binding Beam.BeamChain.K1}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="KeyUp">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </TextBox>
-        <TextBox
-            Grid.Row="5"
-            Grid.Column="1"
-            Margin="0,0,0,8"
-            Text="{Binding Beam.BeamChain.Kz}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="KeyUp">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </TextBox>
-        <TextBox
-            Grid.Row="7"
-            Grid.Column="1"
-            Margin="0,0,0,8"
-            Text="{Binding Beam.BeamChain.KeTop}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="KeyUp">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </TextBox>
-        <TextBox
-            Grid.Row="9"
-            Grid.Column="1"
-            Margin="0,0,0,8"
-            Text="{Binding Beam.BeamChain.KeBottom}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="KeyUp">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}, AncestorLevel=2}, Path=DataContext.SetChainKValuesCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </TextBox>
-
-        <Label
-            Grid.Row="1"
-            Grid.Column="2"
-            Margin="16,0,8,2"
-            HorizontalAlignment="Right"
-            Content="L(2)" />
-        <Label
-            Grid.Row="3"
-            Grid.Column="2"
-            Margin="16,0,8,2"
-            HorizontalAlignment="Right"
-            Content="L(1)" />
-        <Label
-            Grid.Row="5"
-            Grid.Column="2"
-            Margin="16,0,8,2"
-            HorizontalAlignment="Right"
-            Content="L_z" />
-        <Label
-            Grid.Row="7"
-            Grid.Column="2"
-            Margin="16,0,8,2"
-            HorizontalAlignment="Right"
-            Content="L_e(Top)" />
-        <Label
-            Grid.Row="9"
-            Grid.Column="2"
-            Margin="16,0,8,2"
-            HorizontalAlignment="Right"
-            Content="L_e(Bottom)" />
-
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="3"
-            Margin="0,4,8,0">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:F2}  mm">
-                    <Binding Path="Beam.BeamChain.L2" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-        <TextBlock
-            Grid.Row="3"
-            Grid.Column="3"
-            Margin="0,4,8,0">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:F2}  mm">
-                    <Binding Path="Beam.BeamChain.L1" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-        <TextBlock
-            Grid.Row="5"
-            Grid.Column="3"
-            Margin="0,4,8,0">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:F2}  mm">
-                    <Binding Path="Beam.BeamChain.Lz" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-        <TextBlock
-            Grid.Row="7"
-            Grid.Column="3"
-            Margin="0,4,8,0">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:F2}  mm">
-                    <Binding Path="Beam.BeamChain.LeTop" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-        <TextBlock
-            Grid.Row="9"
-            Grid.Column="3"
-            Margin="0,4,8,0">
-            <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:F2}  mm">
-                    <Binding Path="Beam.BeamChain.LeBottom" />
-                </MultiBinding>
-            </TextBlock.Text>
-        </TextBlock>
-
-        <Label
-            Grid.ColumnSpan="5"
-            Margin="0"
-            Content="Un-braced length of major axis:"
-            FontWeight="SemiBold" />
-        <Label
-            Grid.Row="2"
-            Grid.ColumnSpan="5"
-            Margin="0,4,0,0"
-            Content="Un-braced length of minor axis:"
-            FontWeight="SemiBold" />
-        <Label
-            Grid.Row="4"
-            Grid.ColumnSpan="5"
-            Margin="0,4,0,0"
-            Content="Un-braced torsional length, 13.3.2:"
-            FontWeight="SemiBold" />
-        <Label
-            Grid.Row="6"
-            Grid.ColumnSpan="5"
-            Margin="0,4,0,0"
-            Content="Un-braced length (Above Neutral Axis), 13.6:"
-            FontWeight="SemiBold" />
-        <Label
-            Grid.Row="8"
-            Grid.ColumnSpan="5"
-            Margin="0,4,0,0"
-            Content="Un-braced length (Below Neutral Axis), 13.6:"
-            FontWeight="SemiBold" />
-    </Grid>-->
 </UserControl>
