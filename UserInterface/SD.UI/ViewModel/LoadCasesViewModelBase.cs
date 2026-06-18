@@ -3,25 +3,37 @@ using CommunityToolkit.Mvvm.Input;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Extensions;
 using SD.Core.Shared.Models;
+using SD.UI.Events;
 using System.Collections.ObjectModel;
 
 namespace SD.UI.ViewModel;
-public abstract partial class LoadCasesViewModelBase(IProcessModel processModel) : ViewModelBase(processModel)
+
+public abstract partial class LoadCasesViewModelBase : ViewModelBase
 {
-    [ObservableProperty]
-    public bool _areAllSelected = false;
+    protected readonly IEventAggregator _eventAggregator;
+    private readonly CanCalculateEvent _canCalculateEvent;
+
+    protected LoadCasesViewModelBase(IProcessModel processModel, IEventAggregator eventAggregator) : base(processModel)
+    {
+        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+
+        _canCalculateEvent = _eventAggregator.GetEvent<CanCalculateEvent>();
+    }
 
     [ObservableProperty]
-    public bool _autoCalculate = false;
+    public partial bool AreAllSelected { get; set; } = false;
 
     [ObservableProperty]
-    public bool _canCalculate = false;
+    public partial bool AutoCalculate { get; set; } = false;
 
     [ObservableProperty]
-    public ObservableCollection<LoadCaseCombination> _loadCaseCombinations = [];
+    public partial bool CanCalculate { get; set; } = false;
 
     [ObservableProperty]
-    public LoadCaseCombination? _selectedLoadCaseCombination;
+    public partial ObservableCollection<LoadCaseCombination> LoadCaseCombinations { get; set; } = [];
+
+    [ObservableProperty]
+    public partial LoadCaseCombination? SelectedLoadCaseCombination { get; set; }
 
     [RelayCommand]
     public async Task SelectedItemChanged()
@@ -32,7 +44,7 @@ public abstract partial class LoadCasesViewModelBase(IProcessModel processModel)
         SelectedLoadCaseCombination.Include = !SelectedLoadCaseCombination.Include;
 
         AreAllSelected = LoadCaseCombinations.All(slcc => slcc.Include);
-        
+
         await AutoCalculateChanged();
     }
 
@@ -51,7 +63,7 @@ public abstract partial class LoadCasesViewModelBase(IProcessModel processModel)
         if (AutoCalculate)
             await SelectedLoadCombinationsChanged();
 
-        CanCalculate = LoadCaseCombinations.Any(slcc => slcc.Include) && !AutoCalculate;
+        _canCalculateEvent.Publish(LoadCaseCombinations.Any(slcc => slcc.Include) && !AutoCalculate);
     }
 
     [RelayCommand]

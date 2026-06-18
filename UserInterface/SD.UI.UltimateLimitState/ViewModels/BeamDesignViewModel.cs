@@ -28,6 +28,8 @@ public partial class BeamDesignViewModel : ViewModelBase
     private readonly IUlsDesignResults _ulsDesignResults;
     private readonly INotificationService _notificationService;
     private readonly IFemModelParameters _femModelParameters;
+    private readonly IEventAggregator _eventAggregator;
+    private readonly IEffectiveLengthDataService _effectiveLengthDataService;
 
     private readonly BeamDesignWindowClosedEvent _beamDesignWindowClosedEvent;
     private readonly SelectedBeamChangedEvent _selectedBeamChangedEvent;
@@ -52,6 +54,15 @@ public partial class BeamDesignViewModel : ViewModelBase
     [ObservableProperty]
     public partial bool HasUlsCalcUpdates { get; set; }
 
+    partial void OnHasUlsCalcUpdatesChanged(bool value)
+    {
+        try
+        {
+            _eventAggregator?.GetEvent<SD.UI.Events.KValuesChangedEvent>()?.Publish(value);
+        }
+        catch { }
+    }
+
     [ObservableProperty]
     public partial BeamFilterViewModel BeamFilterViewModel { get; set; }
 
@@ -65,7 +76,8 @@ public partial class BeamDesignViewModel : ViewModelBase
                                IUlsDesignResults ulsDesignResults,
                                INotificationService notificationService,
                                IDesignCodeAdapter femDesignAdapter,
-                               IEventAggregator eventAggregator) : base(processModel)
+                               IEventAggregator eventAggregator,
+                               IEffectiveLengthDataService effectiveLengthDataService) : base(processModel)
     {
         _femModel = femModel ?? throw new ArgumentNullException(nameof(femModel));
         _designModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
@@ -75,18 +87,20 @@ public partial class BeamDesignViewModel : ViewModelBase
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         _femDesignAdapter = femDesignAdapter ?? throw new ArgumentNullException(nameof(femDesignAdapter));
+        _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+        _effectiveLengthDataService = effectiveLengthDataService ?? throw new ArgumentNullException(nameof(effectiveLengthDataService));
 
-        _beamDesignWindowClosedEvent = eventAggregator.GetEvent<BeamDesignWindowClosedEvent>();
-        _selectedBeamChangedEvent = eventAggregator.GetEvent<SelectedBeamChangedEvent>();
-        _loadCaseChangedEvent = eventAggregator.GetEvent<LoadCaseChangedEvent>();
-        _designFemResizeEvent = eventAggregator.GetEvent<DesignFemResizeEvent>();
-        _selectDataTabEvent = eventAggregator.GetEvent<SelectDataTabEvent>();
+        _beamDesignWindowClosedEvent = _eventAggregator.GetEvent<BeamDesignWindowClosedEvent>();
+        _selectedBeamChangedEvent = _eventAggregator.GetEvent<SelectedBeamChangedEvent>();
+        _loadCaseChangedEvent = _eventAggregator.GetEvent<LoadCaseChangedEvent>();
+        _designFemResizeEvent = _eventAggregator.GetEvent<DesignFemResizeEvent>();
+        _selectDataTabEvent = _eventAggregator.GetEvent<SelectDataTabEvent>();
 
         _beamDesignWindowClosedEvent.Subscribe(BeamDesignWindowClosed);
         _loadCaseChangedEvent.Subscribe(async () => await LoadCaseChanged());
-        eventAggregator.GetEvent<FileClosedEvent>().Subscribe(ClearProperties);
-        eventAggregator.GetEvent<DesignCodeChangedEvent>().Subscribe(DesignCodeChanged);
-        eventAggregator.GetEvent<SelectUlsTabEvent>().Subscribe(SetBeamResult);
+        _eventAggregator.GetEvent<FileClosedEvent>().Subscribe(ClearProperties);
+        _eventAggregator.GetEvent<DesignCodeChangedEvent>().Subscribe(DesignCodeChanged);
+        _eventAggregator.GetEvent<SelectUlsTabEvent>().Subscribe(SetBeamResult);
 
         InitializeBackgroundWorker();
 
@@ -125,10 +139,11 @@ public partial class BeamDesignViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Loaded()
+    private async Task Loaded()
     {
         CheckIfHasSelectedLoadCaseCombination();
         CheckIfHasSelectedBeams();
+        await LoadKValues();
     }
 
     [RelayCommand]
@@ -231,6 +246,35 @@ public partial class BeamDesignViewModel : ViewModelBase
         }
 
         SelectedBeamResultChanged();
+    }
+
+    private async Task LoadKValues()
+    {
+        // Attempt to load persisted K values for the current file and apply to displayed beams
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(_femModel.FileName))
+            {
+                var saved = await _effectiveLengthDataService.GetBeamKValuesByFileName(_femModel.FileName);
+                if (saved != null)
+                {
+                    foreach (var s in saved)
+                    {
+                        var match = DisplayedResults.FirstOrDefault(r => r.Beam.Number == s.BeamNumber);
+                        if (match != null)
+                        {
+                            match.Beam.BeamChain.K1 = s.K1;
+                            match.Beam.BeamChain.K2 = s.K2;
+                            match.Beam.BeamChain.Kz = s.Kz;
+                            match.Beam.BeamChain.KeTop = s.KeTop;
+                            match.Beam.BeamChain.KeBottom = s.KeBottom;
+                            match.Beam.BeamChain.ValuesChanged = false;
+                        }
+                    }
+                }
+            }
+        }
+        catch { }
     }
 
     private void InitializeBackgroundWorker()

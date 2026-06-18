@@ -5,7 +5,7 @@ public class ContourFileService(IAppSettings appSettings) : IContourFileService
     public async Task<string> GenerateDesignableBeamsContourFile(List<Beam> beams)
     {
         const string fileName = "Designable Beams Contour";
-        const string fileTitle = "Designable Beams (True = 1 & False = 0)\n";
+        const string fileTitle = "Can be designed (True = 1 & False = 0)\n";
 
         var fileRows = new StringBuilder();
         foreach (var beam in beams)

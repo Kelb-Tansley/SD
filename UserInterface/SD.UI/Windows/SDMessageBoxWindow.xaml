@@ -131,7 +131,7 @@
                             HorizontalAlignment="Right"
                             Click="Button_Yes_Click"
                             DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Style="{StaticResource MaterialDesignRaisedSecondaryLightButton}"
                             Visibility="Collapsed">
                             <Label
                                 Name="Label_Yes"
@@ -150,7 +150,8 @@
                             Margin="35,0,6,0"
                             HorizontalAlignment="Right"
                             Click="Button_OK_Click"
-                            Style="{StaticResource MaterialDesignOutlinedButton}">
+                            Style="{StaticResource MaterialDesignRaisedSecondaryLightButton}"
+                            Visibility="Visible">
                             <Label
                                 Name="Label_Ok"
                                 Padding="0"

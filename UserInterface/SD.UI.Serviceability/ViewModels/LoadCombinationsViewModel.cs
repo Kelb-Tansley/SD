@@ -9,7 +9,6 @@ using SD.UI.Constants;
 using SD.UI.Events;
 using SD.UI.Serviceability.Events;
 using SD.UI.Serviceability.Models;
-using SD.UI.Services;
 using SD.UI.ViewModel;
 
 namespace SD.UI.Serviceability.ViewModels;
@@ -20,7 +19,6 @@ public partial class LoadCombinationsViewModel : LoadCasesViewModelBase
     private readonly IFemModelDisplayService _femModelDisplayService;
     private readonly IDesignModel _designModel;
     private readonly IFemModel _femModel;
-    private readonly IEventAggregator _eventAggregator;
     private readonly IFemModelParameters _femModelParameters;
     private readonly INotificationService _notificationService;
     private readonly FemLoadedEvent _femLoadedEvent;
@@ -29,17 +27,16 @@ public partial class LoadCombinationsViewModel : LoadCasesViewModelBase
     private readonly SemaphoreSlim _reloadSemaphore = new(1, 1);
 
     public LoadCombinationsViewModel(IProcessModel processModel,
-                                IDesignModel designModel,
-                                IFemModel femModel,
-                                IDesignCodeAdapter femDesignAdapter,
-                                IEventAggregator eventAggregator,
-                                IFemModelDisplayService femModelDisplayService,
-                                IFemModelParameters femModelParameters,
-                                INotificationService notificationService) : base(processModel)
+                                     IDesignModel designModel,
+                                     IFemModel femModel,
+                                     IDesignCodeAdapter femDesignAdapter,
+                                     IEventAggregator eventAggregator,
+                                     IFemModelDisplayService femModelDisplayService,
+                                     IFemModelParameters femModelParameters,
+                                     INotificationService notificationService) : base(processModel, eventAggregator)
     {
         _designModel = designModel;
         _femModel = femModel;
-        _eventAggregator = eventAggregator;
         _femDesignAdapter = femDesignAdapter;
         _femModelDisplayService = femModelDisplayService;
         _femModelParameters = femModelParameters;

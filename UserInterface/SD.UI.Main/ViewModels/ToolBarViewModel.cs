@@ -1,8 +1,9 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SD.Core.Shared.Contracts;
 using SD.UI.Events;
 using SD.UI.ViewModel;
+using SD.Element.Design.Interfaces;
 
 namespace SD.UI.Main.ViewModels;
 
@@ -12,6 +13,7 @@ public partial class ToolBarViewModel : ViewModelBase
     private readonly IFemModel _femModel;
     private readonly IEventAggregator _eventAggregator;
     private readonly IUlsDesignResults _ulsDesignResults;
+    private readonly ISaveService _saveService;
 
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
@@ -36,6 +38,12 @@ public partial class ToolBarViewModel : ViewModelBase
     [ObservableProperty]
     public partial bool UseEnvelopeLoadCase { get; set; }
 
+    [ObservableProperty]
+    public partial bool IsSaveEnabled { get; set; }
+
+    [ObservableProperty]
+    public partial bool CanCalculate { get; set; }
+
     public ToolBarViewModel(IViewManagementModel viewManagementModel,
                             IFemModel femModel,
                             IDesignModel designModel,
@@ -43,7 +51,8 @@ public partial class ToolBarViewModel : ViewModelBase
                             IUlsDesignResults ulsDesignResults,
                             IFemModelParameters femModelParameters,
                             IEventAggregator eventAggregator,
-                            IBeamAxisDisplay beamAxisDisplay) : base(processModel)
+                            IBeamAxisDisplay beamAxisDisplay,
+                            ISaveService saveService) : base(processModel)
     {
         _viewManagementModel = viewManagementModel ?? throw new ArgumentNullException(nameof(viewManagementModel));
         _femModel = femModel ?? throw new ArgumentNullException(nameof(femModel));
@@ -52,6 +61,10 @@ public partial class ToolBarViewModel : ViewModelBase
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
         BeamAxisDisplay = beamAxisDisplay ?? throw new ArgumentNullException(nameof(beamAxisDisplay));
+        _saveService = saveService ?? throw new ArgumentNullException(nameof(saveService));
+
+        _eventAggregator.GetEvent<KValuesChangedEvent>()?.Subscribe((val) => IsSaveEnabled = val);
+        _eventAggregator.GetEvent<CanCalculateEvent>()?.Subscribe((val) => CanCalculate = val);
 
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
         _refreshEvent = _eventAggregator.GetEvent<RefreshEvent>();
@@ -63,7 +76,6 @@ public partial class ToolBarViewModel : ViewModelBase
     private void DesignCodeChanged()
     {
         _designCodeChangedEvent?.Publish();
-
         Refresh();
     }
 
@@ -109,5 +121,12 @@ public partial class ToolBarViewModel : ViewModelBase
         _femModel.ClearFile();
         FemModelParameters.Clear();
         _ulsDesignResults.Clear();
+    }
+
+    [RelayCommand]
+    private async Task Save()
+    {
+        await _saveService.SaveAsync();
+        IsSaveEnabled = false;
     }
 }

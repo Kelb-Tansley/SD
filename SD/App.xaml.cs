@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SD.Adapters;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Infrastructure.Logging;
@@ -8,6 +10,7 @@ using SD.Core.Shared.Events;
 using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.BeamModels;
 using SD.Core.Shared.Models.Core;
+using SD.Data;
 using SD.Data.Entities;
 using SD.Data.Interfaces;
 using SD.Data.Mapping;
@@ -120,6 +123,14 @@ public partial class App : PrismApplication
         _shutdownEvent?.Publish();
     }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        using (var uow = Container.Resolve<IUnitOfWork>())
+            uow.MigrateDb();
+    }
+
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterSingleton<ISplashService, SplashService>();
@@ -135,14 +146,15 @@ public partial class App : PrismApplication
         containerRegistry.Register<IContourFileService, ContourFileService>();
         containerRegistry.Register<IFemModelDisplayService, FemModelDisplayService>();
         containerRegistry.Register<ITankDesignService, TankDesignService>();
-        containerRegistry.Register<IStrandApiCreateService, StrandApiCreateService>(); 
+        containerRegistry.Register<IStrandApiCreateService, StrandApiCreateService>();
 
         containerRegistry.Register<IDesignCodeAdapter, DesignCodeAdapter>();
         containerRegistry.Register<IBeamChainService, BeamChainService>();
+        containerRegistry.Register<ISaveService, SaveService>();
         containerRegistry.Register<IEffectiveLengthService, StrandEffectiveLengthService>();
         containerRegistry.Register<IBucklingAnalysisService, BucklingAnalysisService>();
 
-    containerRegistry.Register<IUlsDataExportService, UlsDataExportService>();
+        containerRegistry.Register<IUlsDataExportService, UlsDataExportService>();
 
         containerRegistry.Register<ITokenCacheService, TokenCacheService>();
         containerRegistry.Register<IAuthenticationService, AuthenticationService>();
@@ -209,6 +221,7 @@ public partial class App : PrismApplication
 
     private static void RegisterRepositories(IContainerRegistry containerRegistry)
     {
+        containerRegistry.Register<IEffectiveLengthDataService, EffectiveLengthDataService>();
         containerRegistry.Register<IDataAccessService, DataAccessService>();
         containerRegistry.Register<IFemFilePathService, FemFilePathService>();
         containerRegistry.Register<IUserPreferencesService, UserPreferencesService>();

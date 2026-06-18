@@ -4,7 +4,7 @@ namespace SD.Core.Shared.Models;
 public partial class LoadCaseCombination : Identity
 {
     [ObservableProperty]
-    public bool _include;
+    public partial bool Include { get; set; }
 
     public static bool AreEqual(LoadCaseCombination a, LoadCaseCombination b) => a.Name.Equals(b.Name) && a.Number.Equals(b.Number);
 

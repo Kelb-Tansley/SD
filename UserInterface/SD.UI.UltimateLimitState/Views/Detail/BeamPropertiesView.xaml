@@ -24,8 +24,8 @@
             Height="Auto"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
-            HeadersVisibility="All"
             ItemsSource="{Binding FemModelParameters.BeamProperties}"
+            RowHeight="34"
             Visibility="{Binding DesignModel.DesignCode, Converter={StaticResource DesignCodeToVisibilityConverter}, ConverterParameter=SANS}">
             <DataGrid.Columns>
                 <materialDesign:DataGridTextColumn
@@ -41,36 +41,6 @@
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
                 <DataGridCheckBoxColumn Binding="{Binding IsPlateGirder, UpdateSourceTrigger=PropertyChanged}" Header="Plate Girder">
-                    <DataGridCheckBoxColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridCheckBoxColumn.HeaderStyle>
-                </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Binding="{Binding IsLateralRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Lateral Restraint">
-                    <DataGridCheckBoxColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                        </Style>
-                    </DataGridCheckBoxColumn.HeaderStyle>
-                </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Binding="{Binding IsTopFlangeRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Top Flange Restraint">
-                    <DataGridCheckBoxColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            <Setter Property="ToolTip" Value="The top flange of a section is typically seen as the portion of the beam in compression when subject to a +ve bending moment." />
-                        </Style>
-                    </DataGridCheckBoxColumn.HeaderStyle>
-                </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Binding="{Binding IsBottomFlangeRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Bottom Flange Restraint">
-                    <DataGridCheckBoxColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            <Setter Property="ToolTip" Value="The bottom flange of a section is typically seen as the portion of the beam in tension when subject to a +ve bending moment." />
-                        </Style>
-                    </DataGridCheckBoxColumn.HeaderStyle>
-                </DataGridCheckBoxColumn>
-                <DataGridCheckBoxColumn Binding="{Binding IsTorsionalRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Torsional Restraint">
                     <DataGridCheckBoxColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -94,6 +64,11 @@
                             </Binding.ValidationRules>
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
+                    <materialDesign:DataGridTextColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="DataGridColumnHeader">
+                            <Setter Property="ToolTip" Value="Net area reduction factor. Applied in tensile resistance." />
+                        </Style>
+                    </materialDesign:DataGridTextColumn.HeaderStyle>
                 </materialDesign:DataGridTextColumn>
                 <materialDesign:DataGridTextColumn
                     ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
@@ -107,6 +82,38 @@
                         </Binding>
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsTopFlangeRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Top Flange Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="ToolTip" Value="Acts as a top flange buckling restraint. The top flange of a section is typically seen as the portion of the beam in compression when subject to a +ve bending moment." />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsBottomFlangeRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Bottom Flange Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="ToolTip" Value="Acts as a bottom flange buckling restraint. The bottom flange of a section is typically seen as the portion of the beam in tension when subject to a +ve bending moment." />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsTorsionalRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Torsional Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="ToolTip" Value="Acts as a torsional buckling restraint." />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsLateralRestraint, UpdateSourceTrigger=PropertyChanged}" Header="Lateral Restraint">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="ToolTip" Value="Acts as a lateral buckling restraint." />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
             </DataGrid.Columns>
         </DataGrid>
 

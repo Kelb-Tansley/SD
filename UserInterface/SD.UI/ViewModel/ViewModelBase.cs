@@ -5,10 +5,10 @@ namespace SD.UI.ViewModel;
 public partial class ViewModelBase(IProcessModel processModel) : ObservableObject
 {
     [ObservableProperty]
-    public IProcessModel _processModel = processModel ?? throw new ArgumentNullException(nameof(processModel));
+    public partial IProcessModel ProcessModel { get; set; } = processModel ?? throw new ArgumentNullException(nameof(processModel));
 
     [ObservableProperty]
-    public bool _isThisProcessRunning = false;
+    public partial bool IsThisProcessRunning { get; set; } = false;
 
     public async Task SetPrimaryProcess(bool isCompleted = false, bool longerDelay = false, bool thisProcessOnly = false)
     {

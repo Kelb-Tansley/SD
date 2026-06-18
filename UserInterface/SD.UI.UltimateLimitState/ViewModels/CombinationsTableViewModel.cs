@@ -21,7 +21,6 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     private readonly IFemModelDisplayService _femModelDisplayService;
     private readonly IDesignModel _designModel;
     private readonly IFemModel _femModel;
-    private readonly IEventAggregator _eventAggregator;
     private readonly IBeamAxisDisplay _beamAxisDisplay;
     private readonly INotificationService _notificationService;
     private readonly IFemFilePathService _femFilePathService;
@@ -54,12 +53,10 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
                                       IStrandApiService strandApiService,
                                       IEffectiveLengthService effectiveLengthService,
                                       IBeamAxisDisplay beamAxisDisplay,
-                                      IUlsDesignResults ulsDesignResults) : base(processModel)
+                                      IUlsDesignResults ulsDesignResults) : base(processModel, eventAggregator)
     {
-        _processModel = processModel;
         _designModel = designModel;
         _femModel = femModel;
-        _eventAggregator = eventAggregator;
         _beamAxisDisplay = beamAxisDisplay;
         _femDesignAdapter = femDesignAdapter;
         _femModelDisplayService = femModelDisplayService;

@@ -7,7 +7,6 @@ public partial class ServiceabilityDesignViewModel : ObservableObject
 {
     public ServiceabilityDesignViewModel(IRegionManager regionManager)
     {
-        regionManager.RegisterViewWithRegion(RegionNames.SlsLoadCombinationsViewRegion, typeof(LoadCombinationsView));
         regionManager.RegisterViewWithRegion(RegionNames.SlsFemModelViewRegion, typeof(SlsFemModelView));
     }
 }

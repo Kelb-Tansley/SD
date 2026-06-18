@@ -82,8 +82,21 @@
                             Width="24"
                             Height="24"
                             HorizontalAlignment="Center"
+                            Kind="OfficeBuildingCog" />
+                        <TextBlock HorizontalAlignment="Center" Text="Sections" />
+                    </StackPanel>
+                </TabItem.Header>
+                <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.BeamPropertiesRegion}" />
+            </TabItem>
+            <TabItem IsEnabled="{Binding HasUlsData}">
+                <TabItem.Header>
+                    <StackPanel Width="auto" Height="auto">
+                        <materialDesign:PackIcon
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center"
                             Kind="PencilRuler" />
-                        <TextBlock HorizontalAlignment="Center" Text="ULS" />
+                        <TextBlock HorizontalAlignment="Center" Text="Design" />
                     </StackPanel>
                 </TabItem.Header>
                 <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.SingleElementDesignRegionTabbed}" />
@@ -96,7 +109,7 @@
                             Height="24"
                             HorizontalAlignment="Center"
                             Kind="TableLarge" />
-                        <TextBlock HorizontalAlignment="Center" Text="Data" />
+                        <TextBlock HorizontalAlignment="Center" Text="Tables" />
                     </StackPanel>
                 </TabItem.Header>
                 <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.UlsDataRegion}" />

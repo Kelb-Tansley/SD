@@ -3,29 +3,17 @@ using SD.Data.Interfaces;
 
 namespace SD.Data.Services;
 
-public class DataAccessService : IDataAccessService
+public class DataAccessService(
+    IUnitOfWork unitOfWork,
+    IEntityMapper<BeamPropertySettings, Section> beamPropertiesMapper,
+    IEntityMapper<DesignSettings, BeamDesignSettings> designSettingsMapper) : IDataAccessService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IRepository<FemFileEntity> _femFileRepo;
-    private readonly IRepository<DesignSettings> _designSettingsRepo;
-    private readonly IRepository<BeamPropertySettings> _beamPropertiesRepo;
+    private readonly IRepository<FemFileEntity> _femFileRepo = unitOfWork.GetRepository<FemFileEntity>();
+    private readonly IRepository<DesignSettings> _designSettingsRepo = unitOfWork.GetRepository<DesignSettings>();
+    private readonly IRepository<BeamPropertySettings> _beamPropertiesRepo = unitOfWork.GetRepository<BeamPropertySettings>();
 
-    private readonly IEntityMapper<DesignSettings, BeamDesignSettings> _designSettingsMapper;
-    private readonly IEntityMapper<BeamPropertySettings, Section> _beamPropertiesMapper;
-
-    public DataAccessService(
-        IUnitOfWork unitOfWork,
-        IEntityMapper<BeamPropertySettings, Section> beamPropertiesMapper,
-        IEntityMapper<DesignSettings, BeamDesignSettings> designSettingsMapper)
-    {
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-        _femFileRepo = unitOfWork.GetRepository<FemFileEntity>();
-        _designSettingsRepo = unitOfWork.GetRepository<DesignSettings>();
-        _beamPropertiesRepo = unitOfWork.GetRepository<BeamPropertySettings>();
-
-        _designSettingsMapper = designSettingsMapper ?? throw new ArgumentNullException(nameof(designSettingsMapper));
-        _beamPropertiesMapper = beamPropertiesMapper ?? throw new ArgumentNullException(nameof(beamPropertiesMapper));
-    }
+    private readonly IEntityMapper<DesignSettings, BeamDesignSettings> _designSettingsMapper = designSettingsMapper ?? throw new ArgumentNullException(nameof(designSettingsMapper));
+    private readonly IEntityMapper<BeamPropertySettings, Section> _beamPropertiesMapper = beamPropertiesMapper ?? throw new ArgumentNullException(nameof(beamPropertiesMapper));
 
     public async Task<Guid> SaveFemFileByName(string fileName)
     {
@@ -37,7 +25,7 @@ public class DataAccessService : IDataAccessService
         var femFile = new FemFileEntity() { FileName = fileName };
         await _femFileRepo.AddAsync(femFile);
 
-        await _unitOfWork.Commit();
+        await unitOfWork.Commit();
         return femFile.Id;
     }
 
@@ -52,15 +40,17 @@ public class DataAccessService : IDataAccessService
         foreach (var setting in settings)
             setting.FemFile.FileName = fileName;
         await _beamPropertiesRepo.AddAllAsync(settings);
-        await _unitOfWork.Commit();
+        await unitOfWork.Commit();
     }
+
     public async Task SaveDesignSettings(BeamDesignSettings designSettings)
     {
         var settings = _designSettingsMapper.Map(designSettings);
 
         await _designSettingsRepo.AddAsync(settings);
-        await _unitOfWork.Commit();
+        await unitOfWork.Commit();
     }
+
     public async Task<DesignSettings?> GetDesignSettings()
     {
         return await _designSettingsRepo.GetByIdAsync(Guid.NewGuid());

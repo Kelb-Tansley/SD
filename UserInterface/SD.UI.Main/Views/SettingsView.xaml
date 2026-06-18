@@ -13,18 +13,7 @@
     mc:Ignorable="d">
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <TabControl
-                MinWidth="600"
-                MinHeight="500"
-                materialDesign:ColorZoneAssist.Mode="PrimaryDark"
-                Style="{StaticResource MaterialDesignFilledTabControl}">
-                <TabItem Header="Beam Property Settings">
-                    <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.BeamPropertiesRegion}" />
-                </TabItem>
-                <TabItem Header="Design Settings">
-                    <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.DesignSettingsRegion}" />
-                </TabItem>
-            </TabControl>
+            <ContentControl prism:RegionManager.RegionName="{x:Static ui:RegionNames.DesignSettingsRegion}" />
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button
                     Margin="4,4,24,16"
