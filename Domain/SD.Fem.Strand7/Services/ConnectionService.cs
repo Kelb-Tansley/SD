@@ -8,7 +8,7 @@ using SD.Core.Shared.Events;
 namespace SD.Fem.Strand7.Services;
 
 public class ConnectionService(
-    IFemFilePathService femFilePathService,
+    IFemFilePathBlobService femFilePathService,
     IRuntimeAppSettings runtimeAppSettings,
     IAppSettings appSettings,
     ISplashService splashService,

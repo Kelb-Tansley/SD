@@ -1,6 +1,4 @@
-﻿
-
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace SD.Data.Interfaces;
 
@@ -13,4 +11,5 @@ public interface IRepository<T>
     Task UpdateAsync(T entity);
     Task DeleteAsync(Guid id);
     Task<T?> FirstOrDefault(Expression<Func<T, bool>> predicate);
+    Task<List<T>?> Where(Expression<Func<T, bool>> predicate);
 }

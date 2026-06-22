@@ -2,7 +2,7 @@
 
 namespace SD.Element.Design.Interfaces;
 
-public interface IEffectiveLengthDataService
+public interface IBeamKFactorDataService
 {
     public Task SaveBeamKValues(string fileName, IEnumerable<BeamKValue> kValues);
     public Task<IEnumerable<BeamKValue>> GetBeamKValuesByFileName(string fileName);

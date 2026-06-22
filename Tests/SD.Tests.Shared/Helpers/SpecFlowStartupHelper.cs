@@ -49,7 +49,7 @@ public static class SpecFlowStartupHelper
 
         //Primary services
         services.AddSingleton<IRuntimeAppSettings, RuntimeAppSettings>();
-        services.AddScoped<IFemFilePathService, FemFilePathService>();
+        services.AddScoped<IFemFilePathBlobService, FemFilePathBlobService>();
         services.AddScoped<ILoggerService, LoggerService>();
 
         // Register services to interfaces

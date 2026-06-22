@@ -23,8 +23,7 @@ public partial class Beam : ObservableObject
     public BeamChain BeamChain { get; set; } = new();
 
     [ObservableProperty]
-    public bool isSelected = false;
-
+    public partial bool IsSelected { get; set; } = false;
     public int Node1 { get; set; }
     public int Node2 { get; set; }
 

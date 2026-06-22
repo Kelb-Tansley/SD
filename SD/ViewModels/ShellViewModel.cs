@@ -26,7 +26,6 @@ public partial class ShellViewModel : FemViewModelBase
     private readonly IEventAggregator _eventAggregator;
     private readonly INotificationService _notificationService;
     private readonly IUserPreferencesService _userPreferencesService;
-    private readonly IDataAccessService _dataAccessService;
 
     [ObservableProperty]
     public bool isFemLoaded = true;
@@ -65,8 +64,7 @@ public partial class ShellViewModel : FemViewModelBase
                           IRuntimeAppSettings runtimeAppSettings,
                           IEventAggregator eventAggregator,
                           ISnackbarModel snackbarModel,
-                          IUserPreferencesService userPreferencesService,
-                          IDataAccessService dataAccessService) : base(viewManagementModel)
+                          IUserPreferencesService userPreferencesService) : base(viewManagementModel)
     {
         _regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
         _authenticationService = authenticationService ?? throw new ArgumentNullException(nameof(authenticationService));
@@ -78,7 +76,6 @@ public partial class ShellViewModel : FemViewModelBase
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _snackbarModel = snackbarModel ?? throw new ArgumentNullException(nameof(snackbarModel));
         _userPreferencesService = userPreferencesService ?? throw new ArgumentNullException(nameof(userPreferencesService));
-        _dataAccessService = dataAccessService ?? throw new ArgumentNullException(nameof(dataAccessService));
 
         _regionManager.RegisterViewWithRegion(RegionNames.MenuRegion, typeof(MenuView));
         _regionManager.RegisterViewWithRegion(RegionNames.HeaderRegion, typeof(HeaderView));

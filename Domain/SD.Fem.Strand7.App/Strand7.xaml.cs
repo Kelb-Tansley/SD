@@ -11,7 +11,7 @@ namespace SD.Fem.Strand7.App;
 public partial class Strand7
 {
     private readonly LoggerService _loggerService;
-    private readonly FemFilePathService _femFilePathService;
+    private readonly FemFilePathBlobService _femFilePathService;
     private IAppSettings _appSettings;
 
     public Strand7()
@@ -19,7 +19,7 @@ public partial class Strand7
         RegisterConfigSettings();
 
         ArgumentNullException.ThrowIfNull(_appSettings);
-        _femFilePathService = new FemFilePathService(_appSettings, new RuntimeAppSettings());
+        _femFilePathService = new FemFilePathBlobService(_appSettings, new RuntimeAppSettings());
         _loggerService = new LoggerService("Strand7Logger.config");
     }
 

@@ -27,13 +27,13 @@ public partial class SplashViewModel : ObservableObject
 
     private readonly ISplashService _splashService;
     private readonly IRuntimeAppSettings _runtimeAppSettings;
-    private readonly IFemFilePathService _femFilePathService;
+    private readonly IFemFilePathBlobService _femFilePathService;
     private readonly IEventAggregator _eventAggregator;
     private readonly AppRestartEvent _appRestartEvent;
 
     public SplashViewModel(ISplashService splashService,
                            IRuntimeAppSettings runtimeAppSettings,
-                           IFemFilePathService femFilePathService,
+                           IFemFilePathBlobService femFilePathService,
                            IEventAggregator eventAggregator)
     {
         _splashService = splashService;

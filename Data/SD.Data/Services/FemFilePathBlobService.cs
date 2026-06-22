@@ -4,7 +4,7 @@ using SD.Data.Interfaces;
 
 namespace SD.Data.Services;
 
-public partial class FemFilePathService(IAppSettings appSettings, IRuntimeAppSettings runtimeAppSettings) : BlobFileService, IFemFilePathService
+public partial class FemFilePathBlobService(IAppSettings appSettings, IRuntimeAppSettings runtimeAppSettings) : BlobFileService, IFemFilePathBlobService
 {
     private readonly IAppSettings _appSettings = appSettings ?? throw new ArgumentNullException(nameof(appSettings));
     private readonly IRuntimeAppSettings _runtimeAppSettings = runtimeAppSettings ?? throw new ArgumentNullException(nameof(runtimeAppSettings));

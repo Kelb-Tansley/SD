@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SD.Data.Entities;
+﻿namespace SD.Data.Entities;
 
 public class FemFileEntity : EntityBase
 {
@@ -9,4 +7,5 @@ public class FemFileEntity : EntityBase
 
     // Original file name or relative path for convenience (do not rely on this as identity)
     public required string FileName { get; set; }
+    public required string FileNameOnly { get; set; }
 }

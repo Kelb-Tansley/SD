@@ -4,6 +4,7 @@ using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Constants;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Models;
+using SD.Core.Shared.Models.BeamModels;
 using SD.Data.Interfaces;
 using SD.Element.Design.Interfaces;
 using SD.Fem.Strand7.Interfaces;
@@ -12,6 +13,7 @@ using SD.UI.Enums;
 using SD.UI.Events;
 using SD.UI.Services;
 using SD.UI.ViewModel;
+using System.ComponentModel;
 
 namespace SD.UI.UltimateLimitState.ViewModels;
 
@@ -23,10 +25,11 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     private readonly IFemModel _femModel;
     private readonly IBeamAxisDisplay _beamAxisDisplay;
     private readonly INotificationService _notificationService;
-    private readonly IFemFilePathService _femFilePathService;
+    private readonly IFemFilePathBlobService _femFilePathService;
     private readonly IEffectiveLengthService _effectiveLengthService;
     private readonly IStrandApiService _strandApiService;
     private readonly IUlsDesignResults _ulsDesignResults;
+    private readonly IBeamKFactorService _beamKFactorService;
 
     private readonly RefreshEvent _refreshEvent;
     private readonly RefreshCalculationEvent _refreshCalculationEvent;
@@ -46,13 +49,14 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
                                       IFemModel femModel,
                                       IDesignCodeAdapter femDesignAdapter,
                                       IEventAggregator eventAggregator,
-                                      IFemFilePathService femFilePathService,
+                                      IFemFilePathBlobService femFilePathService,
                                       IFemModelDisplayService femModelDisplayService,
                                       IFemModelParameters femModelParameters,
                                       INotificationService notificationService,
                                       IStrandApiService strandApiService,
                                       IEffectiveLengthService effectiveLengthService,
                                       IBeamAxisDisplay beamAxisDisplay,
+                                      IBeamKFactorService beamKFactorService,
                                       IUlsDesignResults ulsDesignResults) : base(processModel, eventAggregator)
     {
         _designModel = designModel;
@@ -60,12 +64,13 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         _beamAxisDisplay = beamAxisDisplay;
         _femDesignAdapter = femDesignAdapter;
         _femModelDisplayService = femModelDisplayService;
-        _femModelParameters = femModelParameters;
+        FemModelParameters = femModelParameters;
         _notificationService = notificationService;
         _femFilePathService = femFilePathService ?? throw new ArgumentNullException(nameof(femFilePathService));
         _effectiveLengthService = effectiveLengthService;
         _strandApiService = strandApiService;
         _ulsDesignResults = ulsDesignResults;
+        _beamKFactorService = beamKFactorService;
 
         _refreshEvent = _eventAggregator.GetEvent<RefreshEvent>();
         _refreshCalculationEvent = _eventAggregator.GetEvent<RefreshCalculationEvent>();
@@ -84,7 +89,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     }
 
     [ObservableProperty]
-    public required IFemModelParameters _femModelParameters;
+    public required partial IFemModelParameters FemModelParameters { get; set; }
 
     [RelayCommand]
     private async Task LoadCaseChanged()
@@ -111,7 +116,9 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
                     await _reloadSemaphore.RunInBackgroundAsync(() => _femModelDisplayService.OpenFemFile(FemModels.DisplayModelId, _femModel.FileName, true));
 
                     UpdateLoadCombinations(FemModelParameters.LoadCaseCombinations);
-                    _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, _designModel.IsDesignLengthCalculated, FemModelParameters, _designModel.DesignSettings);
+
+                    await GetEffectiveLengths();
+
                     await DesignContourChanged();
 
                     // Publish the event to notify the application that the FEM model has been loaded.
@@ -133,6 +140,16 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         }
     }
 
+    private async Task GetEffectiveLengths()
+    {
+        var designLengthsTask = Task.Run(() =>
+            _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, _designModel.IsDesignLengthCalculated, FemModelParameters, _designModel.DesignSettings));
+
+        var beamKFactorsTask = _beamKFactorService.GetBeamKValuesByFileName(_femModel.FileName, FemModelParameters.Beams);
+
+        await Task.WhenAll(designLengthsTask, beamKFactorsTask);
+    }
+
     /// <summary>
     /// Attempts to load the properties of the FEM model. If the load fails, the user is prompted to run the solver. If the user chooses to run the solver, the method will recursively call itself.
     /// If the user chooses not to run the solver, the method will navigate back to the file browser view.
@@ -144,7 +161,10 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
         bool femModelOpened = result.IsSuccess;
         if (femModelOpened)
+        {
             _ = await _femFilePathService.AddUpdateFilePathsAsync(_femModel.FileName);
+            SubscribeToPropertyChangedEvents();
+        }
         else
         {
             var userChoice = _notificationService.NotifyUserWithYesNoOption(new Notification("Error", result.Message));
@@ -162,6 +182,22 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         }
 
         return femModelOpened;
+    }
+
+    private void SubscribeToPropertyChangedEvents()
+    {
+        foreach (var beam in FemModelParameters.Beams)
+        {
+            UnsubscribeFromBeam(beam);
+            SubscribeToBeam(beam);
+        }
+        void UnsubscribeFromBeam(Beam beam) => beam.BeamChain?.PropertyChanged -= OnBeamChainPropertyChanged;
+        void SubscribeToBeam(Beam beam) => beam.BeamChain?.PropertyChanged += OnBeamChainPropertyChanged;
+        void OnBeamChainPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender is BeamChain chain && chain.ValuesChanged)
+                _eventAggregator?.GetEvent<KValuesChangedEvent>()?.Publish(true);
+        }
     }
 
     protected override async Task SelectedLoadCombinationsChanged() => await UpdateAndRunUlsSolver();
@@ -199,7 +235,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
     private async Task RefreshCalculation()
     {
-        _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, _designModel.IsDesignLengthCalculated, FemModelParameters, _designModel.DesignSettings);
+        await GetEffectiveLengths();
 
         switch (_lastEventEnum)
         {

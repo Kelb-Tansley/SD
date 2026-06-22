@@ -1,5 +1,5 @@
 ﻿namespace SD.Data.Interfaces;
-public interface IFemFilePathService
+public interface IFemFilePathBlobService
 {
     public string? GetLastStrandApiPath();
     public Task InsertStrandApiPath(string path);

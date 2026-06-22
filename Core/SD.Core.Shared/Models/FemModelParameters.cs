@@ -9,17 +9,16 @@ public partial class FemModelParameters : ObservableObject, IFemModelParameters
     public bool IsInitialized { get; set; }
 
     [ObservableProperty]
-    public ObservableCollection<Section> beamProperties = [];
+    public partial ObservableCollection<Section> BeamProperties { get; set; } = [];
+    [ObservableProperty]
+    public partial ObservableCollection<Section> NonDesignableSections { get; set; } = [];
 
     [ObservableProperty]
-    public ObservableCollection<Section> nonDesignableSections = [];
-
-    [ObservableProperty]
-    public required ObservableCollection<Beam> beams = [];
+    public required partial ObservableCollection<Beam> Beams { get; set; } = [];
     public required UnitFactor UnitFactor { get; set; }
 
     [ObservableProperty]
-    public ObservableCollection<LoadCaseCombination> loadCaseCombinations = [];
+    public partial ObservableCollection<LoadCaseCombination> LoadCaseCombinations { get; set; } = [];
 
     public void Clear()
     {

@@ -42,7 +42,7 @@ public partial class App : PrismApplication
 {
     private AppShutdownEvent? _shutdownEvent;
     private ILoggerService? _logger;
-    private IFemFilePathService? _femFilePathService;
+    private IFemFilePathBlobService? _femFilePathService;
 
     [STAThread]
     protected override Window CreateShell()
@@ -81,7 +81,7 @@ public partial class App : PrismApplication
     private void SubscribeToAppExitEvent()
     {
         var eventAggregator = Container.Resolve<IEventAggregator>();
-        _femFilePathService = Container.Resolve<IFemFilePathService>();
+        _femFilePathService = Container.Resolve<IFemFilePathBlobService>();
         _shutdownEvent = eventAggregator.GetEvent<AppShutdownEvent>();
         _shutdownEvent.Subscribe(ShutdownApplication);
         var restartEvent = eventAggregator.GetEvent<AppRestartEvent>();
@@ -151,6 +151,7 @@ public partial class App : PrismApplication
         containerRegistry.Register<IDesignCodeAdapter, DesignCodeAdapter>();
         containerRegistry.Register<IBeamChainService, BeamChainService>();
         containerRegistry.Register<ISaveService, SaveService>();
+        containerRegistry.Register<IBeamKFactorService, BeamKFactorService>();
         containerRegistry.Register<IEffectiveLengthService, StrandEffectiveLengthService>();
         containerRegistry.Register<IBucklingAnalysisService, BucklingAnalysisService>();
 
@@ -191,7 +192,6 @@ public partial class App : PrismApplication
 
         RegisterLogger(containerRegistry);
         RegisterRepositories(containerRegistry);
-        RegisterMappers(containerRegistry);
         RegisterConfigSettings(containerRegistry);
         RegisterRuntimeSettings(containerRegistry);
         RegisterHttpClients(containerRegistry);
@@ -211,7 +211,7 @@ public partial class App : PrismApplication
     private void RegisterRuntimeSettings(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterSingleton<IRuntimeAppSettings?, RuntimeAppSettings>();
-        var femFilePathService = Container.Resolve<IFemFilePathService>();
+        var femFilePathService = Container.Resolve<IFemFilePathBlobService>();
 
         var appRuntimeSettings = femFilePathService.GetRuntimeSettings();
 
@@ -221,18 +221,12 @@ public partial class App : PrismApplication
 
     private static void RegisterRepositories(IContainerRegistry containerRegistry)
     {
-        containerRegistry.Register<IEffectiveLengthDataService, EffectiveLengthDataService>();
-        containerRegistry.Register<IDataAccessService, DataAccessService>();
-        containerRegistry.Register<IFemFilePathService, FemFilePathService>();
+        containerRegistry.Register<IBeamKFactorDataService, BeamKFactorDataService>();
+        containerRegistry.Register<IFemFilePathDataService, FemFilePathDataService>();
+        containerRegistry.Register<IFemFilePathBlobService, FemFilePathBlobService>();
         containerRegistry.Register<IUserPreferencesService, UserPreferencesService>();
 
         containerRegistry.RegisterSingleton<IUnitOfWork, UnitOfWork>();
-    }
-
-    private static void RegisterMappers(IContainerRegistry containerRegistry)
-    {
-        containerRegistry.Register<IEntityMapper<BeamPropertySettings, Section>, BeamPropertySettingsMapper>();
-        containerRegistry.Register<IEntityMapper<DesignSettings, BeamDesignSettings>, DesignSettingsMapper>();
     }
 
     private static void RegisterConfigSettings(IContainerRegistry containerRegistry)

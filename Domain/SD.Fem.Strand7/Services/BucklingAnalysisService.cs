@@ -5,12 +5,12 @@ namespace SD.Fem.Strand7.Services;
 
 public class BucklingAnalysisService(IFemModelDisplayService femModelDisplayService,
                                      IStrandApiService strandApiService,
-                                     IFemFilePathService femFilePathService,
+                                     IFemFilePathBlobService femFilePathBlobService,
                                      INotificationService notificationService) : IBucklingAnalysisService
 {
     private readonly IFemModelDisplayService _femModelDisplayService = femModelDisplayService;
     private readonly IStrandApiService _strandApiService = strandApiService;
-    private readonly IFemFilePathService _femFilePathService = femFilePathService;
+    private readonly IFemFilePathBlobService _femFilePathBlobService = femFilePathBlobService;
     private readonly INotificationService _notificationService = notificationService;
 
     private readonly string _csvFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Buckling analysis results.csv");
@@ -137,7 +137,7 @@ public class BucklingAnalysisService(IFemModelDisplayService femModelDisplayServ
 
     private async Task SaveAndOpenCsvResultsAsync(List<string> csvResults)
     {
-        await _femFilePathService.StoreCsvResultsFileAsync(_csvFilePath, csvResults);
-        _femFilePathService.OpenCsvResultsFile(_csvFilePath);
+        await _femFilePathBlobService.StoreCsvResultsFileAsync(_csvFilePath, csvResults);
+        _femFilePathBlobService.OpenCsvResultsFile(_csvFilePath);
     }
 }

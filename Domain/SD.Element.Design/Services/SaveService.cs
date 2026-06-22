@@ -8,15 +8,15 @@ public class SaveService : ISaveService
 {
     private readonly IFemModel _femModel;
     private readonly IUlsDesignResults _ulsDesignResults;
-    private readonly IEffectiveLengthDataService _effectiveLengthDataService;
+    private readonly IBeamKFactorService _beamKFactorService;
 
     public SaveService(IFemModel femModel,
                        IUlsDesignResults ulsDesignResults,
-                       IEffectiveLengthDataService effectiveLengthDataService)
+                       IBeamKFactorService beamKFactorService)
     {
         _femModel = femModel ?? throw new ArgumentNullException(nameof(femModel));
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
-        _effectiveLengthDataService = effectiveLengthDataService ?? throw new ArgumentNullException(nameof(effectiveLengthDataService));
+        _beamKFactorService = beamKFactorService ?? throw new ArgumentNullException(nameof(beamKFactorService));
     }
 
     public async Task SaveAsync()
@@ -25,26 +25,8 @@ public class SaveService : ISaveService
         if (string.IsNullOrWhiteSpace(fileName))
             return;
 
-        var dirtyResults = _ulsDesignResults.GetUlsResults()
-            ?.Where(r => r.Beam.BeamChain.ValuesChanged)
-            .ToList();
+        var beams = _ulsDesignResults.GetUlsResults()?.Select(r => r.Beam).ToList();
 
-        if (dirtyResults is not { Count: > 0 })
-            return;
-
-        var kValues = dirtyResults.Select(r => new BeamKValue
-        {
-            BeamNumber = r.Beam.Number,
-            K1 = r.Beam.BeamChain.K1,
-            K2 = r.Beam.BeamChain.K2,
-            Kz = r.Beam.BeamChain.Kz,
-            KeTop = r.Beam.BeamChain.KeTop,
-            KeBottom = r.Beam.BeamChain.KeBottom
-        }).ToList();
-
-        await _effectiveLengthDataService.SaveBeamKValues(fileName, kValues);
-
-        foreach (var r in dirtyResults)
-            r.Beam.BeamChain.ValuesChanged = false;
+        await _beamKFactorService.SetBeamKValuesByFileName(fileName, beams);
     }
 }

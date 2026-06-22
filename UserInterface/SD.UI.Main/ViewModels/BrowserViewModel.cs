@@ -17,7 +17,7 @@ public partial class BrowserViewModel : ObservableObject
     private readonly IViewManagementModel _viewManagementModel;
     private readonly IFemModel _femModel;
     private readonly IEventAggregator _eventAggregator;
-    private readonly IFemFilePathService _femFilePathService;
+    private readonly IFemFilePathBlobService _femFilePathService;
 
     private readonly FileOpenedEvent _fileOpenedEvent;
     private readonly FileClosedEvent _fileClosedEvent;
@@ -26,7 +26,7 @@ public partial class BrowserViewModel : ObservableObject
 
     public BrowserViewModel(IViewManagementModel viewManagementModel,
                             IEventAggregator eventAggregator,
-                            IFemFilePathService femFilePathService,
+                            IFemFilePathBlobService femFilePathService,
                             IFemModel femModel)
     {
         _viewManagementModel = viewManagementModel ?? throw new ArgumentNullException(nameof(viewManagementModel));

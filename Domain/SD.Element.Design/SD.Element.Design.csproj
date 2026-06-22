@@ -16,7 +16,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Core\SD.Core.Infrastructure\SD.Core.Infrastructure.csproj" />
-		<ProjectReference Include="..\..\Core\SD.Core.Shared\SD.Core.Shared.csproj" />
 		<ProjectReference Include="..\..\Core\SD.Core.Strand\SD.Core.Strand.csproj" />
 	</ItemGroup>
 
