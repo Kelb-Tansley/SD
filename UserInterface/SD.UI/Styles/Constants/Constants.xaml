@@ -7,8 +7,8 @@
     <sys:Double x:Key="MenuHeaderRowHeightMin">42</sys:Double>
 
     <!--  Window Constants  -->
-    <sys:Double x:Key="LargePopUpMinHeight">552</sys:Double>
-    <sys:Double x:Key="LargePopUpMinWidth">600</sys:Double>
+    <sys:Double x:Key="LargePopUpMinHeight">350</sys:Double>
+    <sys:Double x:Key="LargePopUpMinWidth">500</sys:Double>
 
     <sys:Double x:Key="IconSize">24</sys:Double>
     <sys:Double x:Key="ButtonWidth">90</sys:Double>

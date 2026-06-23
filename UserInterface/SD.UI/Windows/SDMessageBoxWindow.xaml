@@ -7,23 +7,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     Title=""
-    Width="800"
+    Width="570"
     Height="300"
-    MinWidth="350"
-    MinHeight="250"
-    MaxWidth="570"
+    MaxWidth="800"
     MaxHeight="550"
     x:ClassModifier="internal"
+    AllowsTransparency="False"
     ResizeMode="NoResize"
-    ShowInTaskbar="False"
     SizeToContent="WidthAndHeight"
-    Style="{StaticResource PopUpWindowStyle}"
+    SnapsToDevicePixels="True"
+    Style="{DynamicResource PopUpWindowStyle}"
     TextOptions.TextFormattingMode="Display"
     TextOptions.TextRenderingMode="ClearType"
-    Topmost="True"
     UseLayoutRounding="True"
     WindowStartupLocation="CenterOwner"
-    WindowStyle="SingleBorderWindow"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -131,7 +128,7 @@
                             HorizontalAlignment="Right"
                             Click="Button_Yes_Click"
                             DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignRaisedSecondaryLightButton}"
+                            Style="{StaticResource MaterialDesignFlatButton}"
                             Visibility="Collapsed">
                             <Label
                                 Name="Label_Yes"
@@ -150,7 +147,7 @@
                             Margin="35,0,6,0"
                             HorizontalAlignment="Right"
                             Click="Button_OK_Click"
-                            Style="{StaticResource MaterialDesignRaisedSecondaryLightButton}"
+                            Style="{StaticResource MaterialDesignFlatButton}"
                             Visibility="Visible">
                             <Label
                                 Name="Label_Ok"

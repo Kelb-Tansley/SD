@@ -63,10 +63,9 @@
     </ControlTemplate>
 
     <Style x:Key="PopUpWindowStyle" TargetType="{x:Type Window}">
-        <Setter Property="WindowStyle" Value="None" />
-        <Setter Property="ResizeMode" Value="CanResize" />
-        <Setter Property="MinHeight" Value="{StaticResource LargePopUpMinHeight}" />
-        <Setter Property="MinWidth" Value="{StaticResource LargePopUpMinWidth}" />
+        <Setter Property="WindowStyle" Value="SingleBorderWindow" />
+        <Setter Property="MinHeight" Value="{DynamicResource LargePopUpMinHeight}" />
+        <Setter Property="MinWidth" Value="{DynamicResource LargePopUpMinWidth}" />
         <Setter Property="ShowInTaskbar" Value="False" />
         <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDarkBackground}" />
         <Setter Property="BorderThickness" Value="1" />

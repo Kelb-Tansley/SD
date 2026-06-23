@@ -143,15 +143,23 @@ public partial class BeamFemModelViewModel : FemViewModelBase
     [RelayCommand]
     public async Task ZoomOut()
     {
-        _zoomLevel = _zoomLevel.ZoomOut();
-        await Task.Run(() => UpdateFemModel(_selectedBeamResult, true));
+        try
+        {
+            _zoomLevel = _zoomLevel.ZoomOut();
+            await Task.Run(() => UpdateFemModel(_selectedBeamResult, true));
+        }
+        catch (Exception) { }
     }
 
     [RelayCommand]
     public async Task ZoomIn()
     {
-        _zoomLevel = _zoomLevel.ZoomIn();
-        await Task.Run(() => UpdateFemModel(_selectedBeamResult, true));
+        try
+        {
+            _zoomLevel = _zoomLevel.ZoomIn();
+            await Task.Run(() => UpdateFemModel(_selectedBeamResult, true));
+        }
+        catch (Exception) { }
     }
 
     [RelayCommand]
@@ -166,6 +174,7 @@ public partial class BeamFemModelViewModel : FemViewModelBase
     {
         _isLoaded = false;
     }
+
     private void FileClosed()
     {
         _strand7ModelOpened = false;

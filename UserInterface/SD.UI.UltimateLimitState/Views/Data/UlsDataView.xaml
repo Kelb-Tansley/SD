@@ -97,8 +97,9 @@
             CanUserDeleteRows="False"
             CanUserSortColumns="True"
             ClipboardCopyMode="ExcludeHeader"
+            ColumnHeaderHeight="41"
             ColumnWidth="Auto"
-            EnableColumnVirtualization="True"
+            EnableColumnVirtualization="False"
             EnableRowVirtualization="True"
             FrozenColumnCount="4"
             IsReadOnly="False"
@@ -376,6 +377,22 @@
                     Binding="{Binding Capacity.MrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
                     Header="Mry-y [kN.m]"
                     IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.ω1Major, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="ω1 (Major)"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.ω1Minor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="ω1 (Minor)"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.ω2Major, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="ω2 (Major)"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Capacity.ω2Minor, Converter={StaticResource DoubleTwoDecimalsConverter}}"
+                    Header="ω2 (Minor)"
+                    IsReadOnly="True" />
 
                 <DataGridTextColumn
                     Binding="{Binding Utilization.Tension, Converter={StaticResource DoubleToPercentageConverter}}"
@@ -523,7 +540,7 @@
                     <materialDesign:PackIcon
                         Width="{StaticResource IconSize}"
                         Height="{StaticResource IconSize}"
-                        Kind="TableArrowRight" />
+                        Kind="MicrosoftExcel" />
                 </Button>
                 <Button
                     VerticalAlignment="Center"
