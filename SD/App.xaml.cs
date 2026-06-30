@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
 using SD.Adapters;
 using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Infrastructure.Logging;
@@ -8,12 +6,9 @@ using SD.Core.Infrastructure.Services;
 using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Events;
 using SD.Core.Shared.Models;
-using SD.Core.Shared.Models.BeamModels;
 using SD.Core.Shared.Models.Core;
 using SD.Data;
-using SD.Data.Entities;
 using SD.Data.Interfaces;
-using SD.Data.Mapping;
 using SD.Data.Repository;
 using SD.Data.Services;
 using SD.Element.Design.AS.Services;
@@ -126,9 +121,6 @@ public partial class App : PrismApplication
     protected override void OnInitialized()
     {
         base.OnInitialized();
-
-        using (var uow = Container.Resolve<IUnitOfWork>())
-            uow.MigrateDb();
     }
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)

@@ -12,11 +12,6 @@ public class UnitOfWork(StructuralDesignContext context) : IUnitOfWork
         await _context.SaveChangesAsync();
     }
 
-    public void MigrateDb()
-    {
-        _context.Database.Migrate();
-    }
-
     public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
     {
         var type = typeof(TEntity);

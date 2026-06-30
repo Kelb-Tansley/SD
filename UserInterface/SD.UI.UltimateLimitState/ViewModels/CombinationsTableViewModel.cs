@@ -201,7 +201,6 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         {
             if (sender is BeamChain chain && chain.ValuesChanged)
                 _designModel.IsSaveEnabled = true;
-            //_eventAggregator?.GetEvent<KValuesChangedEvent>()?.Publish(true);
         }
 
         // Subscribe to the PropertyChanged event for each Section collection.
@@ -215,7 +214,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         void SubscribeToSection(Section section) => section?.PropertyChanged += OnSectionPropertyChanged;
         void OnSectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (sender is Section section)
+            if (sender is Section section && section.CanDesign)
                 _designModel.IsSaveEnabled = true;
         }
     }

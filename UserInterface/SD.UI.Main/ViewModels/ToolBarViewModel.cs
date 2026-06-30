@@ -66,7 +66,6 @@ public partial class ToolBarViewModel : ViewModelBase
         _saveService = saveService ?? throw new ArgumentNullException(nameof(saveService));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
 
-        _eventAggregator.GetEvent<KValuesChangedEvent>()?.Subscribe((val) => DesignModel.IsSaveEnabled = val);
         _eventAggregator.GetEvent<CanCalculateEvent>()?.Subscribe((val) => CanCalculate = val);
 
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
@@ -133,7 +132,7 @@ public partial class ToolBarViewModel : ViewModelBase
     [RelayCommand]
     private async Task Save()
     {
-        await _saveService.SaveAsync(FemModelParameters.Beams);
+        await _saveService.SaveAsync(FemModelParameters.Beams, FemModelParameters.BeamProperties);
         DesignModel.IsSaveEnabled = false;
     }
 

@@ -1,22 +1,23 @@
-﻿using SD.Data.Entities;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SD.Data.Entities;
 
 namespace SD.Data;
 
 public class StructuralDesignContext : DbContext
 {
-    private readonly string? _dbPath;
+    private readonly string? DbPath;
 
     public StructuralDesignContext(IAppSettings appSettings)
     {
-        _dbPath = Path.Join(appSettings.StorageLocation, "StructuralDesign.db");
-        Database.EnsureCreated();
+        DbPath = Path.Join(appSettings.StorageLocation, "StructuralDesign.db");
+        Database.Migrate();
     }
 
     public StructuralDesignContext(DbContextOptions options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        options.UseSqlite($"Data Source={_dbPath}");
+        options.UseSqlite($"Data Source={DbPath}");
     }
 
     public DbSet<FemFileEntity> FemFiles { get; set; } = null!;

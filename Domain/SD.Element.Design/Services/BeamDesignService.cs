@@ -31,12 +31,11 @@ public class BeamDesignService(IBeamKFactorDataService beamKFactorDataService, I
         }
     }
 
-    public async Task SetBeamValuesByFileName(string fileName, IEnumerable<Beam> beams)
+    public async Task SetBeamValuesByFileName(string fileName, IEnumerable<Beam> beams, IEnumerable<Section> sections)
     {
         if (string.IsNullOrWhiteSpace(fileName) || beams is null)
             return;
 
-        var sections = beams.Select(b => b.Section).Distinct();
         await sectionPropertiesDataService.SaveSectionDesignSettings(fileName, sections);
 
         var modifiedBeams = beams.Where(b => b.BeamChain.ValuesChanged);

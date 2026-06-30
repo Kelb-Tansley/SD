@@ -23,11 +23,16 @@
         AutoGenerateColumns="False"
         CanUserAddRows="False"
         ColumnHeaderHeight="50"
+        EnableColumnVirtualization="False"
+        EnableRowVirtualization="True"
         ItemsSource="{Binding LoadCaseCombinations}"
         RowHeight="47"
         SelectedItem="{Binding SelectedLoadCaseCombination, Mode=TwoWay}"
         SelectionMode="Single"
-        SelectionUnit="FullRow">
+        SelectionUnit="FullRow"
+        VirtualizingPanel.IsVirtualizing="True"
+        VirtualizingPanel.ScrollUnit="Pixel"
+        VirtualizingPanel.VirtualizationMode="Recycling">
         <DataGrid.Resources>
             <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
                 <Setter Property="Template">
