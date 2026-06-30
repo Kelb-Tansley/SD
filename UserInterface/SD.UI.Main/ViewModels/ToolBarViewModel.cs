@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SD.Core.Infrastructure.Interfaces;
 using SD.Core.Shared.Contracts;
+using SD.Core.Shared.Models;
+using SD.Element.Design.Interfaces;
 using SD.UI.Events;
 using SD.UI.ViewModel;
-using SD.Element.Design.Interfaces;
+using System.Windows;
 
 namespace SD.UI.Main.ViewModels;
 
@@ -14,6 +17,7 @@ public partial class ToolBarViewModel : ViewModelBase
     private readonly IEventAggregator _eventAggregator;
     private readonly IUlsDesignResults _ulsDesignResults;
     private readonly ISaveService _saveService;
+    private readonly INotificationService _notificationService;
 
     private readonly FileClosedEvent _fileClosedEvent;
     private readonly DesignCodeChangedEvent _designCodeChangedEvent;
@@ -39,9 +43,6 @@ public partial class ToolBarViewModel : ViewModelBase
     public partial bool UseEnvelopeLoadCase { get; set; }
 
     [ObservableProperty]
-    public partial bool IsSaveEnabled { get; set; }
-
-    [ObservableProperty]
     public partial bool CanCalculate { get; set; }
 
     public ToolBarViewModel(IViewManagementModel viewManagementModel,
@@ -52,6 +53,7 @@ public partial class ToolBarViewModel : ViewModelBase
                             IFemModelParameters femModelParameters,
                             IEventAggregator eventAggregator,
                             IBeamAxisDisplay beamAxisDisplay,
+                            INotificationService notificationService,
                             ISaveService saveService) : base(processModel)
     {
         _viewManagementModel = viewManagementModel ?? throw new ArgumentNullException(nameof(viewManagementModel));
@@ -62,8 +64,9 @@ public partial class ToolBarViewModel : ViewModelBase
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
         BeamAxisDisplay = beamAxisDisplay ?? throw new ArgumentNullException(nameof(beamAxisDisplay));
         _saveService = saveService ?? throw new ArgumentNullException(nameof(saveService));
+        _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
 
-        _eventAggregator.GetEvent<KValuesChangedEvent>()?.Subscribe((val) => IsSaveEnabled = val);
+        _eventAggregator.GetEvent<KValuesChangedEvent>()?.Subscribe((val) => DesignModel.IsSaveEnabled = val);
         _eventAggregator.GetEvent<CanCalculateEvent>()?.Subscribe((val) => CanCalculate = val);
 
         _fileClosedEvent = _eventAggregator.GetEvent<FileClosedEvent>();
@@ -73,10 +76,10 @@ public partial class ToolBarViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void DesignCodeChanged()
+    private async Task DesignCodeChanged()
     {
         _designCodeChangedEvent?.Publish();
-        Refresh();
+        await Refresh();
     }
 
     [RelayCommand]
@@ -86,8 +89,12 @@ public partial class ToolBarViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void Refresh()
+    private async Task Refresh()
     {
+        var saveBeforeReloading = await SaveBeforeReload();
+        if (saveBeforeReloading is false)
+            return;
+
         FemModelParameters.Clear();
         _ulsDesignResults.Clear(); //Check if this is correct
         _refreshEvent.Publish();
@@ -105,7 +112,7 @@ public partial class ToolBarViewModel : ViewModelBase
     public void Loaded()
     {
         _fileClosedEvent.Subscribe(FileClosed);
-        _designCodeChangedEvent.Subscribe(DesignCodeChanged);
+        _designCodeChangedEvent.Subscribe(async () => await DesignCodeChanged());
     }
 
     [RelayCommand]
@@ -126,7 +133,20 @@ public partial class ToolBarViewModel : ViewModelBase
     [RelayCommand]
     private async Task Save()
     {
-        await _saveService.SaveAsync();
-        IsSaveEnabled = false;
+        await _saveService.SaveAsync(FemModelParameters.Beams);
+        DesignModel.IsSaveEnabled = false;
+    }
+
+    private async Task<bool?> SaveBeforeReload()
+    {
+        if (!DesignModel.IsSaveEnabled)
+            return null;
+
+        var result = _notificationService.NotifyUserWithYesNoOption(new Notification("Save Changes", "There are unsaved changes. Do you want to save before reloading?"));
+        if (result == MessageBoxResult.Yes)
+            await Save();
+        else return false;
+
+        return true;
     }
 }

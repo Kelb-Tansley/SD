@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SD.Core.Shared.Models;
-public class BeamDesignSettings : ObservableObject
+public class ModelDesignSettings : ObservableObject
 {
     public double BeamAllignmentAngleTolerance { get; set; } = 2;
     public double BeamRotationAngleTolerance { get; set; } = 1;

@@ -151,7 +151,7 @@ public partial class App : PrismApplication
         containerRegistry.Register<IDesignCodeAdapter, DesignCodeAdapter>();
         containerRegistry.Register<IBeamChainService, BeamChainService>();
         containerRegistry.Register<ISaveService, SaveService>();
-        containerRegistry.Register<IBeamKFactorService, BeamKFactorService>();
+        containerRegistry.Register<IBeamDesignService, BeamDesignService>();
         containerRegistry.Register<IEffectiveLengthService, StrandEffectiveLengthService>();
         containerRegistry.Register<IBucklingAnalysisService, BucklingAnalysisService>();
 
@@ -221,6 +221,8 @@ public partial class App : PrismApplication
 
     private static void RegisterRepositories(IContainerRegistry containerRegistry)
     {
+        containerRegistry.Register<ISectionPropertiesDataService, SectionPropertiesDataService>();
+        
         containerRegistry.Register<IBeamKFactorDataService, BeamKFactorDataService>();
         containerRegistry.Register<IFemFilePathDataService, FemFilePathDataService>();
         containerRegistry.Register<IFemFilePathBlobService, FemFilePathBlobService>();

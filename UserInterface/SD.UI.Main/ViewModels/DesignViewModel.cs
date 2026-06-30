@@ -52,13 +52,13 @@ public partial class DesignViewModel : ObservableObject
     private void SelectDataTab(UlsResult result)
     {
         if (result is not null)
-            SelectedTabIndex = 2;
+            SelectedTabIndex = 3;
     }
 
     private void SelectUlsTab(UlsResult result)
     {
         if (result is not null)
-            SelectedTabIndex = 1;
+            SelectedTabIndex = 2;
     }
 
     private void UpdateHasUlsData()

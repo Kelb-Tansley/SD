@@ -259,7 +259,7 @@
                 Margin="6,0,0,0"
                 materialDesign:ElevationAssist.Elevation="Dp0"
                 Command="{Binding SaveCommand}"
-                IsEnabled="{Binding IsSaveEnabled}"
+                IsEnabled="{Binding DesignModel.IsSaveEnabled}"
                 Style="{StaticResource MaterialDesignFlatButton}"
                 ToolTip="Save edited K values to database.">
                 <materialDesign:PackIcon

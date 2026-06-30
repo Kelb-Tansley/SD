@@ -4,8 +4,13 @@ using SD.Element.Design.Interfaces;
 
 namespace SD.Element.Design.Services;
 
-public class BeamKFactorService(IBeamKFactorDataService beamKFactorDataService) : IBeamKFactorService
+public class BeamDesignService(IBeamKFactorDataService beamKFactorDataService, ISectionPropertiesDataService sectionPropertiesDataService) : IBeamDesignService
 {
+    public async Task GetSectionPropertiesByFileName(string fileName, IEnumerable<Section> sections)
+    {
+        await sectionPropertiesDataService.GetSectionDesignSettingsByFileName(fileName, sections);
+    }
+
     public async Task GetBeamKValuesByFileName(string fileName, IEnumerable<Beam> beams)
     {
         var kvalues = await beamKFactorDataService.GetBeamKValuesByFileName(fileName);
@@ -26,17 +31,20 @@ public class BeamKFactorService(IBeamKFactorDataService beamKFactorDataService) 
         }
     }
 
-    public async Task SetBeamKValuesByFileName(string fileName, IEnumerable<Beam> beams)
+    public async Task SetBeamValuesByFileName(string fileName, IEnumerable<Beam> beams)
     {
         if (string.IsNullOrWhiteSpace(fileName) || beams is null)
             return;
+
+        var sections = beams.Select(b => b.Section).Distinct();
+        await sectionPropertiesDataService.SaveSectionDesignSettings(fileName, sections);
 
         var modifiedBeams = beams.Where(b => b.BeamChain.ValuesChanged);
         var kValues = modifiedBeams.Select(b => b.MapToBeamKValue(b.Number));
         if (kValues is null)
             return;
 
-        await beamKFactorDataService.SaveBeamKValues(fileName, kValues);
+        await beamKFactorDataService.SaveBeamKValues(fileName, kValues!);
 
         foreach (var b in modifiedBeams)
             b.BeamChain.ValuesChanged = false;

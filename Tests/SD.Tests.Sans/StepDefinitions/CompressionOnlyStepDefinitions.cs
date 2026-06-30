@@ -65,7 +65,7 @@ public sealed class CompressionOnlyStepDefinitions
 
         _femModelDisplayService.LoadFemModelProperties(_modelId, DesignCode.SANS, _femModel.FileName, true);
 
-        var settings = new BeamDesignSettings();
+        var settings = new ModelDesignSettings();
         _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, true, _femModelParameters, settings);
 
         _femModelParameters.LoadCaseCombinations.ToList().ForEach(lcc => lcc.Include = true);

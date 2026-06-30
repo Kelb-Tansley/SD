@@ -20,9 +20,8 @@ public class StructuralDesignContext : DbContext
     }
 
     public DbSet<FemFileEntity> FemFiles { get; set; } = null!;
-    public DbSet<BeamPropertySettings> BeamPropertySettings { get; set; } = null!;
-    public DbSet<DesignSettings> DesignSettings { get; set; } = null!;
     public DbSet<BeamKValueEntity> BeamKValues { get; set; } = null!;
-}
 
-//dotnet ef migrations add 'First'
+    public DbSet<SectionDesignSetting> SectionDesignSettings { get; set; } = null!;
+    public DbSet<ModelDesignSetting> ModelDesignSettings { get; set; } = null!;
+}

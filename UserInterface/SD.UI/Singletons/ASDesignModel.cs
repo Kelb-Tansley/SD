@@ -20,5 +20,7 @@ public partial class ASDesignModel : ObservableObject, IDesignModel
     [ObservableProperty]
     public required LoadCaseCombination? loadCaseCombination;
     [ObservableProperty]
-    public BeamDesignSettings designSettings = new();
+    public ModelDesignSettings designSettings = new();
+
+    public bool IsSaveEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 }

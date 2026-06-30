@@ -201,7 +201,7 @@ public class ChannelSection : Section
     private double XeNA { get; set; }
     protected override void SetDefaultRestraints()
     {
-        IsBottomFlangeRestraint = false;
+        IsBottomFlangeRestraint = true;
         IsTopFlangeRestraint = true;
         IsTorsionalRestraint = true;
     }

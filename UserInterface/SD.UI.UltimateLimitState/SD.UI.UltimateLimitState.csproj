@@ -18,7 +18,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Core\SD.Core.Shared\SD.Core.Shared.csproj" />
 		<ProjectReference Include="..\..\Domain\SD.Element.Design\SD.Element.Design.csproj" />
-		<ProjectReference Include="..\..\Domain\SD.MathcadPrime\SD.MathcadPrime.csproj" />
+		<ProjectReference Include="..\..\MathcadPrime\SD.MathcadPrime\SD.MathcadPrime.csproj" />
 		<ProjectReference Include="..\SD.UI\SD.UI.csproj" />
 	</ItemGroup>
 

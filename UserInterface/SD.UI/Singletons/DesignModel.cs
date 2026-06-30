@@ -22,16 +22,23 @@ public partial class DesignModel : ObservableObject, IDesignModel
     }
 
     [ObservableProperty]
-    public required string? designCode;
+    public partial bool IsSaveEnabled { get; set; } = false;
+
     [ObservableProperty]
-    public string verticalAxis = "Y";
+    public required partial string? DesignCode { get; set; }
+
     [ObservableProperty]
-    public SolverType solverType = SolverType.LSA;
+    public partial string VerticalAxis { get; set; } = "Y";
+
+    [ObservableProperty]
+    public partial SolverType SolverType { get; set; } = SolverType.LSA;
+
     [ObservableProperty]
     public partial bool IsDesignLengthCalculated { get; set; } = true;
 
     [ObservableProperty]
-    public required LoadCaseCombination? loadCaseCombination;
+    public required partial LoadCaseCombination? LoadCaseCombination { get; set; }
+
     [ObservableProperty]
-    public BeamDesignSettings designSettings = new();
+    public partial ModelDesignSettings DesignSettings { get; set; } = new();
 }

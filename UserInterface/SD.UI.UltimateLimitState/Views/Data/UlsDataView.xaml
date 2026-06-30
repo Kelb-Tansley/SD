@@ -350,7 +350,11 @@
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Binding="{Binding Beam.BeamChain.LeTop}"
-                    Header="L(e) [mm]"
+                    Header="L(e-t) [mm]"
+                    IsReadOnly="True" />
+                <DataGridTextColumn
+                    Binding="{Binding Beam.BeamChain.LeBottom}"
+                    Header="L(e-b) [mm]"
                     IsReadOnly="True" />
 
                 <DataGridTextColumn

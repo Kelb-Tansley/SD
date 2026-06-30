@@ -11,10 +11,10 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Core\SD.Core.Shared\SD.Core.Shared.csproj" />
-		<ProjectReference Include="..\..\MathcadPrime\Ptc.MathcadPrime.Automation\Ptc.MathcadPrime.Automation.csproj" />
-		<ProjectReference Include="..\SD.Element.Design.Sans\SD.Element.Design.Sans.csproj" />
-		<ProjectReference Include="..\SD.Element.Design.AS\SD.Element.Design.AS.csproj" />
-		<ProjectReference Include="..\SD.Element.Design\SD.Element.Design.csproj" />
+		<ProjectReference Include="..\Ptc.MathcadPrime.Automation\Ptc.MathcadPrime.Automation.csproj" />
+		<ProjectReference Include="..\..\Domain\SD.Element.Design.Sans\SD.Element.Design.Sans.csproj" />
+		<ProjectReference Include="..\..\Domain\SD.Element.Design.AS\SD.Element.Design.AS.csproj" />
+		<ProjectReference Include="..\..\Domain\SD.Element.Design\SD.Element.Design.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

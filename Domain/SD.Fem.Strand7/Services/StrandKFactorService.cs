@@ -1,7 +1,7 @@
 ﻿namespace SD.Fem.Strand7.Services;
 public class StrandKFactorService : IKFactorService
 {
-    public async Task CalculateKFactors(int modelId, IFemModelParameters femModelParameters, BeamDesignSettings sansDesignSettings, BeamAxis beamAxisEnum)
+    public async Task CalculateKFactors(int modelId, IFemModelParameters femModelParameters, ModelDesignSettings sansDesignSettings, BeamAxis beamAxisEnum)
     {
         var beamChains = femModelParameters?.Beams?.Select(b => b.BeamChain)?.Distinct()?.ToList();
         if (beamChains == null || beamChains.Count == 0)

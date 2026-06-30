@@ -180,7 +180,7 @@ public class TSection : Section
 
     protected override void SetDefaultRestraints()
     {
-        IsBottomFlangeRestraint = false;
+        IsBottomFlangeRestraint = true;
         IsTopFlangeRestraint = true;
         IsTorsionalRestraint = true;
     }

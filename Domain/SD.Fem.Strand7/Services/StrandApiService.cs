@@ -822,13 +822,9 @@ public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
             var section = _femDesignAdapter.GetBeamPropertiesService(designCode).GetBeamSection(beamName?.ToString(), sectiontype, beamPropertyChecked && sectionDesignable, materialData, sectionData, unitFactor, propNum);
 
             if (sectionDesignable)
-            {
                 beamProperties.Add(section);
-            }
             else
-            {
                 nonDesignableProperties.Add(section);
-            }
         }
         return (beamProperties, nonDesignableProperties);
     }

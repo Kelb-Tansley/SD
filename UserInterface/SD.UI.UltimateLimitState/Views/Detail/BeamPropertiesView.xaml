@@ -2,6 +2,7 @@
     x:Class="SD.UI.UltimateLimitState.Views.BeamPropertiesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:SD.UI.UltimateLimitState.Behaviors"
     xmlns:controls="clr-namespace:SD.UI.Controls;assembly=SD.UI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
@@ -22,11 +23,15 @@
         <!--  SANS Beam Section Settings  -->
         <DataGrid
             Height="Auto"
+            VerticalContentAlignment="Center"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             ItemsSource="{Binding FemModelParameters.BeamProperties}"
-            RowHeight="34"
+            RowHeight="46"
             Visibility="{Binding DesignModel.DesignCode, Converter={StaticResource DesignCodeToVisibilityConverter}, ConverterParameter=SANS}">
+            <i:Interaction.Behaviors>
+                <behaviors:DataGridHorizontalScrollBehavior />
+            </i:Interaction.Behaviors>
             <DataGrid.Columns>
                 <materialDesign:DataGridTextColumn
                     ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
@@ -41,6 +46,13 @@
                     </materialDesign:DataGridTextColumn.Binding>
                 </materialDesign:DataGridTextColumn>
                 <DataGridCheckBoxColumn Binding="{Binding IsPlateGirder, UpdateSourceTrigger=PropertyChanged}" Header="Plate Girder">
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Binding="{Binding IsBracedFrame, UpdateSourceTrigger=PropertyChanged}" Header="Braced Frame (13.8)">
                     <DataGridCheckBoxColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />

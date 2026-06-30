@@ -223,9 +223,9 @@ public class AngleSection : Section
 
     protected override void SetDefaultRestraints()
     {
-        IsBottomFlangeRestraint = false;
+        IsBottomFlangeRestraint = true;
         IsTopFlangeRestraint = true;
-        IsTorsionalRestraint = false;
+        IsTorsionalRestraint = true;
     }
 
     protected override string GetDisplayName() => $"{D.Cut(1)}x{B1.Cut(1)}x{T1.Cut(1)} {TypeDisplay}";

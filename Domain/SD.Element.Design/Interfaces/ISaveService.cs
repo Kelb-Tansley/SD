@@ -1,6 +1,8 @@
+using SD.Core.Shared.Models.BeamModels;
+
 namespace SD.Element.Design.Interfaces;
 
 public interface ISaveService
 {
-    public Task SaveAsync();
+    public Task SaveAsync(IEnumerable<Beam> beams);
 }

@@ -8,7 +8,7 @@ public class StrandEffectiveLengthService(IBeamChainService beamChainService) : 
     public void CalculateDesignLengths(int modelId,
                                        bool designLengthCalculated,
                                        IFemModelParameters femModelParameters,
-                                       BeamDesignSettings sansDesignSettings)
+                                       ModelDesignSettings sansDesignSettings)
     {
         if (designLengthCalculated)
             CalculateEffectiveLengths(modelId, femModelParameters.Beams, sansDesignSettings);
@@ -22,9 +22,7 @@ public class StrandEffectiveLengthService(IBeamChainService beamChainService) : 
     private static void SetDesignLengthsToDefault(IEnumerable<Beam> beams)
     {
         foreach (var beam in beams)
-        {
             beam.ResetToDefault();
-        }
     }
 
     private static void SetChainDetails(int modelId, IEnumerable<Beam> beams)
@@ -45,14 +43,14 @@ public class StrandEffectiveLengthService(IBeamChainService beamChainService) : 
         }
     }
 
-    private void CalculateEffectiveLengths(int modelId, IEnumerable<Beam> beams, BeamDesignSettings designSettings)
+    private void CalculateEffectiveLengths(int modelId, IEnumerable<Beam> beams, ModelDesignSettings designSettings)
     {
         FindBeamsNeighbours(modelId, beams, designSettings);
 
         _beamChainService.GenerateBeamChains([.. beams]);
     }
 
-    private static void FindBeamsNeighbours(int modelId, IEnumerable<Beam> beams, BeamDesignSettings designSettings)
+    private static void FindBeamsNeighbours(int modelId, IEnumerable<Beam> beams, ModelDesignSettings designSettings)
     {
         // We look for 0, 1 or 2 connected beams for each beam as its 'Neighbour'
         foreach (var beam in beams)
@@ -66,6 +64,8 @@ public class StrandEffectiveLengthService(IBeamChainService beamChainService) : 
             St7.St7GetBeamAxisSystemInitial(modelId, beam.Number, beamAxisVectors).ThrowIfFails();
 
             var connectedBeams = beam.GetConnectedBeams(beams);
+            if (connectedBeams is null)
+                continue;
 
             beam.BeamChain.ResetToPrimaryBeam(beam);
 
@@ -147,7 +147,7 @@ public class StrandEffectiveLengthService(IBeamChainService beamChainService) : 
         }
         return releasedEnds;
     }
-    private static BeamConnection AreBeamsConnected(int modelId, Beam beam, Beam subBeam, [NotNull] List<BeamReleasedEnds> releasedEnds, IEnumerable<Beam> connectedBeams, double[] beamAxis, BeamDesignSettings settings)
+    private static BeamConnection AreBeamsConnected(int modelId, Beam beam, Beam subBeam, [NotNull] List<BeamReleasedEnds> releasedEnds, IEnumerable<Beam> connectedBeams, double[] beamAxis, ModelDesignSettings settings)
     {
         var beamConnection = new BeamConnection();
 
@@ -220,7 +220,7 @@ public class StrandEffectiveLengthService(IBeamChainService beamChainService) : 
         if (releasedEnds?.Count != 0)
         {
             //A released end does exist for either axis 1 or 2
-            foreach (var releasedEnd in releasedEnds)
+            foreach (var releasedEnd in releasedEnds!)
             {
                 if (connectedEnd == releasedEnd.ReleasedEnd && releasedEnd.ReleasedAxis == BeamAxis.Principal1)
                     beamConnection.Principal1Disconnected = true;

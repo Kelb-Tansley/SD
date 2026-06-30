@@ -14,6 +14,7 @@ using SD.UI.Events;
 using SD.UI.Services;
 using SD.UI.ViewModel;
 using System.ComponentModel;
+using System.Windows;
 
 namespace SD.UI.UltimateLimitState.ViewModels;
 
@@ -29,7 +30,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
     private readonly IEffectiveLengthService _effectiveLengthService;
     private readonly IStrandApiService _strandApiService;
     private readonly IUlsDesignResults _ulsDesignResults;
-    private readonly IBeamKFactorService _beamKFactorService;
+    private readonly IBeamDesignService _beamDesignService;
 
     private readonly RefreshEvent _refreshEvent;
     private readonly RefreshCalculationEvent _refreshCalculationEvent;
@@ -56,7 +57,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
                                       IStrandApiService strandApiService,
                                       IEffectiveLengthService effectiveLengthService,
                                       IBeamAxisDisplay beamAxisDisplay,
-                                      IBeamKFactorService beamKFactorService,
+                                      IBeamDesignService beamKFactorService,
                                       IUlsDesignResults ulsDesignResults) : base(processModel, eventAggregator)
     {
         _designModel = designModel;
@@ -70,7 +71,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         _effectiveLengthService = effectiveLengthService;
         _strandApiService = strandApiService;
         _ulsDesignResults = ulsDesignResults;
-        _beamKFactorService = beamKFactorService;
+        _beamDesignService = beamKFactorService;
 
         _refreshEvent = _eventAggregator.GetEvent<RefreshEvent>();
         _refreshCalculationEvent = _eventAggregator.GetEvent<RefreshCalculationEvent>();
@@ -142,10 +143,12 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
     private async Task GetEffectiveLengths()
     {
+        await _beamDesignService.GetSectionPropertiesByFileName(_femModel.FileName, FemModelParameters.BeamProperties);
+
         var designLengthsTask = Task.Run(() =>
             _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, _designModel.IsDesignLengthCalculated, FemModelParameters, _designModel.DesignSettings));
 
-        var beamKFactorsTask = _beamKFactorService.GetBeamKValuesByFileName(_femModel.FileName, FemModelParameters.Beams);
+        var beamKFactorsTask = _beamDesignService.GetBeamKValuesByFileName(_femModel.FileName, FemModelParameters.Beams);
 
         await Task.WhenAll(designLengthsTask, beamKFactorsTask);
     }
@@ -186,6 +189,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
     private void SubscribeToPropertyChangedEvents()
     {
+        // Subscribe to the PropertyChanged event for each Beam's BeamChain collection.
         foreach (var beam in FemModelParameters.Beams)
         {
             UnsubscribeFromBeam(beam);
@@ -196,7 +200,23 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         void OnBeamChainPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is BeamChain chain && chain.ValuesChanged)
-                _eventAggregator?.GetEvent<KValuesChangedEvent>()?.Publish(true);
+                _designModel.IsSaveEnabled = true;
+            //_eventAggregator?.GetEvent<KValuesChangedEvent>()?.Publish(true);
+        }
+
+        // Subscribe to the PropertyChanged event for each Section collection.
+        foreach (var section in FemModelParameters.BeamProperties)
+        {
+            UnsubscribeFromSection(section);
+            SubscribeToSection(section);
+        }
+
+        void UnsubscribeFromSection(Section section) => section?.PropertyChanged -= OnSectionPropertyChanged;
+        void SubscribeToSection(Section section) => section?.PropertyChanged += OnSectionPropertyChanged;
+        void OnSectionPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (sender is Section section)
+                _designModel.IsSaveEnabled = true;
         }
     }
 
@@ -214,9 +234,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
 
                 femModelOpened = await TryLoadFemModelProperties();
                 if (femModelOpened)
-                {
                     await RefreshCalculation();
-                }
             }
             else
                 femModelOpened = false;
@@ -229,6 +247,7 @@ public partial class CombinationsTableViewModel : LoadCasesViewModelBase
         finally
         {
             ProcessModel.IsFemModelLoaded = femModelOpened;
+            _designModel.IsSaveEnabled = false;
             await SetPrimaryProcess(true);
         }
     }

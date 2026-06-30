@@ -51,7 +51,7 @@ public sealed class ElementLengthStepDefinitions
         var resultsFileMock = new StrandResultFile();
         //_strandApiService.GetFemModelParameters(_femModelParameters, DesignCode.SANS, _modelId, _designModel.IsLsa, resultsFileMock);
 
-        var settings = new BeamDesignSettings();
+        var settings = new ModelDesignSettings();
         _effectiveLengthService.CalculateDesignLengths(_modelId, true, _femModelParameters, settings);
     }
 

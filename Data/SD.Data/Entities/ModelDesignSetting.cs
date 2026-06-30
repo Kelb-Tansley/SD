@@ -1,6 +1,6 @@
 ﻿namespace SD.Data.Entities;
 
-public class DesignSettings : EntityBase
+public class ModelDesignSetting : EntityBase
 {
     public double BeamAllignmentAngleTolerance { get; set; }
     public double BeamRotationAngleTolerance { get; set; }
