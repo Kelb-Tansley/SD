@@ -26,6 +26,16 @@ public class SectionCapacity
     public double MrMajor { get; set; }
 
     /// <summary>
+    /// Bending moment resistance of the top of the beam in the major (2) axis, including lateral and lateral torsional buckling effects.
+    /// </summary>
+    public double MrMajorTop { get; set; }
+
+    /// <summary>
+    /// Bending moment resistance of the bottom of the beam in the major (2) axis, including lateral and lateral torsional buckling effects.
+    /// </summary>
+    public double MrMajorBottom { get; set; }
+
+    /// <summary>
     /// Bending moment resistance of the beam in the minor (1) axis, including lateral and lateral torsional buckling effects.
     /// </summary>
     public double MrMinor { get; set; }

@@ -19,6 +19,7 @@
     <converter:WrapPanelConverter x:Key="WrapPanelConverter" />
     <converter:BeamTypeConverter x:Key="BeamTypeConverter" />
     <converter:DesignCodeToVisibilityConverter x:Key="DesignCodeToVisibilityConverter" />
+    <converter:DesignTypeToVisibilityConverter x:Key="DesignTypeToVisibilityConverter" />
     <converter:ObjectNullToVisibilityConverter x:Key="ObjectNullToVisibilityConverter" />
     <converter:InvertedObjectNullToVisibilityConverter x:Key="InvertedObjectNullToVisibilityConverter" />
     <converter:ListToCountConverter x:Key="ListToCountConverter" />

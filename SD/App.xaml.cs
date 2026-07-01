@@ -197,7 +197,7 @@ public partial class App : PrismApplication
     private void RegisterLogger(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterSingleton<ILoggerService, LoggerService>();
-        _logger = Container.Resolve<ILoggerService>();
+        _logger = Container.Resolve<ILoggerService>() ?? throw new InvalidOperationException("Logger service could not be resolved.");
     }
 
     private void RegisterRuntimeSettings(IContainerRegistry containerRegistry)
@@ -290,12 +290,12 @@ public partial class App : PrismApplication
         }
         catch (Exception ex)
         {
-            _logger.LogError(GetType(), $"{message} : Exception {ex.Message}");
+            _logger!.LogError(GetType(), $"{message} : Exception {ex.Message}");
         }
         finally
         {
-            _logger.LogError(GetType(), $"{message} : Exception {exception.Message}");
-            _shutdownEvent.Publish();
+            _logger!.LogError(GetType(), $"{message} : Exception {exception.Message}");
+            _shutdownEvent!.Publish();
         }
     }
     #endregion

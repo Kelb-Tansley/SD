@@ -233,7 +233,7 @@
                     Foreground="{StaticResource PrimaryDark1}">
                     <TextBlock.Text>
                         <MultiBinding StringFormat="{}{0:F2}  mm">
-                            <Binding Path="Beam.BeamChain.LeTop" />
+                            <Binding Path="Beam.BeamChain.LeBottom" />
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>

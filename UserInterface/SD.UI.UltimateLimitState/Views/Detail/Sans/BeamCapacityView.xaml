@@ -20,11 +20,29 @@
             <Label Content="Vrx-x" />
             <Label Content="Vry-y" />
             <Label Content="Mrx-x" />
+            <Label Content="  • Mrx-x (Top)" ToolTip="Unbraced bending resistance of the major axis of the section above the neutral axis." />
+            <Label Content="  • Mrx-x (Bottom)" ToolTip="Unbraced bending resistance of the major axis of the section below the neutral axis." />
             <Label Content="Mry-y" />
             <Label Content="Axial Class" />
             <Label Content="Flexural Class" />
-            <Label Content="KL/r (Major)" />
-            <Label Content="KL/r (Minor)" />
+            <Label Content="KL(2)/r (Major)" />
+            <Label Content="KL(1)/r (Minor)" />
+            <Label
+                Content="ω2 (Major)"
+                ToolTip="SANS 10162:1, 2011, section 13.6"
+                Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label
+                Content="ω2 (Minor)"
+                ToolTip="SANS 10162:1, 2011, section 13.6"
+                Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label
+                Content="ω1 (Major)"
+                ToolTip="SANS 10162:1, 2011, section 13.8.5"
+                Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label
+                Content="ω1 (Minor)"
+                ToolTip="SANS 10162:1, 2011, section 13.8.5"
+                Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
         </StackPanel>
 
         <StackPanel Grid.Column="1" Margin="0,0,12,0">
@@ -33,11 +51,17 @@
             <Label Content="{Binding Capacity.VrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Capacity.VrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Capacity.MrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.MrMajorTop, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.MrMajorBottom, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Capacity.MrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding AxialClass.SectionClassNumber}" />
             <Label Content="{Binding FlexuralClass.SectionClassNumber}" />
             <Label Content="{Binding Capacity.SlendernessMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Capacity.SlendernessMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.ω2Major, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="{Binding Capacity.ω2Minor, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="{Binding Capacity.ω1Major, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="{Binding Capacity.ω1Minor, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
         </StackPanel>
 
         <StackPanel Grid.Column="2">
@@ -45,6 +69,8 @@
             <Label Content="kN" />
             <Label Content="kN" />
             <Label Content="kN" />
+            <Label Content="kN.m" />
+            <Label Content="kN.m" />
             <Label Content="kN.m" />
             <Label Content="kN.m" />
         </StackPanel>

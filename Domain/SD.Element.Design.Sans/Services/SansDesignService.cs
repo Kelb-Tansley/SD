@@ -348,6 +348,8 @@ public class SansDesignService : SansService, IElementDesignService
         if (mr != null)
         {
             capacity.MrMajor = mr.MrMajor / 1000000;
+            capacity.MrMajorTop = mr.MrMajorTopUnsupported / 1000000;
+            capacity.MrMajorBottom = mr.MrMajorBottomUnsupported / 1000000;
             capacity.MrMinor = mr.MrMinor / 1000000;
         }
 
