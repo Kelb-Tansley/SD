@@ -34,13 +34,6 @@
                         <Border Style="{StaticResource CardBorder}">
                             <views:BeamHeaderCardView />
                         </Border>
-                        <!--<Expander
-                            HorizontalAlignment="Stretch"
-                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
-                            BorderThickness="0,0,0,1"
-                            Header="Effective Length">
-                            <views:BeamEffectiveLengthView Margin="8" />
-                        </Expander>-->
                         <Border Background="Transparent" Style="{StaticResource CardBorder}">
                             <controls:ExpandingCard ExpanderTitle="Effective Length" IsExpanded="True">
                                 <views:BeamEffectiveLengthView />
@@ -56,32 +49,11 @@
                                 <views:BeamUtilizationView />
                             </controls:ExpandingCard>
                         </Border>
-                        <!--<Expander
-                            HorizontalAlignment="Stretch"
-                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
-                            BorderThickness="0,0,0,1"
-                            Header="ULS Utilization">
-                            <views:BeamUtilizationView Margin="8" />
-                        </Expander>-->
-                        <!--<Expander
-                            HorizontalAlignment="Stretch"
-                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
-                            BorderThickness="0,0,0,1"
-                            Header="Member Capacity">
-                            <views:BeamCapacityView Margin="8" />
-                        </Expander>-->
                         <Border Background="Transparent" Style="{StaticResource CardBorder}">
                             <controls:ExpandingCard ExpanderTitle="Section Properties">
                                 <views:BeamSectionProperties />
                             </controls:ExpandingCard>
                         </Border>
-                        <!--<Expander
-                            HorizontalAlignment="Stretch"
-                            BorderBrush="{DynamicResource PrimaryHueLightBrush}"
-                            BorderThickness="0,0,0,1"
-                            Header="Section Properties">
-                            <views:BeamSectionProperties Margin="8" />
-                        </Expander>-->
                     </StackPanel>
                 </ScrollViewer>
             </DataTemplate>

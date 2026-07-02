@@ -67,6 +67,8 @@
                     CanUserAddRows="false"
                     ColumnHeaderHeight="41"
                     ColumnWidth="Auto"
+                    EnableColumnVirtualization="False"
+                    EnableRowVirtualization="True"
                     ItemsSource="{Binding DisplayedResults}"
                     RowHeight="32"
                     SelectedItem="{Binding SelectedBeamResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -120,16 +122,6 @@
                             Binding="{Binding Utilization.MaxUtilizationPercentage, Converter={StaticResource DoubleTwoDecimalsConverter}}"
                             Header="Utilisation"
                             IsReadOnly="True" />
-                        <!--<DataGridTextColumn
-                            Width="60"
-                            Binding="{Binding Beam.Section.TypeDisplay}"
-                            Header="Type"
-                            IsReadOnly="True" />-->
-                        <!--<DataGridTextColumn
-                            MinWidth="110"
-                            Binding="{Binding Beam.Section.DisplayName}"
-                            Header="Property"
-                            IsReadOnly="True" />-->
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

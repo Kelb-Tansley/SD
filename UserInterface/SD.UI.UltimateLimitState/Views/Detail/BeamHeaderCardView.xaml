@@ -8,8 +8,8 @@
     <Border MinHeight="80">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="160" />
             </Grid.ColumnDefinitions>
 
             <!--  Left: Peak utilization  -->
@@ -38,7 +38,8 @@
                         VerticalAlignment="Center"
                         FontSize="11"
                         Foreground="{StaticResource PrimaryColor}"
-                        Text="{Binding Beam.Section.DisplayName}" />
+                        Text="{Binding Beam.Section.DisplayName}"
+                        TextWrapping="Wrap" />
                 </StackPanel>
             </StackPanel>
 
@@ -46,9 +47,9 @@
             <StackPanel
                 Grid.Column="1"
                 Margin="8,0,0,0"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Stretch"
                 Orientation="Vertical">
-                <StackPanel Margin="0,4,0,0" HorizontalAlignment="Right">
+                <StackPanel Margin="0,4,0,0" HorizontalAlignment="Stretch">
                     <TextBlock
                         Margin="0,0,6,0"
                         VerticalAlignment="Center"
@@ -59,45 +60,9 @@
                         VerticalAlignment="Center"
                         FontSize="11"
                         Foreground="{StaticResource PrimaryColor}"
-                        Text="{Binding Utilization.MaxUtilizationDescription}" />
+                        Text="{Binding Utilization.MaxUtilizationDescription}"
+                        TextWrapping="Wrap" />
                 </StackPanel>
-
-                <!--  KPI row  -->
-                <!--
-                <StackPanel
-                    Margin="0,8,0,0"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-                    <StackPanel
-                        Width="100"
-                        HorizontalAlignment="Right"
-                        Orientation="Vertical">
-                        <TextBlock
-                            FontSize="11"
-                            Foreground="{StaticResource PrimaryLight2}"
-                            Text="Cr" />
-                        <TextBlock
-                            FontSize="12"
-                            FontWeight="SemiBold"
-                            Foreground="{StaticResource PrimaryLight1}"
-                            Text="{Binding Cr, FallbackValue='0 kN'}" />
-                    </StackPanel>
-
-                    <StackPanel
-                        Width="120"
-                        HorizontalAlignment="Right"
-                        Orientation="Vertical">
-                        <TextBlock
-                            FontSize="11"
-                            Foreground="{StaticResource PrimaryLight2}"
-                            Text="Tr" />
-                        <TextBlock
-                            FontSize="12"
-                            FontWeight="SemiBold"
-                            Foreground="{StaticResource PrimaryLight1}"
-                            Text="{Binding Tr, FallbackValue='0 kN'}" />
-                    </StackPanel>
-                </StackPanel>-->
             </StackPanel>
         </Grid>
     </Border>

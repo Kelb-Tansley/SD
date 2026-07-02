@@ -9,6 +9,7 @@ public interface IRepository<T>
     Task AddAsync(T entity);
     Task AddAllAsync(IEnumerable<T> entities);
     Task UpdateAsync(T entity);
+    Task UpdateAllAsync(IEnumerable<T> entities);
     Task DeleteAsync(Guid id);
     Task<T?> FirstOrDefault(Expression<Func<T, bool>> predicate);
     Task<List<T>?> Where(Expression<Func<T, bool>> predicate);

@@ -39,6 +39,12 @@ public class Repository<T> : IRepository<T> where T : class
         _dbContext.Entry(entity).State = EntityState.Modified;
     }
 
+    public async Task UpdateAllAsync(IEnumerable<T> entities)
+    {
+        foreach (var entity in entities)
+            _dbContext.Entry(entity).State = EntityState.Modified;
+    }
+
     public async Task DeleteAsync(Guid id)
     {
         var entity = await _dbSet.FindAsync(id);

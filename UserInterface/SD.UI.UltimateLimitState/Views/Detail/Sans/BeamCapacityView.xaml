@@ -19,12 +19,18 @@
             <Label Content="Tr" />
             <Label Content="Vrx-x" />
             <Label Content="Vry-y" />
-            <Label Content="Mrx-x" />
-            <Label Content="  • Mrx-x (Top)" ToolTip="Unbraced bending resistance of the major axis of the section above the neutral axis." />
-            <Label Content="  • Mrx-x (Bottom)" ToolTip="Unbraced bending resistance of the major axis of the section below the neutral axis." />
-            <Label Content="Mry-y" />
+            <Label Content="Mrx-x" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label
+                Content="  • Mrx-x (Top)"
+                ToolTip="Unbraced bending resistance of the major axis of the section above the neutral axis."
+                Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label
+                Content="  • Mrx-x (Bottom)"
+                ToolTip="Unbraced bending resistance of the major axis of the section below the neutral axis."
+                Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="Mry-y" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
             <Label Content="Axial Class" />
-            <Label Content="Flexural Class" />
+            <Label Content="Flexural Class" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
             <Label Content="KL(2)/r (Major)" />
             <Label Content="KL(1)/r (Minor)" />
             <Label
@@ -50,12 +56,12 @@
             <Label Content="{Binding Capacity.Tr, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Capacity.VrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Capacity.VrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
-            <Label Content="{Binding Capacity.MrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
-            <Label Content="{Binding Capacity.MrMajorTop, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
-            <Label Content="{Binding Capacity.MrMajorBottom, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
-            <Label Content="{Binding Capacity.MrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
+            <Label Content="{Binding Capacity.MrMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="{Binding Capacity.MrMajorTop, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="{Binding Capacity.MrMajorBottom, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="{Binding Capacity.MrMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
             <Label Content="{Binding AxialClass.SectionClassNumber}" />
-            <Label Content="{Binding FlexuralClass.SectionClassNumber}" />
+            <Label Content="{Binding FlexuralClass.SectionClassNumber}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
             <Label Content="{Binding Capacity.SlendernessMajor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Capacity.SlendernessMinor, Converter={StaticResource DoubleTwoDecimalsConverter}}" />
             <Label Content="{Binding Capacity.ω2Major, Converter={StaticResource DoubleTwoDecimalsConverter}}" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
@@ -69,10 +75,10 @@
             <Label Content="kN" />
             <Label Content="kN" />
             <Label Content="kN" />
-            <Label Content="kN.m" />
-            <Label Content="kN.m" />
-            <Label Content="kN.m" />
-            <Label Content="kN.m" />
+            <Label Content="kN.m" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="kN.m" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="kN.m" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
+            <Label Content="kN.m" Visibility="{Binding DesignType, Converter={StaticResource DesignTypeToVisibilityConverter}}" />
         </StackPanel>
     </Grid>
 </UserControl>

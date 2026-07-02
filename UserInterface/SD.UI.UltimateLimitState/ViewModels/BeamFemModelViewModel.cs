@@ -10,6 +10,7 @@ using SD.UI.Events;
 using SD.Core.Shared.Extensions;
 using SD.UI.ViewModel;
 using SD.Core.Infrastructure.Interfaces;
+using SD.Core.Infrastructure.Logging;
 
 namespace SD.UI.UltimateLimitState.ViewModels;
 
@@ -20,6 +21,7 @@ public partial class BeamFemModelViewModel : FemViewModelBase
     private readonly IEventAggregator _eventAggregator;
     private readonly IFemModelDisplayService _femModelDisplayService;
     private readonly INotificationService _notificationService;
+    private readonly ILoggerService _logger;
     private readonly BeamDesignWindowClosedEvent _beamDesignWindowClosedEvent;
     private readonly SelectedBeamChangedEvent _selectedBeamChangedEvent;
     private readonly DesignFemResizeEvent _designFemResizeEvent;
@@ -39,12 +41,14 @@ public partial class BeamFemModelViewModel : FemViewModelBase
                                  IFemModel femModel,
                                  IEventAggregator eventAggregator,
                                  IFemModelDisplayService femModelDisplayService,
-                                 INotificationService notificationService) : base(viewManagementModel)
+                                 INotificationService notificationService,
+                                 ILoggerService logger) : base(viewManagementModel)
     {
         _femModel = femModel ?? throw new ArgumentNullException(nameof(femModel));
         _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         _femModelDisplayService = femModelDisplayService ?? throw new ArgumentNullException(nameof(femModelDisplayService));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         _beamDesignWindowClosedEvent = _eventAggregator.GetEvent<BeamDesignWindowClosedEvent>();
         _selectedBeamChangedEvent = _eventAggregator.GetEvent<SelectedBeamChangedEvent>();
@@ -148,7 +152,10 @@ public partial class BeamFemModelViewModel : FemViewModelBase
             _zoomLevel = _zoomLevel.ZoomOut();
             await Task.Run(() => UpdateFemModel(_selectedBeamResult, true));
         }
-        catch (Exception) { }
+        catch (Exception ex)
+        {
+            _logger.LogError(GetType(), $"Zoom out failed: {ex.Message}");
+        }
     }
 
     [RelayCommand]
@@ -159,7 +166,10 @@ public partial class BeamFemModelViewModel : FemViewModelBase
             _zoomLevel = _zoomLevel.ZoomIn();
             await Task.Run(() => UpdateFemModel(_selectedBeamResult, true));
         }
-        catch (Exception) { }
+        catch (Exception ex)
+        {
+            _logger.LogError(GetType(), $"Zoom in failed: {ex.Message}");
+        }
     }
 
     [RelayCommand]

@@ -238,14 +238,14 @@ public partial class BeamDesignViewModel : ViewModelBase
     private void InitializeBackgroundWorker()
     {
         _exportWorker = new BackgroundWorker();
-        _exportWorker.DoWork += MathcadExportWorkerDoWork;
-        _exportWorker.RunWorkerCompleted += MathcadExportWorkerRunWorkerCompleted;
+        _exportWorker.DoWork += MathcadExportWorkerDoWork!;
+        _exportWorker.RunWorkerCompleted += MathcadExportWorkerRunWorkerCompleted!;
     }
 
     [RelayCommand]
     public void MathcadExport()
     {
-        if (SelectedBeamResult == null || _exportWorker.IsBusy)
+        if (SelectedBeamResult == null || _exportWorker!.IsBusy)
         {
             _notificationService.ShowSnackNotification(new Notification("Cancelled", "Export process is currently busy..."));
             return;

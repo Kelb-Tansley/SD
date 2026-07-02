@@ -1,4 +1,5 @@
 ﻿using SD.Core.Infrastructure.Interfaces;
+using SD.Core.Infrastructure.Logging;
 using SD.Core.Shared.Enum;
 using SD.Data.Entities;
 using SD.Data.Interfaces;
@@ -7,12 +8,13 @@ using System.Windows;
 
 namespace SD.Data.Services;
 
-public class BeamKFactorDataService(IUnitOfWork unitOfWork, IFemFilePathDataService femFilePathDataService, INotificationService notificationService) : IBeamKFactorDataService
+public class BeamKFactorDataService(IUnitOfWork unitOfWork, IFemFilePathDataService femFilePathDataService, INotificationService notificationService, ILoggerService logger) : IBeamKFactorDataService
 {
     private readonly IRepository<BeamKValueEntity> _beamKValueRepo = unitOfWork.GetRepository<BeamKValueEntity>();
 
     private readonly IFemFilePathDataService _femFilePathDataService = femFilePathDataService;
     private readonly INotificationService _notificationService = notificationService;
+    private readonly ILoggerService _logger = logger;
 
     public async Task<IEnumerable<BeamKValue>> GetBeamKValuesByFileName(string fileName)
     {
@@ -42,8 +44,10 @@ public class BeamKFactorDataService(IUnitOfWork unitOfWork, IFemFilePathDataServ
             foreach (var kValue in kValues ?? Enumerable.Empty<BeamKValueEntity>())
                 result.Add(kValue.MapToBeamKValue());
         }
-        catch (Exception)
-        { }
+        catch (Exception ex)
+        {
+            _logger.LogError(typeof(BeamKFactorDataService), $"Failed to retrieve K-values for file '{fileName}': {ex.Message}");
+        }
 
         return result;
     }
@@ -57,22 +61,35 @@ public class BeamKFactorDataService(IUnitOfWork unitOfWork, IFemFilePathDataServ
         if (file is null)
             return;
 
-        var existing = await _beamKValueRepo.Where(b => b.FemFileStableId == file.FileId);
+        var kValuesList = kValues.ToList();
+        if (kValuesList.Count == 0)
+            return;
 
-        foreach (var kValue in kValues)
+        var existing = await _beamKValueRepo.Where(b => b.FemFileStableId == file.FileId);
+        var existingDict = existing?.ToDictionary(e => e.BeamNumber) ?? new Dictionary<int, BeamKValueEntity>();
+
+        var toUpdate = new List<BeamKValueEntity>();
+        var toAdd = new List<BeamKValueEntity>();
+
+        foreach (var kValue in kValuesList)
         {
-            var found = existing?.FirstOrDefault(e => e.BeamNumber == kValue.BeamNumber);
-            if (found != null)
+            if (existingDict.TryGetValue(kValue.BeamNumber, out var found))
             {
                 found.UpdateProperties(kValue);
-                await _beamKValueRepo.UpdateAsync(found);
+                toUpdate.Add(found);
             }
             else
             {
                 var entity = kValue.MapToBeamKValueEntity(file.FileId!.Value);
-                await _beamKValueRepo.AddAsync(entity);
+                toAdd.Add(entity);
             }
         }
+
+        if (toUpdate.Count > 0)
+            await _beamKValueRepo.UpdateAllAsync(toUpdate);
+
+        if (toAdd.Count > 0)
+            await _beamKValueRepo.AddAllAsync(toAdd);
 
         await unitOfWork.Commit();
     }

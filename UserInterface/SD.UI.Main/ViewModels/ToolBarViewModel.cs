@@ -95,7 +95,7 @@ public partial class ToolBarViewModel : ViewModelBase
             return;
 
         FemModelParameters.Clear();
-        _ulsDesignResults.Clear(); //Check if this is correct
+        _ulsDesignResults.Clear();
         _refreshEvent.Publish();
     }
 

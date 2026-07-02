@@ -7,7 +7,6 @@ using SD.Core.Shared.Contracts;
 using SD.Core.Shared.Events;
 using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.Core;
-using SD.Data;
 using SD.Data.Interfaces;
 using SD.Data.Repository;
 using SD.Data.Services;
@@ -113,7 +112,10 @@ public partial class App : PrismApplication
                 WindowStyle = ProcessWindowStyle.Hidden
             });
         }
-        catch (Exception) { }
+        catch (Exception ex)
+        {
+            _logger!.LogError(GetType(), $"Failed to restart application: Exception {ex.Message}");
+        }
 
         _shutdownEvent?.Publish();
     }
@@ -214,7 +216,7 @@ public partial class App : PrismApplication
     private static void RegisterRepositories(IContainerRegistry containerRegistry)
     {
         containerRegistry.Register<ISectionPropertiesDataService, SectionPropertiesDataService>();
-        
+
         containerRegistry.Register<IBeamKFactorDataService, BeamKFactorDataService>();
         containerRegistry.Register<IFemFilePathDataService, FemFilePathDataService>();
         containerRegistry.Register<IFemFilePathBlobService, FemFilePathBlobService>();

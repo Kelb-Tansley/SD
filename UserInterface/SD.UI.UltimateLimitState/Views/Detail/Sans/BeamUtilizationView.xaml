@@ -77,7 +77,7 @@
             <Label />
             <Label />
             <Label />
-            <Label Content="{Binding Forces.VonMises, Converter={StaticResource DoubleTwoDecimalsConverter}}" ContentStringFormat="({0} MPa)" />
+            <Label Content="{Binding Forces.VonMises, Converter={StaticResource DoubleTwoDecimalsConverter}, ConverterParameter=1}" ContentStringFormat="({0} MPa)" />
             <Label />
             <Label />
         </StackPanel>

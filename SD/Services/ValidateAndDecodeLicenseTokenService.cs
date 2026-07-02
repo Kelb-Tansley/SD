@@ -6,7 +6,20 @@ namespace SD.Services;
 
 public static class ValidateAndDecodeLicenseTokenService
 {
+    private static readonly string[] InstallKeyClaimTypes =
+    [
+        "InstallKey",
+        "installKey",
+        "install_key"
+    ];
+
     public static bool ValidateAndDecodeLicenseToken(this string token, string secret)
+    {
+        var result = token.ValidateAndDecodeLicenseTokenDetails(secret);
+        return result.IsLicensed;
+    }
+
+    public static LicenseValidationResult ValidateAndDecodeLicenseTokenDetails(this string token, string secret)
     {
         var key = Encoding.UTF8.GetBytes(secret);
 
@@ -30,10 +43,17 @@ public static class ValidateAndDecodeLicenseTokenService
 
             // Extract claims
             var licensedClaim = principal.Claims.FirstOrDefault(c => c.Type == "Licensed")?.Value ?? throw new SecurityTokenException("Missing licensed claim");
-            var expiresClaim = principal.Claims.FirstOrDefault(c => c.Type == "ExpiresAt")?.Value ?? throw new SecurityTokenException("Missing expiration claim");
+            _ = principal.Claims.FirstOrDefault(c => c.Type == "ExpiresAt")?.Value ?? throw new SecurityTokenException("Missing expiration claim");
+            var installKey = InstallKeyClaimTypes
+                .Select(claimType => principal.Claims.FirstOrDefault(c => c.Type == claimType)?.Value)
+                .FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
 
             bool.TryParse(licensedClaim, out var licensed);
-            return licensed;
+            return new LicenseValidationResult
+            {
+                IsLicensed = licensed,
+                InstallKey = installKey
+            };
         }
         catch (SecurityTokenException)
         {
