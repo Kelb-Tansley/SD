@@ -153,6 +153,7 @@ public partial class App : PrismApplication
 
         containerRegistry.Register<ITokenCacheService, TokenCacheService>();
         containerRegistry.Register<IAuthenticationService, AuthenticationService>();
+        containerRegistry.Register<IInstallKeyFileService, InstallKeyFileService>();
 
 
         // Code specific services

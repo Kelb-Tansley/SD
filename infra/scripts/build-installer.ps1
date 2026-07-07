@@ -32,17 +32,48 @@ $sdProj = Join-Path $root 'SD\SD.csproj'
 $msiProj = Join-Path $root 'Installer\SD.WiX\SD.WiX.wixproj'
 $bundleProj = Join-Path $root 'Installer\SD.Bundle\SD.Bundle.wixproj'
 
-if ([string]::IsNullOrWhiteSpace($PublishDir)) {
-    $PublishDir = Join-Path $root 'build-output\publish'
-}
+# Version control flow:
+# 1. MsiVersion is read from SD.WiX.wixproj (or overridden by -MsiVersion param)
+# 2. BundleVersion defaults to MsiVersion (or overridden by -BundleVersion param)
+# 3. BundleVersion is used in:
+#    - Bundle.wixproj: <OutputName>Aurestruct Setup $(BundleVersion)</OutputName>
+#    - Bundle.wxs: Version="$(BundleVersion)" (displayed in installer UI)
+# Result: EXE filename and installer version are automatically in sync.
 
 $publishDirResolved = [System.IO.Path]::GetFullPath($PublishDir)
 if (-not $publishDirResolved.EndsWith([System.IO.Path]::DirectorySeparatorChar)) {
     $publishDirResolved += [System.IO.Path]::DirectorySeparatorChar
 }
 
+function Get-StampedMsiVersion {
+    param(
+        [Parameter(Mandatory = $true)][string]$WixProjectPath
+    )
+
+    if (-not (Test-Path $WixProjectPath)) {
+        return $null
+    }
+
+    try {
+        [xml]$xml = Get-Content -Path $WixProjectPath
+        $versionNode = $xml.Project.PropertyGroup.MsiVersion | Select-Object -First 1
+        if ([string]::IsNullOrWhiteSpace($versionNode)) {
+            return $null
+        }
+
+        return [string]$versionNode
+    }
+    catch {
+        return $null
+    }
+}
+
+$stampedMsiVersion = Get-StampedMsiVersion -WixProjectPath $msiProj
+$effectiveMsiVersion = if (-not [string]::IsNullOrWhiteSpace($MsiVersion)) { $MsiVersion } else { $stampedMsiVersion }
+$effectiveBundleVersion = if (-not [string]::IsNullOrWhiteSpace($BundleVersion)) { $BundleVersion } else { $effectiveMsiVersion }
+
 $msiOut = Join-Path $root 'Installer\SD.WiX\bin\x64\Release\Aurestruct.msi'
-$bundleOut = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release\AurestructSetup.exe'
+$bundleOutDir = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release'
 $artifacts = Join-Path $root 'artifacts\msi'
 
 New-Item -Path $publishDirResolved -ItemType Directory -Force | Out-Null
@@ -71,8 +102,8 @@ try {
     }
 
     $msiBuildArgs = @('build', $msiProj, '--configuration', $Configuration, "-p:AppPublishDir=$publishDirResolved", '--nologo')
-    if (-not [string]::IsNullOrWhiteSpace($MsiVersion)) {
-        $msiBuildArgs += "-p:MsiVersion=$MsiVersion"
+    if (-not [string]::IsNullOrWhiteSpace($effectiveMsiVersion)) {
+        $msiBuildArgs += "-p:MsiVersion=$effectiveMsiVersion"
     }
 
     Invoke-Step -Name 'dotnet build SD.WiX' -Action {
@@ -84,29 +115,33 @@ try {
     }
 
     $bundleBuildArgs = @('build', $bundleProj, '--configuration', $Configuration, "-p:MsiPath=$msiOut", '--nologo')
-    if (-not [string]::IsNullOrWhiteSpace($BundleVersion)) {
-        $bundleBuildArgs += "-p:BundleVersion=$BundleVersion"
+    if (-not [string]::IsNullOrWhiteSpace($effectiveBundleVersion)) {
+        $bundleBuildArgs += "-p:BundleVersion=$effectiveBundleVersion"
     }
 
     Invoke-Step -Name 'dotnet build SD.Bundle' -Action {
         dotnet @bundleBuildArgs
     }
 
-    if (-not (Test-Path $bundleOut)) {
-        throw "Expected bundle EXE not found: $bundleOut"
+    $bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'Aurestruct Setup *.exe' -File -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTimeUtc -Descending |
+        Select-Object -First 1
+
+    if ($null -eq $bundleOut) {
+        throw "Expected bundle EXE not found in: $bundleOutDir"
     }
 
     if (-not $SkipArtifactCopy) {
         Write-Host "==> Copying artifacts to $artifacts"
         Copy-Item $msiOut (Join-Path $artifacts (Split-Path $msiOut -Leaf)) -Force
-        Copy-Item $bundleOut (Join-Path $artifacts (Split-Path $bundleOut -Leaf)) -Force
+        Copy-Item $bundleOut.FullName (Join-Path $artifacts $bundleOut.Name) -Force
     }
 
     Write-Host ''
     Write-Host 'Build complete.'
     Write-Host "  Publish Dir: $publishDirResolved"
     Write-Host "  MSI:         $msiOut"
-    Write-Host "  Bundle EXE:  $bundleOut"
+    Write-Host "  Bundle EXE:  $($bundleOut.FullName)"
     if (-not $SkipArtifactCopy) {
         Write-Host "  Artifacts:   $artifacts"
     }

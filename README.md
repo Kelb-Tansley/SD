@@ -106,17 +106,35 @@ Run all commands from the repository root (`D:\mine\SD`).
 
 ### 0) Preferred: run the single helper script
 
+The script automatically names the output EXE as `Aurestruct Setup <version>.exe` based on the version you provide.
+
 ```powershell
-pwsh -File infra/scripts/build-installer.ps1
+pwsh -File infra/scripts/build-installer.ps1 -MsiVersion 1.2.3
 ```
 
-Optional examples:
+Optional parameters:
 
 ```powershell
-pwsh -File infra/scripts/build-installer.ps1 -MsiVersion 1.2.3 -BundleVersion 1.2.3
+# Set the version (controls both MSI version and bundle/EXE name)
+pwsh -File infra/scripts/build-installer.ps1 -MsiVersion 1.2.3
+
+# Override just the bundle/EXE version (MSI version remains as in SD.WiX.wixproj)
+pwsh -File infra/scripts/build-installer.ps1 -BundleVersion 1.2.3
+
+# Custom publish directory
 pwsh -File infra/scripts/build-installer.ps1 -PublishDir "D:\build\publish\"
+
+# Skip tool restore
 pwsh -File infra/scripts/build-installer.ps1 -SkipToolRestore
+
+# Combine options
+pwsh -File infra/scripts/build-installer.ps1 -MsiVersion 2.0.0 -SkipClean
 ```
+
+**Version behavior:**
+- If no `-MsiVersion` is provided, the script uses the version hardcoded in `Installer/SD.WiX/SD.WiX.wixproj` (currently `1.0.0`).
+- If no `-BundleVersion` is provided, the script uses the same version as the MSI.
+- Both the EXE filename and the installer UI version are automatically synchronized.
 
 ### 1) Publish the desktop app (required before MSI build)
 

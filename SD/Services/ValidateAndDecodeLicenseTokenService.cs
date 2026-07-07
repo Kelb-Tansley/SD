@@ -13,12 +13,6 @@ public static class ValidateAndDecodeLicenseTokenService
         "install_key"
     ];
 
-    public static bool ValidateAndDecodeLicenseToken(this string token, string secret)
-    {
-        var result = token.ValidateAndDecodeLicenseTokenDetails(secret);
-        return result.IsLicensed;
-    }
-
     public static LicenseValidationResult ValidateAndDecodeLicenseTokenDetails(this string token, string secret)
     {
         var key = Encoding.UTF8.GetBytes(secret);
@@ -28,9 +22,9 @@ public static class ValidateAndDecodeLicenseTokenService
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateIssuer = true,
-            ValidIssuer = "11c7f14f-3903-4948-8fe0-a106b8b001e2",       // must match issuer used when creating
+            ValidIssuer = "de1ea3ae-85f5-4876-895d-58d126a372ab",       // must match issuer used when creating
             ValidateAudience = true,
-            ValidAudience = "32631303-9274-4bf0-a8bd-4d1877a7f331",  // must match audience used when creating
+            ValidAudience = "aurestruct-web-nonprod",  // must match audience used when creating
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero       // no tolerance for expired tokens
         };
