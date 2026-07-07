@@ -11,7 +11,6 @@ param(
     [switch]$SkipClean,
     [switch]$SkipArtifactCopy
 )
-
 $ErrorActionPreference = 'Stop'
 
 function Invoke-Step {
@@ -78,6 +77,9 @@ $effectiveBundleVersion = if (-not [string]::IsNullOrWhiteSpace($BundleVersion))
 $msiOut = Join-Path $root 'Installer\SD.WiX\bin\x64\Release\Aurestruct.msi'
 $bundleOutDir = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release'
 $artifacts = Join-Path $root 'artifacts\msi'
+
+Write-Host "Bundle output directory contents:"
+Get-ChildItem -Path $bundleOutDir -Force
 
 New-Item -Path $publishDirResolved -ItemType Directory -Force | Out-Null
 New-Item -Path $artifacts -ItemType Directory -Force | Out-Null
