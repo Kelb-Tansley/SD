@@ -106,7 +106,7 @@ Run all commands from the repository root (`D:\mine\SD`).
 
 ### 0) Preferred: run the single helper script
 
-The script automatically names the output EXE as `Aurestruct Setup <version>.exe` based on the version you provide.
+The script automatically names the output EXE as `AurestructSetup<version>.exe` based on the version you provide.
 
 ```powershell
 pwsh -File infra/scripts/build-installer.ps1 -MsiVersion 1.2.3
@@ -178,7 +178,7 @@ dotnet build Installer/SD.Bundle/SD.Bundle.wixproj -c Release -p:MsiPath="D:\cus
 
 ```text
 Installer/SD.WiX/bin/Release/Aurestruct.msi
-Installer/SD.Bundle/bin/Release/Aurestruct Setup *.exe
+Installer/SD.Bundle/bin/Release/AurestructSetup*.exe
 ```
 
 ### 8) Verify install/uninstall manually (silent)

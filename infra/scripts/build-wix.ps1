@@ -11,7 +11,7 @@ $msiProj    = Join-Path $root 'Installer\SD.WiX\SD.WiX.wixproj'
 $bundleProj = Join-Path $root 'Installer\SD.Bundle\SD.Bundle.wixproj'
 $msiOut     = Join-Path $root 'Installer\SD.WiX\bin\x64\Release\Aurestruct.msi'
 $bundleOutDir = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release'
-$bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'Aurestruct Setup *.exe' -File -ErrorAction SilentlyContinue |
+$bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'AurestructSetup*.exe' -File -ErrorAction SilentlyContinue |
     Sort-Object LastWriteTimeUtc -Descending |
     Select-Object -First 1
 $artifacts  = Join-Path $root 'artifacts\msi'

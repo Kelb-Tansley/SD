@@ -36,7 +36,7 @@ $bundleProj = Join-Path $root 'Installer\SD.Bundle\SD.Bundle.wixproj'
 # 1. MsiVersion is read from SD.WiX.wixproj (or overridden by -MsiVersion param)
 # 2. BundleVersion defaults to MsiVersion (or overridden by -BundleVersion param)
 # 3. BundleVersion is used in:
-#    - Bundle.wixproj: <OutputName>Aurestruct Setup $(BundleVersion)</OutputName>
+#    - Bundle.wixproj: <OutputName>AurestructSetup$(BundleVersion)</OutputName>
 #    - Bundle.wxs: Version="$(BundleVersion)" (displayed in installer UI)
 # Result: EXE filename and installer version are automatically in sync.
 
@@ -70,8 +70,11 @@ function Get-StampedMsiVersion {
 
 $stampedMsiVersion = Get-StampedMsiVersion -WixProjectPath $msiProj
 $effectiveMsiVersion = if (-not [string]::IsNullOrWhiteSpace($MsiVersion)) { $MsiVersion } else { $stampedMsiVersion }
-$effectiveBundleVersion = if (-not [string]::IsNullOrWhiteSpace($BundleVersion)) { $BundleVersion } else { $effectiveMsiVersion }
-
+$effectiveBundleVersion = if (-not [string]::IsNullOrWhiteSpace($BundleVersion)) { 
+    $BundleVersion 
+} else { 
+    $effectiveMsiVersion 
+}
 $msiOut = Join-Path $root 'Installer\SD.WiX\bin\x64\Release\Aurestruct.msi'
 $bundleOutDir = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release'
 $artifacts = Join-Path $root 'artifacts\msi'
@@ -123,7 +126,7 @@ try {
         dotnet @bundleBuildArgs
     }
 
-    $bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'Aurestruct Setup*.exe' -File -ErrorAction SilentlyContinue |
+    $bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'AurestructSetup*.exe' -File -ErrorAction SilentlyContinue |
         Sort-Object LastWriteTimeUtc -Descending |
         Select-Object -First 1
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Bundle</OutputType>
-    <OutputName>Aurestruct Setup $(BundleVersion)</OutputName>
+    <OutputName>AurestructSetup$(BundleVersion)</OutputName>
     <InstallerPlatform>x64</InstallerPlatform>
     <!--
       Must match the MSI version stamped by infra/scripts/set-release-version.ps1.
