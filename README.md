@@ -178,7 +178,7 @@ dotnet build Installer/SD.Bundle/SD.Bundle.wixproj -c Release -p:MsiPath="D:\cus
 
 ```text
 Installer/SD.WiX/bin/Release/Aurestruct.msi
-Installer/SD.Bundle/bin/Release/AurestructSetup.exe
+Installer/SD.Bundle/bin/Release/Aurestruct Setup *.exe
 ```
 
 ### 8) Verify install/uninstall manually (silent)

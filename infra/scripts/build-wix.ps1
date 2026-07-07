@@ -10,8 +10,15 @@ $publishDir = Join-Path $root 'build-output\publish'
 $msiProj    = Join-Path $root 'Installer\SD.WiX\SD.WiX.wixproj'
 $bundleProj = Join-Path $root 'Installer\SD.Bundle\SD.Bundle.wixproj'
 $msiOut     = Join-Path $root 'Installer\SD.WiX\bin\x64\Release\Aurestruct.msi'
-$bundleOut  = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release\AurestructSetup.exe'
+$bundleOutDir = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release'
+$bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'Aurestruct Setup *.exe' -File -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTimeUtc -Descending |
+    Select-Object -First 1
 $artifacts  = Join-Path $root 'artifacts\msi'
+
+if (-not $bundleOut) {
+    throw "Expected bundle EXE not found in $bundleOutDir"
+}
 
 New-Item -Path $publishDir -ItemType Directory -Force | Out-Null
 New-Item -Path $artifacts  -ItemType Directory -Force | Out-Null
@@ -62,4 +69,4 @@ Copy-Item $bundleOut (Join-Path $artifacts (Split-Path $bundleOut -Leaf)) -Force
 Write-Host ""
 Write-Host "Build complete."
 Write-Host "  MSI:        $artifacts\Aurestruct.msi"
-Write-Host "  Bundle EXE: $artifacts\AurestructSetup.exe"
+Write-Host "Bundle EXE: $($bundleOut.FullName)"
