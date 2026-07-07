@@ -11,14 +11,7 @@ $msiProj    = Join-Path $root 'Installer\SD.WiX\SD.WiX.wixproj'
 $bundleProj = Join-Path $root 'Installer\SD.Bundle\SD.Bundle.wixproj'
 $msiOut     = Join-Path $root 'Installer\SD.WiX\bin\x64\Release\Aurestruct.msi'
 $bundleOutDir = Join-Path $root 'Installer\SD.Bundle\bin\x64\Release'
-$bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'AurestructSetup*.exe' -File -ErrorAction SilentlyContinue |
-    Sort-Object LastWriteTimeUtc -Descending |
-    Select-Object -First 1
 $artifacts  = Join-Path $root 'artifacts\msi'
-
-if (-not $bundleOut) {
-    throw "Expected bundle EXE not found in $bundleOutDir"
-}
 
 New-Item -Path $publishDir -ItemType Directory -Force | Out-Null
 New-Item -Path $artifacts  -ItemType Directory -Force | Out-Null
@@ -57,7 +50,14 @@ if (-not (Test-Path $msiOut)) { throw "Expected MSI not found: $msiOut" }
 Write-Host "==> dotnet build (SD.Bundle, Release, x64)"
 & dotnet build $bundleProj --configuration Release -p:Platform=x64 "-p:MsiPath=$msiOut" --nologo
 if ($LASTEXITCODE -ne 0) { throw "SD.Bundle build failed" }
+$bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'AurestructSetup*.exe' -File -ErrorAction SilentlyContinue |
+    Sort-Object LastWriteTimeUtc -Descending |
+    Select-Object -First 1
+    
 if (-not (Test-Path $bundleOut)) { throw "Expected bundle EXE not found: $bundleOut" }
+if (-not $bundleOut) {
+    throw "Expected bundle EXE not found in $bundleOutDir"
+}
 
 # ---------------------------------------------------------------------------
 # 5. Copy artifacts
