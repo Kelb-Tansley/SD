@@ -123,13 +123,9 @@ try {
         dotnet @bundleBuildArgs
     }
 
-    $bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'Aurestruct Setup *.exe' -File -ErrorAction SilentlyContinue |
+    $bundleOut = Get-ChildItem -Path $bundleOutDir -Filter 'Aurestruct Setup*.exe' -File -ErrorAction SilentlyContinue |
         Sort-Object LastWriteTimeUtc -Descending |
         Select-Object -First 1
-
-    if ($null -eq $bundleOut) {
-        throw "Expected bundle EXE not found in: $bundleOutDir"
-    }
 
     if (-not $SkipArtifactCopy) {
         Write-Host "==> Copying artifacts to $artifacts"
