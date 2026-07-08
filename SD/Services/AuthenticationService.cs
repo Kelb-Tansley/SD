@@ -9,10 +9,11 @@ namespace SD.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
+    private readonly string _apiAppRegClientId = "6a75416f-b00c-46a6-aa83-ac75cf5b6b93";
+
     private readonly string _appRegClientId = "32631303-9274-4bf0-a8bd-4d1877a7f331";
     private readonly string _appRegTenantId = "2cd924f5-c630-4fca-9460-d4032b489567";
-    private readonly string _apiAppRegClientId = "de1ea3ae-85f5-4876-895d-58d126a372ab";
-    
+
     private readonly ITokenCacheService _tokenCacheService;
     private readonly IWebApiHttpClient _webApiHttpClient;
     private readonly IInstallKeyFileService _installKeyFileService;

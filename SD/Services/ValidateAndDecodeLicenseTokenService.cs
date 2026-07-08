@@ -22,9 +22,9 @@ public static class ValidateAndDecodeLicenseTokenService
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(key),
             ValidateIssuer = true,
-            ValidIssuer = "de1ea3ae-85f5-4876-895d-58d126a372ab",       // must match issuer used when creating
+            ValidIssuer = "6a75416f-b00c-46a6-aa83-ac75cf5b6b93",       // must match issuer used when creating
             ValidateAudience = true,
-            ValidAudience = "aurestruct-web-nonprod",  // must match audience used when creating
+            ValidAudience = "718a047d-f387-4017-8642-e9eba84c68df",  // must match audience used when creating
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero       // no tolerance for expired tokens
         };
