@@ -7,6 +7,13 @@ on:
         description: Release version in format Major.Minor.Patch.Revision (e.g., 1.0.0.4)
         required: true
         type: string
+      environment:
+        description: Target environment (prod or nonprod)
+        required: true
+        type: choice
+        options:
+          - nonprod
+          - prod
 
 jobs:
   build-and-upload:
@@ -14,6 +21,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
       - name: Checkout
