@@ -177,25 +177,23 @@ public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
             //Project global vector onto the plane vector for a plane representing the principal 1 direction of the beam
             var projectionVectorG1 = VectorService.AngleBetweenTwoVectors(windLoadVector, vectorAxis1);
             var orientation1 = VectorService.VectorOrientation(vectorAxis1, windLoadVector);
-            var windPressure1 = orientation1 * factoredPressure * Math.Cos(projectionVectorG1.DegreesToRadians());
-
+            var windPressure1 = orientation1 * factoredPressure * Math.Abs(Math.Cos(projectionVectorG1.DegreesToRadians()));
 
             var projectionVectorG2 = VectorService.AngleBetweenTwoVectors(windLoadVector, vectorAxis2);
             var orientation2 = VectorService.VectorOrientation(vectorAxis2, windLoadVector);
-            var windPressure2 = orientation2 * factoredPressure * Math.Cos(projectionVectorG2.DegreesToRadians());
+            var windPressure2 = orientation2 * factoredPressure * Math.Abs(Math.Cos(projectionVectorG2.DegreesToRadians()));
 
             var appliedPressure1 = new double[6];
-            appliedPressure1[0] = windPressure1 * beam.Section.B1 / unitFactor.Length;
+            appliedPressure1[0] = (windPressure1 * beam.Section.GetSectionBreadth() / unitFactor.Length).ZeroIfTiny();
 
             var appliedPressure2 = new double[6];
-            appliedPressure2[0] = windPressure2 * beam.Section.D / unitFactor.Length;
+            appliedPressure2[0] = (windPressure2 * beam.Section.GetSectionDepth() / unitFactor.Length).ZeroIfTiny();
 
-
-            St7.St7SetBeamDistributedForcePrincipal6ID(modelId, beam.Number, 1, loadCase, St7.dlConstant, 1, appliedPressure1).ThrowIfFails();
-            St7.St7SetBeamDistributedForcePrincipal6ID(modelId, beam.Number, 2, loadCase, St7.dlConstant, 1, appliedPressure2).ThrowIfFails();
+            St7.St7SetBeamDistributedForcePrincipal6ID(modelId, beam.Number, 1, loadCase, St7.dlConstant, 1, appliedPressure1).HandleApiError();
+            St7.St7SetBeamDistributedForcePrincipal6ID(modelId, beam.Number, 2, loadCase, St7.dlConstant, 1, appliedPressure2).HandleApiError();
         }
 
-        St7.St7SaveFile(modelId).ThrowIfFails();
+        St7.St7SaveFile(modelId).HandleApiError();
     }
     public List<LoadCase> GetPrimaryLoadCases(int modelId)
     {

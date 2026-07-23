@@ -5,9 +5,14 @@ namespace SD.UI.Singletons;
 public partial class ProcessModel : ObservableObject, IProcessModel
 {
     [ObservableProperty]
-    public bool isPrimaryProcessRunning = false;
+    public partial bool IsPrimaryProcessRunning { get; set; } = false;
+
     [ObservableProperty]
-    public bool isDesignWindowOpen = false;
+    public partial bool IsDesignWindowOpen { get; set; } = false;
+
     [ObservableProperty]
-    public bool isFemModelLoaded = false;
+    public partial bool IsFemModelLoaded { get; set; } = false;
+
+    [ObservableProperty]
+    public partial bool IsRightDrawerProcessRunning { get; set; } = false;
 }

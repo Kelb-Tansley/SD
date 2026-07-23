@@ -98,6 +98,8 @@ public class RectangularSection : Section
         IsTorsionalRestraint = true;
     }
 
+    public override double GetSectionDepth() => D;
+    public override double GetSectionBreadth() => B1;
     protected override string GetDisplayName() => $"{D.Cut(1)}x{B1.Cut(1)}x{T1.Cut(1)}{(T2 != T1 ? 'x' + T2.Cut(1).ToString() : string.Empty)} {TypeDisplay}";
     protected override string GetTypeDisplay() => D == B1 && D == B2 ? "SHS" : "RHS";
 }

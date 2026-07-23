@@ -87,6 +87,8 @@ public class CircularSection : Section
         IsTorsionalRestraint = true;
     }
 
+    public override double GetSectionDepth() => D;
+    public override double GetSectionBreadth() => D;
     protected override string GetDisplayName() => $"{D.Cut(1)}x{T1.Cut(1)} {TypeDisplay}";
     protected override string GetTypeDisplay() => "CHS";
 }

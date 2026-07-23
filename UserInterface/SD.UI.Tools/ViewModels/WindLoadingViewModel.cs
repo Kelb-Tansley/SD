@@ -21,22 +21,35 @@ public partial class WindLoadingViewModel : FemDisplayViewModelBase
     private readonly IStrandApiService _strandApiService;
     private readonly INotificationService _notificationService;
     private readonly IDesignModel _designModel;
+
     private readonly WindViewLoadEvent _windViewLoadEvent;
 
     [ObservableProperty]
-    public WindLoadingModel _windLoadingModel = new();
+    public partial IProcessModel ProcessModel { get; set; }
 
     [ObservableProperty]
-    public ObservableCollection<LoadCase> _loadCases = [];
+    public partial WindLoadingModel WindLoading { get; set; } = new();
 
     [ObservableProperty]
-    public ObservableCollection<string> _loadDirections = ["X", "Y", "Z", "-X", "-Y", "-Z"];
+    public partial ObservableCollection<LoadCase> LoadCases { get; set; } = [];
 
     [ObservableProperty]
-    public LoadCase? _selectedLoadCase;
+    public partial ObservableCollection<string> LoadDirections { get; set; } = ["X", "Y", "Z", "-X", "-Y", "-Z"];
 
     [ObservableProperty]
-    public string _selectedLoadDirection;
+    public partial LoadCase? SelectedLoadCase { get; set; }
+
+    [ObservableProperty]
+    public partial string SelectedLoadDirection { get; set; }
+
+    [ObservableProperty]
+    public partial bool ProcessError { get; set; } = false;
+    
+    [ObservableProperty]
+    public partial bool WindLoadsApplied { get; set; } = false;
+
+    [ObservableProperty]
+    public partial string ProcessErrorMessage { get; set; } = string.Empty;
 
     private double[] windLoadVector = [1, 0, 0];
 
@@ -46,18 +59,21 @@ public partial class WindLoadingViewModel : FemDisplayViewModelBase
                                 IFemModelParameters femModelParameters,
                                 IFemModelDisplayService femModelDisplayService,
                                 IDesignModel designModel,
-                                INotificationService notificationService)
+                                INotificationService notificationService,
+                                IProcessModel processModel)
         : base(viewManagementModel, femModelDisplayService, FemModels.WindLoadingDisplayModelId)
     {
         _strandApiService = strandApiService ?? throw new ArgumentNullException(nameof(strandApiService));
         _femModelParameters = femModelParameters ?? throw new ArgumentNullException(nameof(femModelParameters));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
         _designModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
+        ProcessModel = processModel ?? throw new ArgumentNullException(nameof(processModel));
 
         _windViewLoadEvent = eventAggregator.GetEvent<WindViewLoadEvent>();
         _windViewLoadEvent.Subscribe(GetLoadCases);
 
         SelectedLoadDirection = LoadDirections[0];
+        WindLoading.SetVector(windLoadVector);
     }
 
     private void GetLoadCases(string filePath)
@@ -94,23 +110,52 @@ public partial class WindLoadingViewModel : FemDisplayViewModelBase
         else if (SelectedLoadDirection == "-Z")
             windLoadVector = [0, 0, -1];
 
-        WindLoadingModel.SetVector(windLoadVector);
+        WindLoading.SetVector(windLoadVector);
     }
 
     [RelayCommand]
-    private void ApplyWindLoad()
+    private async Task ApplyWindLoad()
     {
+        WindLoadsApplied = false;
         if (SelectedLoadCase == null)
             return;
 
-        _strandApiService.GetFemModelParameters(_femModelParameters, _designModel.DesignCode.ToDesignCodeEnum(), _modelId, _designModel.SolverType, null);
+        try
+        {
+            ProcessModel.IsRightDrawerProcessRunning = true;
+            _strandApiService.GetFemModelParameters(_femModelParameters, _designModel.DesignCode.ToDesignCodeEnum(), _modelId, _designModel.SolverType, null);
 
-        _strandApiService.ApplyBeamWindLoads(_modelId, SelectedLoadCase.Number, windLoadVector, WindLoadingModel, _femModelParameters.Beams, _femModelParameters.UnitFactor);
+            await Task.Run(() =>
+            {
+                _strandApiService.ApplyBeamWindLoads(_modelId, SelectedLoadCase.Number, windLoadVector, WindLoading, _femModelParameters.Beams, _femModelParameters.UnitFactor);
+                WindLoadsApplied = true;
+            });
+        }
+        catch (Exception ex)
+        {
+            ProcessErrorMessage = ex.Message;
+            ProcessError = true;
+            WindLoadsApplied = false;
+        }
+        finally
+        {
+            ProcessModel.IsRightDrawerProcessRunning = false;
+        }
     }
 
     [RelayCommand]
     private async Task Cancel()
     {
+        _strandApiService.CloseAllFemFiles(_modelId);
         await CloseRightDrawer();
+        WindLoadsApplied = false;
+    }
+
+    [RelayCommand]
+    private async Task Save()
+    {
+        _strandApiService.SaveAndCloseFile(_modelId);
+        await CloseRightDrawer();
+        WindLoadsApplied = false;
     }
 }

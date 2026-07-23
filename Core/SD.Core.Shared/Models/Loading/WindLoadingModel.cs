@@ -5,19 +5,22 @@ namespace SD.Core.Shared.Models.Loading;
 public partial class WindLoadingModel : ObservableObject
 {
     [ObservableProperty]
-    public double _windPressure = 1050D; //Default unit is pascals
+    public partial double WindPressure { get; set; } = 1050D;
+
     [ObservableProperty]
-    public double _sharpEdgeFactor = 2D;
+    public partial double SharpEdgeFactor { get; set; } = 2D;
+
     [ObservableProperty]
-    public double _circularSectionFactor = 0.8D;
+    public partial double CircularSectionFactor { get; set; } = 0.8D;
+
     [ObservableProperty]
-    public double _rectangularSectionFactor = 1.8D;
+    public partial double RectangularSectionFactor { get; set; } = 1.8D;
     [ObservableProperty]
-    public double _xVectorCoord = 0D;
+    public partial double XVectorCoord { get; set; } = 0D;
     [ObservableProperty]
-    public double _yVectorCoord = 0D;
+    public partial double YVectorCoord { get; set; } = 0D;
     [ObservableProperty]
-    public double _zVectorCoord = 0D;
+    public partial double ZVectorCoord { get; set; } = 0D;
 
     public void SetVector(double[] windLoadVector)
     {

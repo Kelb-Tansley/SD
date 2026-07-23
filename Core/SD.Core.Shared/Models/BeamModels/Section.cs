@@ -55,7 +55,8 @@ public abstract partial class Section : SectionProperties
     {
         return Agr * Material.Density;
     }
-
+    public abstract double GetSectionDepth();
+    public abstract double GetSectionBreadth();
     protected abstract string GetTypeDisplay();
     protected abstract string GetDisplayName();
 

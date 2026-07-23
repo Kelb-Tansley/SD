@@ -14,7 +14,7 @@ public abstract partial class FemDisplayViewModelBase(IViewManagementModel viewM
     private readonly SemaphoreSlim _reloadSemaphore = new(1, 1);
 
     [ObservableProperty]
-    public bool _isModelOpen = false;
+    public partial bool IsModelOpen { get; set; } = false;
 
     public required int _modelId = modelId;
     protected string FilePath { get; set; } = string.Empty;

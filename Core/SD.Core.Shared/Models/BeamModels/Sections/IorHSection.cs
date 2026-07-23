@@ -214,6 +214,8 @@ public class IorHSection : Section
         IsTorsionalRestraint = true;
     }
 
+    public override double GetSectionDepth() => D;
+    public override double GetSectionBreadth() => B1;
     protected override string GetDisplayName() => $"{D.Cut(1)}x{Math.Max(B1, B2).Cut(1)} {TypeDisplay}";
     protected override string GetTypeDisplay() => IsH() ? "H" : "I";
     private bool IsH()
