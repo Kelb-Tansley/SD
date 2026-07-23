@@ -192,8 +192,6 @@ public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
             St7.St7SetBeamDistributedForcePrincipal6ID(modelId, beam.Number, 1, loadCase, St7.dlConstant, 1, appliedPressure1).HandleApiError();
             St7.St7SetBeamDistributedForcePrincipal6ID(modelId, beam.Number, 2, loadCase, St7.dlConstant, 1, appliedPressure2).HandleApiError();
         }
-
-        St7.St7SaveFile(modelId).HandleApiError();
     }
     public List<LoadCase> GetPrimaryLoadCases(int modelId)
     {

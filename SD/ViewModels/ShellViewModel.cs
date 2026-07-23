@@ -94,6 +94,8 @@ public partial class ShellViewModel : FemViewModelBase
     [RelayCommand]
     public async Task Loaded()
     {
+        _appShutdownEvent = _eventAggregator.GetEvent<AppShutdownEvent>();
+
         try
         {
             if (!await _authenticationService.IsUserValid())
@@ -101,13 +103,13 @@ public partial class ShellViewModel : FemViewModelBase
         }
         catch (Exception ex)
         {
-            _notificationService.ShutdownAfterErrorNotice(new Notification("Authentication Error", $"User authentication failed with error: {ex.Message}. \n\n The application will now close."));
+            _splashService.SetMessageInSplash($"User authentication failed with error: {ex.Message} \n\nThe application will now close.");
+            Task.Delay(4000).GetAwaiter().GetResult();
+            _appShutdownEvent.Publish(); 
             return;
         }
 
         await GetUserPreferences();
-
-        _appShutdownEvent = _eventAggregator.GetEvent<AppShutdownEvent>();
 
         if (_runtimeAppSettings.RequiresRestart)
             Task.Run(() => Task.Delay(5000)).GetAwaiter().GetResult();

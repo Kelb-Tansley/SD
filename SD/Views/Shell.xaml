@@ -48,6 +48,7 @@
             x:Name="DrawerHost"
             Padding="16"
             BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BottomDrawerCloseOnClickAway="False"
             IsBottomDrawerOpen="{Binding IsBottomDrawerOpen, Mode=TwoWay}"
             IsRightDrawerOpen="{Binding ViewManagementModel.IsRightDrawerOpen}"
             RightDrawerBackground="Transparent"
@@ -78,17 +79,21 @@
                             <TextBlock TextWrapping="Wrap">
                                 <Run FontWeight="Bold">Disclaimer</Run>
                                 <LineBreak />
-                                The software provided herein is intended to assist in the design of structural steelwork in the mining and industrial sectors. While every effort has been made to ensure the accuracy and reliability of the software, it is provided "as is" without warranty of any kind, either express or implied.<LineBreak />
-                                <LineBreak />
+                                The software provided herein is intended to assist in the design of structural steelwork. While every effort has been made to ensure the accuracy and reliability of the software, it is provided "as is" without warranty of any kind, either express or implied.<LineBreak /><LineBreak />
+
                                 <Run FontWeight="Bold">Liability Disclaimer</Run>
                                 <LineBreak />
-                                The developers of this software shall not be held liable for any direct, indirect, incidental, or consequential damages or losses arising out of the use or inability to use the software, including but not limited to structural failure, property damage, personal injury, or death.<LineBreak />
-                                <LineBreak />
+                                The developers of this software shall not be held liable for any direct, indirect, incidental, or consequential damages or losses arising out of the use or inability to use the software, including but not limited to structural failure, property damage, personal injury, or death.<LineBreak /><LineBreak />
+
                                 <Run FontWeight="Bold">User Responsibility</Run>
                                 <LineBreak />
-                                It is the sole responsibility of the user to ensure the accuracy, completeness, and suitability of the software for their specific application. Users must conduct their own independent verification and validation of the software's output and ensure that all designs comply with relevant codes, standards, and regulations. The use of this software does not replace the need for professional engineering judgment and expertise.<LineBreak />
+                                It is the sole responsibility of the user to ensure the accuracy, completeness, and suitability of the software for their specific application. Users must conduct their own independent verification and validation of the software's output and ensure that all designs comply with relevant codes, standards, and regulations. The use of this software does not replace the need for professional engineering judgment and expertise.<LineBreak /><LineBreak />
+
+                                <Run FontWeight="Bold">License Restrictions</Run>
                                 <LineBreak />
-                                By using this software, you acknowledge that you have read, understood, and agreed to this disclaimer.</TextBlock>
+                                This software is licensed for personal and internal professional use only. You may not copy, distribute, sell, rent, lease, sublicense, or otherwise make this software available to any third party, whether for commercial gain or free of charge. Any unauthorized distribution or commercialization is strictly prohibited and may result in legal action.<LineBreak /><LineBreak />
+                                By using this software, you acknowledge that you have read, understood, and agreed to this disclaimer and the licensing restrictions.</TextBlock>
+
                             <StackPanel
                                 Margin="0,16,0,0"
                                 HorizontalAlignment="Right"
