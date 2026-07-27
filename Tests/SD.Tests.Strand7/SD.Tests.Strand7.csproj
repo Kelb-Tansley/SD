@@ -5,16 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <SpecFlowObsoleteCodeBehindFiles Remove="Features\AppliedLoad - Copy.feature.cs" />
-    <SpecFlowObsoleteCodeBehindFiles Remove="Features\CompressionOnly.feature.cs" />
-    <SpecFlowObsoleteCodeBehindFiles Remove="Features\ElementLength.feature.cs" />
+    <ReqnrollObsoleteCodeBehindFiles Remove="Features\AppliedLoad - Copy.feature.cs" />
+    <ReqnrollObsoleteCodeBehindFiles Remove="Features\CompressionOnly.feature.cs" />
+    <ReqnrollObsoleteCodeBehindFiles Remove="Features\ElementLength.feature.cs" />
   </ItemGroup>
   <ItemGroup>
 	  <PackageReference Include="FluentAssertions" Version="8.9.0" />
 	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
-	  <PackageReference Include="SolidToken.SpecFlow.DependencyInjection" Version="3.9.3" />
-	  <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
-	  <PackageReference Include="SpecFlow.MsTest" Version="3.9.74" />
+	  <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="3.3.4" />
+	  <PackageReference Include="Reqnroll.MSTest" Version="3.3.4" />
 	  <PackageReference Include="MSTest.TestAdapter" Version="4.2.1" />
 	  <PackageReference Include="MSTest.TestFramework" Version="4.2.1" />
   </ItemGroup>
@@ -56,17 +55,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <SpecFlowFeatureFiles Update="Features\SectionProperties.feature">
+    <ReqnrollFeatureFiles Update="Features\SectionProperties.feature">
       <Visible>$(UsingMicrosoftNETSdk)</Visible>
       <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
-    </SpecFlowFeatureFiles>
-    <SpecFlowFeatureFiles Update="Features\AppliedLoad.feature">
+    </ReqnrollFeatureFiles>
+    <ReqnrollFeatureFiles Update="Features\AppliedLoad.feature">
       <Visible>$(UsingMicrosoftNETSdk)</Visible>
       <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
-    </SpecFlowFeatureFiles>
-    <SpecFlowFeatureFiles Update="Features\ElementLength.feature">
+    </ReqnrollFeatureFiles>
+    <ReqnrollFeatureFiles Update="Features\ElementLength.feature">
       <Visible>$(UsingMicrosoftNETSdk)</Visible>
       <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
-    </SpecFlowFeatureFiles>
+    </ReqnrollFeatureFiles>
   </ItemGroup>
 </Project>

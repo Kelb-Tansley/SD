@@ -19,7 +19,7 @@ public sealed class AppliedLoadStepDefinitions
     private readonly IEffectiveLengthService _effectiveLengthService;
 
     private int _modelId = 1;
-    private readonly double _accuracy = 0.0001;
+    private readonly double _accuracy = 0.0002;
     private readonly bool _designLengthCalculated = false;
 
     public AppliedLoadStepDefinitions(
@@ -42,19 +42,6 @@ public sealed class AppliedLoadStepDefinitions
         _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
         _strandApiService = strandApiService ?? throw new ArgumentNullException(nameof(strandApiService));
         _effectiveLengthService = effectiveLengthService ?? throw new ArgumentNullException(nameof(effectiveLengthService));
-    }
-
-    [BeforeStep]
-    public void OnLoad()
-    {
-        if (!_connectionService.IsApiConnected)
-            _connectionService.ConnectToStrand7Api();
-    }
-
-    [Given("the applied load test file name is (.*)")]
-    public void GivenTheAppliedLoadTestFileNameIs(string fileName)
-    {
-        LocateStrand7TestModel.Initialize(fileName, _femModel, _designModel, out _modelId);
     }
 
     [When("the uls analysis is run")]

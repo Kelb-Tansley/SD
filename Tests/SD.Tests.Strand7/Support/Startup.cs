@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Reqnroll.Microsoft.Extensions.DependencyInjection;
 using SD.Tests.Shared.Helpers;
-using SolidToken.SpecFlow.DependencyInjection;
 
 namespace SD.Tests.Strand7.Support;
 public class Startup

@@ -1,4 +1,4 @@
-﻿global using TechTalk.SpecFlow;
+﻿global using Reqnroll;
 global using FluentAssertions;
 global using SD.Core.Shared.Contracts;
 global using SD.Core.Shared.Models;

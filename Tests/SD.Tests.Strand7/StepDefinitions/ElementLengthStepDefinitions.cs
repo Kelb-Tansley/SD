@@ -30,19 +30,6 @@ public sealed class ElementLengthStepDefinitions
         _strandApiService = strandApiService ?? throw new ArgumentNullException(nameof(strandApiService));
     }
 
-    [BeforeStep]
-    public void OnLoad()
-    {
-        if (!_connectionService.IsApiConnected)
-            _connectionService.ConnectToStrand7Api();
-    }
-
-    [Given("the fem test file name is (.*)")]
-    public void GivenTheFemTestFileNameIs(string fileName)
-    {
-        LocateStrand7TestModel.Initialize(fileName, _femModel, _designModel, out _modelId);
-    }
-
     [When("SANS ULS design is run")]
     public void WhenSansUlsIsRun()
     {

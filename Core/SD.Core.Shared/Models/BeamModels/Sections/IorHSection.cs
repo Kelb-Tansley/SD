@@ -2,6 +2,7 @@
 using SD.Core.Shared.Extensions;
 
 namespace SD.Core.Shared.Models.BeamModels.Sections;
+
 public class IorHSection : Section
 {
     /// <summary>
@@ -23,7 +24,12 @@ public class IorHSection : Section
                        double? iMinor = null,
                        double? j = null,
                        double? aMajor = null,
-                       double? aMinor = null) : base(SectionType.IorH, material)
+                       double? aMinor = null,
+                       double? zeMajor = null,
+                       double? zeMinor = null,
+                       double? zplMajor = null,
+                       double? zplMinor = null,
+                       double? cw = null) : base(SectionType.IorH, material)
     {
         B1 = b1;
         B2 = b2;
@@ -39,10 +45,27 @@ public class IorHSection : Section
                                     iMinor: iMinor,
                                     j: j,
                                     aMajor: aMajor,
-                                    aMinor: aMinor);
+                                    aMinor: aMinor,
+                                    zeMajor: zeMajor,
+                                    zeMinor: zeMinor,
+                                    zplMajor: zplMajor,
+                                    zplMinor: zplMinor,
+                                    cw: cw);
     }
 
-    private void InitialiseSectionProperties(double? agr, double? ceMajor, double? ceMinor, double? iMajor, double? iMinor, double? j, double? aMajor, double? aMinor)
+    private void InitialiseSectionProperties(double? agr,
+                                             double? ceMajor,
+                                             double? ceMinor,
+                                             double? iMajor,
+                                             double? iMinor,
+                                             double? j,
+                                             double? aMajor,
+                                             double? aMinor,
+                                             double? zeMajor,
+                                             double? zeMinor,
+                                             double? zplMajor,
+                                             double? zplMinor,
+                                             double? cw)
     {
         SetHw();
         SetAgr(agr);
@@ -55,10 +78,10 @@ public class IorHSection : Section
         SetIMinor(iMinor);
         SetRMajor();
         SetRMinor();
-        SetZeMajor();
-        SetZeMinor();
-        SetZplMajor();
-        SetZplMinor();
+        SetZeMajor(zeMajor);
+        SetZeMinor(zeMinor);
+        SetZplMajor(zplMajor);
+        SetZplMinor(zplMinor);
         SetJ(j);
         SetCw();
     }

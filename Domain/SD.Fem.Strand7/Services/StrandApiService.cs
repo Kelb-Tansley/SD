@@ -1,4 +1,5 @@
-﻿using SD.Core.Shared.Models.Loading;
+﻿using Microsoft.Extensions.DependencyModel;
+using SD.Core.Shared.Models.Loading;
 using SD.Core.Shared.Models.Sans;
 using SD.Element.Design.Services;
 
@@ -770,7 +771,7 @@ public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
 
             // Check if St7 Beam is Designable
             var integers = new int[5];
-            var sectionData = new double[St7.kNumBeamSectionData];
+            var sectionData = new double[39];
             var materialData = new double[St7.kNumMaterialData];
             St7.St7GetBeamPropertyData(modelId, propNum, integers, sectionData, materialData).ThrowIfFails();
             St7.St7GetPropertyName(modelId, St7.ptBEAMPROP, propNum, beamName, 100).ThrowIfFails();
@@ -783,39 +784,81 @@ public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
                 St7.bsCircularHollow => true,
                 St7.bsSquareHollow => true,
                 St7.bsTSection => true,
-                //St7.bsBXSSection => true,
+                St7.bsBXSSection => false,
                 _ => false
             };
 
-            //if (sectionDesignable)
-            //{
-            //    int[] integ = new int[100];
-            //    double[] dubs = new double[39];
-            //    var named = new StringBuilder(0, 100) { Capacity = 100 };
-            //    int shape = 0;
-            //    St7.St7GetLibraryBeamSectionGeometryBGL(modelId, propNum, St7.luMILLIMETRE, named, int.MaxValue, ref shape, dubs);
-
-            //    sectionDesignable = shape switch
-            //    {
-            //        St7.bgNullSection => false,
-            //        St7.bgRectangularHollow => true,
-            //        St7.bgISection => true,
-            //        St7.bgChannel => true,
-            //        St7.bgTSection => true,
-            //        St7.bgAngle => true,
-            //        St7.bgBulbFlat => false,
-            //        _ => false
-            //    };
-
-            //    var name = new StringBuilder(0, 100) { Capacity = 100 };
-            //    double[] dubsd = new double[St7.kNumBeamSectionData];
-            //    St7.St7GetLibraryBeamSectionPropertyDataBGL(modelId, propNum, St7.luMILLIMETRE, name, int.MaxValue, dubsd);
-            //}
-
             var beamPropertyChecked = integers[St7.ipBeamPropBeamType] == St7.btBeam && integers[St7.ipBeamPropMirrorType] == St7.mtNone && !string.IsNullOrWhiteSpace(beamName?.ToString());
-            var sectiontype = SectionTypeHelper.SectionTypeFromStrand(integers[St7.ipBeamPropSectionType]);
 
-            var section = _femDesignAdapter.GetBeamPropertiesService(designCode).GetBeamSection(beamName?.ToString(), sectiontype, beamPropertyChecked && sectionDesignable, materialData, sectionData, unitFactor, propNum);
+            var sectiontype = SectionType.Unknown;
+
+            var isBGLSection = false;
+            var bGLDimensions = new double[St7.kMaxBGLDimensions - 1];
+
+            // For BGL sections, we need to check the geometry type to determine if it is designable or not
+            if (sectionDesignable is false)
+            {
+                var sectionTypeByGeometry = 0;
+                var doubles = new double[5];
+                St7.St7GetBeamSectionGeometry(modelId, propNum, ref sectionTypeByGeometry, doubles).ThrowIfFails();
+
+                if (sectionTypeByGeometry is St7.bsBGLSection)
+                {
+                    int bGLShape = 0;
+
+                    St7.St7GetBeamSectionGeometryBGL(modelId,
+                                                     propNum,
+                                                     ref bGLShape,
+                                                     bGLDimensions).ThrowIfFails();
+
+                    sectionDesignable = bGLShape switch
+                    {
+                        St7.bgNullSection => false,
+                        St7.bgRectangularHollow => true,
+                        St7.bgISection => true,
+                        St7.bgChannel => true,
+                        St7.bgTSection => true,
+                        St7.bgAngle => true,
+                        St7.bgBulbFlat => false,
+                        _ => false
+                    };
+
+                    if (sectionDesignable)
+                    {
+                        var sectionMatch = Strand7SectionResolver.ResolveSectionFromProperty(modelId, propNum, true, unitFactor);
+                        if (sectionMatch is not null)
+                        {
+                            sectiontype = SectionTypeHelper.BGLSectionTypeFromStrand(bGLShape);
+
+                            var bGLPropName = new StringBuilder(256);
+                            St7.St7GetLibraryBeamSectionPropertyDataBGL(sectionMatch.LibraryID,
+                                                                        sectionMatch.ItemID,
+                                                                        St7.luMILLIMETRE,
+                                                                        bGLPropName,
+                                                                        bGLPropName.Capacity,
+                                                                        sectionData).ThrowIfFails();
+
+                            isBGLSection = true;
+                        }
+                        else
+                            sectionDesignable = false;
+                    }
+                }
+            }
+            else
+                sectiontype = SectionTypeHelper.SectionTypeFromStrand(integers[St7.ipBeamPropSectionType]);
+
+            var section = _femDesignAdapter
+                .GetBeamPropertiesService(designCode)
+                .GetBeamSection(beamName?.ToString(),
+                                sectiontype,
+                                beamPropertyChecked && sectionDesignable,
+                                materialData,
+                                sectionData,
+                                unitFactor,
+                                propNum,
+                                isBGLSection,
+                                bGLDimensions);
 
             if (sectionDesignable)
                 beamProperties.Add(section);

@@ -21,4 +21,24 @@ public class SectionTypeHelper
             _ => SectionType.Unknown,
         };
     }
+    public static SectionType BGLSectionTypeFromStrand(int sectionType)
+    {
+        return sectionType switch
+        {
+            // Sections I and H
+            St7.bgISection => SectionType.IorH,
+            // Sections PFC and TFC
+            St7.bgChannel => SectionType.LipChannel,
+            // Sections EA and UA
+            St7.bgAngle => SectionType.Angle,
+            // Section CHS
+            // No BGL section type for CHS
+            // Sections SHS and RHS
+            St7.bgRectangularHollow => SectionType.RectangularHollow,
+            // Section T
+            St7.bgTSection => SectionType.T,
+            // Section NoDesign
+            _ => SectionType.Unknown,
+        };
+    }
 }

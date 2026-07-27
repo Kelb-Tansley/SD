@@ -21,7 +21,12 @@ public class ChannelSection : Section
                           double? iMinor = null,
                           double? j = null,
                           double? aMajor = null,
-                          double? aMinor = null) : base(SectionType.LipChannel, material)
+                          double? aMinor = null,
+                          double? zeMajor = null,
+                          double? zeMinor = null,
+                          double? zplMajor = null,
+                          double? zplMinor = null,
+                          double? cw = null) : base(SectionType.LipChannel, material)
     {
         B1 = b;
         B2 = 0;
@@ -37,10 +42,27 @@ public class ChannelSection : Section
                                     iMinor: iMinor,
                                     j: j,
                                     aMajor: aMajor,
-                                    aMinor: aMinor);
+                                    aMinor: aMinor,
+                                    zeMajor: zeMajor,
+                                    zeMinor: zeMinor,
+                                    zplMajor: zplMajor,
+                                    zplMinor: zplMinor,
+                                    cw: cw);
     }
 
-    private void InitialiseSectionProperties(double? agr, double? ceMajor, double? ceMinor, double? iMajor, double? iMinor, double? j, double? aMajor, double? aMinor)
+    private void InitialiseSectionProperties(double? agr,
+                                             double? ceMajor,
+                                             double? ceMinor,
+                                             double? iMajor,
+                                             double? iMinor,
+                                             double? j,
+                                             double? aMajor,
+                                             double? aMinor,
+                                             double? zeMajor,
+                                             double? zeMinor,
+                                             double? zplMajor,
+                                             double? zplMinor,
+                                             double? cw)
     {
         SetHw();
         SetAgr(agr);
@@ -53,12 +75,12 @@ public class ChannelSection : Section
         SetIMinor(iMinor);
         SetRMajor();
         SetRMinor();
-        SetZeMajor();
-        SetZeMinor();
-        SetZplMajor();
-        SetZplMinor();
+        SetZeMajor(zeMajor);
+        SetZeMinor(zeMinor);
+        SetZplMajor(zplMajor);
+        SetZplMinor(zplMinor);
         SetJ(j);
-        SetCw();
+        SetCw(cw);
     }
 
     private void SetHw()
