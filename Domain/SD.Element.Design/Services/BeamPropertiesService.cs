@@ -103,9 +103,7 @@ public abstract class BeamPropertiesService : IBeamPropertiesService
                                 ceMinor: sectionData[St7.ipXBAR] * unitFactor.Length,
                                 iMajor: sectionData[St7.ipI11] * Math.Pow(unitFactor.Length, 4),
                                 iMinor: sectionData[St7.ipI22] * Math.Pow(unitFactor.Length, 4),
-                                j: sectionData[St7.ipJ] * Math.Pow(unitFactor.Length, 4),
-                                aMajor: sectionData[St7.ipSL2] * unitFactor.Length,
-                                aMinor: (sectionData[St7.ipXBAR] - sectionData[St7.ipSL1]) * unitFactor.Length);
+                                j: sectionData[St7.ipJ] * Math.Pow(unitFactor.Length, 4));
     }
     private CircularSection GetCircularStrand7Section(UnitFactor unitFactor, double[] sectionData, double[] materialData, string steelGrade)
     {
@@ -168,19 +166,19 @@ public abstract class BeamPropertiesService : IBeamPropertiesService
                                t2: t2,
                                t3: t3,
                                material: GetMaterialProperties(t1, t2, t3, steelGrade, SectionType.IorH, materialData, unitFactor),
-                               agr: sectionData[St7.ipBXSArea] * unitFactor.Length * unitFactor.Length,
-                               ceMajor: sectionData[St7.ipBXSYBar] * unitFactor.Length,
-                               ceMinor: sectionData[St7.ipBXSXBar] * unitFactor.Length,
-                               iMajor: sectionData[St7.ipBXSI11] * Math.Pow(unitFactor.Length, 4),
-                               iMinor: sectionData[St7.ipBXSI22] * Math.Pow(unitFactor.Length, 4),
-                               j: sectionData[St7.ipBXSJ] * Math.Pow(unitFactor.Length, 4),
-                               aMajor: sectionData[St7.ipBXSSL2] * unitFactor.Length,
-                               aMinor: sectionData[St7.ipBXSSL1] * unitFactor.Length,
-                               zeMajor: sectionData[St7.ipBXSZ11Plus] * unitFactor.Length,
-                               zeMinor: sectionData[St7.ipBXSZ22Plus] * unitFactor.Length,
-                               zplMajor: sectionData[St7.ipBXSS11] * unitFactor.Length,
-                               zplMinor: sectionData[St7.ipBXSS22] * unitFactor.Length,
-                               cw: sectionData[St7.ipBXSIw] * unitFactor.Length);
+                               agr: sectionData[St7.ipBXSArea],
+                               ceMajor: sectionData[St7.ipBXSYBar],
+                               ceMinor: sectionData[St7.ipBXSXBar],
+                               iMajor: sectionData[St7.ipBXSI11],
+                               iMinor: sectionData[St7.ipBXSI22],
+                               j: sectionData[St7.ipBXSJ],
+                               aMajor: sectionData[St7.ipBXSSL2],
+                               aMinor: sectionData[St7.ipBXSSL1],
+                               zeMajor: sectionData[St7.ipBXSZ11Plus],
+                               zeMinor: sectionData[St7.ipBXSZ22Plus],
+                               zplMajor: sectionData[St7.ipBXSS11],
+                               zplMinor: sectionData[St7.ipBXSS22],
+                               cw: sectionData[St7.ipBXSIw]);
     }
     private ChannelSection GetChannelStrand7BGLSection(UnitFactor unitFactor, double[] sectionData, double[] materialData, string steelGrade, double[] bGLDimensions)
     {
@@ -191,36 +189,44 @@ public abstract class BeamPropertiesService : IBeamPropertiesService
                                   t1: t1,
                                   t2: t2,
                                   material: GetMaterialProperties(t1, t2, 0, steelGrade, SectionType.LipChannel, materialData, unitFactor),
-                                  agr: sectionData[St7.ipBXSArea] * unitFactor.Length * unitFactor.Length,
-                                  ceMajor: sectionData[St7.ipBXSYBar] * unitFactor.Length,
-                                  ceMinor: sectionData[St7.ipBXSXBar] * unitFactor.Length,
-                                  iMajor: sectionData[St7.ipBXSI11] * Math.Pow(unitFactor.Length, 4),
-                                  iMinor: sectionData[St7.ipBXSI22] * Math.Pow(unitFactor.Length, 4),
-                                  j: sectionData[St7.ipBXSJ] * Math.Pow(unitFactor.Length, 4),
-                                  aMajor: sectionData[St7.ipBXSSL2] * unitFactor.Length,
-                                  aMinor: Math.Abs(sectionData[St7.ipBXSSL1]) * unitFactor.Length,
-                                  zeMajor: sectionData[St7.ipBXSZ11Plus] * unitFactor.Length,
-                                  zeMinor: sectionData[St7.ipBXSZ22Plus] * unitFactor.Length,
-                                  zplMajor: sectionData[St7.ipBXSS11] * unitFactor.Length,
-                                  zplMinor: sectionData[St7.ipBXSS22] * unitFactor.Length,
-                                  cw: sectionData[St7.ipBXSIw] * unitFactor.Length);
+                                  agr: sectionData[St7.ipBXSArea],
+                                  ceMajor: sectionData[St7.ipBXSYBar],
+                                  ceMinor: sectionData[St7.ipBXSXBar],
+                                  iMajor: sectionData[St7.ipBXSI11],
+                                  iMinor: sectionData[St7.ipBXSI22],
+                                  j: sectionData[St7.ipBXSJ],
+                                  aMajor: sectionData[St7.ipBXSSL2],
+                                  aMinor: Math.Abs(sectionData[St7.ipBXSSL1]),
+                                  zeMajor: sectionData[St7.ipBXSZ11Plus],
+                                  zeMinor: sectionData[St7.ipBXSZ22Plus],
+                                  zplMajor: sectionData[St7.ipBXSS11],
+                                  zplMinor: sectionData[St7.ipBXSS22],
+                                  cw: sectionData[St7.ipBXSIw]);
     }
     private AngleSection GetAngleStrand7BGLSection(UnitFactor unitFactor, double[] sectionData, double[] materialData, string steelGrade, double[] bGLDimensions)
     {
-        var t1 = sectionData[St7.ipT1] * unitFactor.Length;
+        var t1 = bGLDimensions[2] * unitFactor.Length;
         //Even though Strand7 allows two thicknesses for angle sections, most design codes do not account for this.
-        return new AngleSection(b: sectionData[St7.ipD1] * unitFactor.Length,
-                                d: sectionData[St7.ipD2] * unitFactor.Length,
+        return new AngleSection(b: bGLDimensions[1] * unitFactor.Length,
+                                d: bGLDimensions[0] * unitFactor.Length,
                                 t: t1,
                                 material: GetMaterialProperties(t1, 0, 0, steelGrade, SectionType.Angle, materialData, unitFactor),
-                                agr: sectionData[St7.ipAREA] * unitFactor.Length * unitFactor.Length,
-                                ceMajor: sectionData[St7.ipYBAR] * unitFactor.Length,
-                                ceMinor: sectionData[St7.ipXBAR] * unitFactor.Length,
-                                iMajor: sectionData[St7.ipI11] * Math.Pow(unitFactor.Length, 4),
-                                iMinor: sectionData[St7.ipI22] * Math.Pow(unitFactor.Length, 4),
-                                j: sectionData[St7.ipJ] * Math.Pow(unitFactor.Length, 4),
-                                aMajor: sectionData[St7.ipSL2] * unitFactor.Length,
-                                aMinor: (sectionData[St7.ipXBAR] - sectionData[St7.ipSL1]) * unitFactor.Length);
+                                agr: sectionData[St7.ipBXSArea],
+                                ceMajor: sectionData[St7.ipBXSYBar],
+                                ceMinor: sectionData[St7.ipBXSXBar],
+                                iMajor: sectionData[St7.ipBXSI11],
+                                iMinor: sectionData[St7.ipBXSI22],
+                                rMajor: sectionData[St7.ipBXSr1],
+                                rMinor: sectionData[St7.ipBXSr2],
+                                iXX: sectionData[St7.ipBXSIxxL],
+                                iYY: sectionData[St7.ipBXSIyyL],
+                                iXY: sectionData[St7.ipBXSIxyL],
+                                alpha: sectionData[St7.ipBXSAngle] * 180 / Math.PI,
+                                j: sectionData[St7.ipBXSJ],
+                                zeMajor: sectionData[St7.ipBXSZ11Plus],
+                                zeMinor: sectionData[St7.ipBXSZ22Plus],
+                                zeXX: sectionData[St7.ipBXSZxxPlus],
+                                zeYY: sectionData[St7.ipBXSZyyPlus]);
     }
     private RectangularSection GetRectangularStrand7BGLSection(UnitFactor unitFactor, double[] sectionData, double[] materialData, string steelGrade, double[] bGLDimensions)
     {
@@ -238,26 +244,54 @@ public abstract class BeamPropertiesService : IBeamPropertiesService
     }
     private TSection GetTStrand7BGLSection(UnitFactor unitFactor, double[] sectionData, double[] materialData, string steelGrade, double[] bGLDimensions)
     {
-        //From the collection of South African T-Sections, T sections can have the major axis as x-x (1-1) or y-y (2-2). 2-2 axis alligns with y-y.
-        var is22Major = sectionData[St7.ipI22] > sectionData[St7.ipI11];
-        var ceMajor = (is22Major ? sectionData[St7.ipXBAR] : sectionData[St7.ipYBAR]) * unitFactor.Length;
-        var ceMinor = (is22Major ? sectionData[St7.ipYBAR] : sectionData[St7.ipXBAR]) * unitFactor.Length;
-        var iMajor = (is22Major ? sectionData[St7.ipI22] : sectionData[St7.ipI11]) * Math.Pow(unitFactor.Length, 4);
-        var iMinor = (is22Major ? sectionData[St7.ipI11] : sectionData[St7.ipI22]) * Math.Pow(unitFactor.Length, 4);
-        var t1 = sectionData[St7.ipT1] * unitFactor.Length;
-        var t2 = sectionData[St7.ipT2] * unitFactor.Length;
+        var d = bGLDimensions[0] * unitFactor.Length;
+        var b = bGLDimensions[1] * unitFactor.Length;
+        var tw = bGLDimensions[2] * unitFactor.Length;
+        var tf = bGLDimensions[3] * unitFactor.Length;
 
-        return new TSection(b: sectionData[St7.ipD1] * unitFactor.Length,
-                            d: sectionData[St7.ipD2] * unitFactor.Length,
-                            t1: t1,
-                            t2: t2,
-                            material: GetMaterialProperties(t1, t2, 0, steelGrade, SectionType.T, materialData, unitFactor),
-                            agr: sectionData[St7.ipAREA] * unitFactor.Length * unitFactor.Length,
+        var material = GetMaterialProperties(tf, tw, 0, steelGrade, SectionType.T, materialData, unitFactor);
+
+        // Decide which principal axis is major (1–1 or 2–2)
+        var is22Major = sectionData[St7.ipBXSIyyL] > sectionData[St7.ipBXSIxxL];
+
+        var ceMajor = is22Major ? sectionData[St7.ipBXSXBar] : sectionData[St7.ipBXSYBar];
+        var ceMinor = is22Major ? sectionData[St7.ipBXSYBar] : sectionData[St7.ipBXSXBar];
+
+        var yeNa = is22Major ? d - ceMinor : d - ceMajor;
+
+        var iMajor = is22Major ? sectionData[St7.ipBXSIyyL] : sectionData[St7.ipBXSIxxL];
+        var iMinor = is22Major ? sectionData[St7.ipBXSIxxL] : sectionData[St7.ipBXSIyyL];
+
+        var rMajor = is22Major ? sectionData[St7.ipBXSry] : sectionData[St7.ipBXSrx];
+        var rMinor = is22Major ? sectionData[St7.ipBXSrx] : sectionData[St7.ipBXSry];
+
+        var zeMajor = is22Major ? Math.Min(sectionData[St7.ipBXSZyyPlus], sectionData[St7.ipBXSZyyMinus]) : Math.Min(sectionData[St7.ipBXSZxxPlus], sectionData[St7.ipBXSZxxMinus]);
+        var zeMinor = is22Major ? Math.Min(sectionData[St7.ipBXSZxxPlus], sectionData[St7.ipBXSZxxMinus]) : Math.Min(sectionData[St7.ipBXSZyyPlus], sectionData[St7.ipBXSZyyMinus]);
+
+        var zplMajor = is22Major ? sectionData[St7.ipBXSSyy] : sectionData[St7.ipBXSSxx];
+        var zplMinor = is22Major ? sectionData[St7.ipBXSSxx] : sectionData[St7.ipBXSSyy];
+
+        return new TSection(b: b,
+                            d: d,
+                            t1: tf,
+                            t2: tw,
+                            material: material,
+                            agr: sectionData[St7.ipBXSArea],
+                            yeNa: yeNa,
+                            iXX: sectionData[St7.ipBXSIxxL],
+                            iYY: sectionData[St7.ipBXSIyyL],
                             ceMajor: ceMajor,
                             ceMinor: ceMinor,
                             iMajor: iMajor,
                             iMinor: iMinor,
-                            j: sectionData[St7.ipJ] * Math.Pow(unitFactor.Length, 4));
+                            rMajor: rMajor,
+                            rMinor: rMinor,
+                            j: sectionData[St7.ipBXSJ],
+                            zeMajor: zeMajor,
+                            zeMinor: zeMinor,
+                            zplMajor: zplMajor,
+                            zplMinor: zplMinor,
+                            cw: sectionData[St7.ipBXSIw]);
     }
 
     protected abstract Material GetMaterialProperties(double t1, double t2, double t3, string steelGrade, SectionType sectionType, double[] materialData, UnitFactor unitFactor);

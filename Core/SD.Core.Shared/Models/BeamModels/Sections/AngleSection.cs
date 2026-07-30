@@ -2,6 +2,7 @@
 using SD.Core.Shared.Extensions;
 
 namespace SD.Core.Shared.Models.BeamModels.Sections;
+
 public class AngleSection : Section
 {
     public double Ixx { get; private set; }
@@ -27,9 +28,17 @@ public class AngleSection : Section
                         double? ceMinor = null,
                         double? iMajor = null,
                         double? iMinor = null,
+                        double? rMajor = null,
+                        double? rMinor = null,
+                        double? iXX = null,
+                        double? iYY = null,
+                        double? iXY = null,
+                        double? alpha = null,
                         double? j = null,
-                        double? aMajor = null,
-                        double? aMinor = null) : base(SectionType.Angle, material)
+                        double? zeMajor = null,
+                        double? zeMinor = null,
+                        double? zeXX = null,
+                        double? zeYY = null) : base(SectionType.Angle, material)
     {
         B1 = b;
         B2 = 0;
@@ -43,9 +52,17 @@ public class AngleSection : Section
                                     ceMinor: ceMinor,
                                     iMajor: iMajor,
                                     iMinor: iMinor,
+                                    rMajor: rMajor,
+                                    rMinor: rMinor,
+                                    iXX: iXX,
+                                    iYY: iYY,
+                                    iXY: iXY,
+                                    alpha: alpha,
                                     j: j,
-                                    aMajor: aMajor,
-                                    aMinor: aMinor);
+                                    zeMajor: zeMajor,
+                                    zeMinor: zeMinor,
+                                    zeXX: zeXX,
+                                    zeYY: zeYY);
     }
 
     private void InitialiseSectionProperties(double? agr = null,
@@ -53,36 +70,44 @@ public class AngleSection : Section
                                              double? ceMinor = null,
                                              double? iMajor = null,
                                              double? iMinor = null,
+                                             double? rMajor = null,
+                                             double? rMinor = null,
+                                             double? iXX = null,
+                                             double? iYY = null,
+                                             double? iXY = null,
+                                             double? alpha = null,
                                              double? j = null,
-                                             double? aMajor = null,
-                                             double? aMinor = null)
+                                             double? zeMajor = null,
+                                             double? zeMinor = null,
+                                             double? zeXX = null,
+                                             double? zeYY = null)
     {
         SetAgr(agr);
         SetCeMajor(ceMajor);
         SetCeMinor(ceMinor);
-        SetAMajor(aMajor);
-        SetAMinor(aMinor);
-        SetIXX();
-        SetIYY();
-        SetIXY();
-        SetAlpha();
+        SetAMajor();
+        SetAMinor();
+        SetIXX(iXX);
+        SetIYY(iYY);
+        SetIXY(iXY);
+        SetAlpha(alpha);
 
         SetIMajor(iMajor);
         SetIMinor(iMinor);
-        SetRMajor();
-        SetRMinor();
-        SetZeXX();
-        SetZeYY();
+        SetRMajor(rMajor);
+        SetRMinor(rMinor);
+        SetZeXX(zeXX);
+        SetZeYY(zeYY);
 
         SetV1();
         SetV2();
         SetU2();
         SetU1();
 
-        SetZeMajor();
-        SetZeMinor();
+        SetZeMajor(zeMajor);
+        SetZeMinor(zeMinor);
         SetJ(j);
-        SetCw();
+        SetCw(0);
     }
 
     private void SetAgr(double? value = null)

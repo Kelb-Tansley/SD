@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using CommunityToolkit.Mvvm;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FluentAssertions;
 using Moq;
-using SD.Core.Shared;
 using SD.Core.Shared.Enum;
-using SD.Core.Shared.Extensions;
-using SD.Core.Shared.Models;
 using SD.Core.Shared.Models.BeamModels;
 
-namespace SD.Core.Shared.Models.BeamModels.UnitTests;
+namespace SD.Core.Shared.UnitTests.Models.BeamModels;
 
 
 /// <summary>

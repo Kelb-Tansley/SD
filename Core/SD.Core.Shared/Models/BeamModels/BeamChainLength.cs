@@ -5,7 +5,7 @@ namespace SD.Core.Shared.Models.BeamModels;
 public partial class BeamChainLength : ObservableObject
 {
     private const double MinKValue = 0;
-    private const double MaxKValue = 5;
+    private const double MaxKValue = 10;
 
     public double L1 { get; set; } = 0;
     public double L2 { get; set; } = 0;

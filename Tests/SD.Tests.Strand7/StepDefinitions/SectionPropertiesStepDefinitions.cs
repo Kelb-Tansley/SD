@@ -37,7 +37,7 @@ public sealed class SectionPropertiesStepDefinitions(
     {
         AssertSectionProperties(property, value, _beamProps1!);
         AssertSectionProperties(property, value, _beamProps2!);
-        SectionAssertions.AssertSectionsAreEqual(_beamProps1!, _beamProps2!);
+        SectionAssertions.AssertSectionsAreEqual(_beamProps1!, _beamProps2!, _accuracy);
     }
 
     private void AssertSectionProperties(string property, double value, Section section)

@@ -5,31 +5,29 @@ namespace SD.Tests.Strand7.Helpers;
 
 public static class SectionAssertions
 {
-    private const double Tolerance = 0.015;
-
-    public static void AssertSectionsAreEqual(SectionProperties a, SectionProperties b)
+    public static void AssertSectionsAreEqual(SectionProperties a, SectionProperties b, double tolerance)
     {
         var props = typeof(SectionProperties)
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => p.PropertyType == typeof(double));
 
         Console.WriteLine();
-        Console.WriteLine("------------------------------------------------------------------------------------------------");
-        Console.WriteLine("Property                       A Value               B Value               Diff           Tol ");
-        Console.WriteLine("------------------------------------------------------------------------------------------------");
+        Console.WriteLine("----------------------------------------------------------------------------------------------------------------");
+        Console.WriteLine("Property                            A Value                B Value                   Diff                    Tol ");
+        Console.WriteLine("----------------------------------------------------------------------------------------------------------------");
 
         foreach (var prop in props)
         {
             double av = (double)prop.GetValue(a)!;
             double bv = (double)prop.GetValue(b)!;
             double diff = Math.Abs(av - bv);
-            var tol = Math.Min(Math.Abs(av) * Tolerance, Math.Abs(bv) * Tolerance);
+            var tol = Math.Min(Math.Abs(av) * tolerance, Math.Abs(bv) * tolerance);
 
             string avStr = FormatSmart(av);
             string bvStr = FormatSmart(bv);
             string diffStr = FormatSmart(diff);
             string tolStr = FormatSmart(tol);
-            Console.WriteLine($"{prop.Name,-20} {avStr,20} {bvStr,20} {diffStr,15} {tolStr,15}");
+            Console.WriteLine($"{prop.Name,-20} {avStr,22} {bvStr,22} {diffStr,22} {tolStr,22}");
 
             diff.Should().BeLessThanOrEqualTo(tol, $"Property {prop.Name} should match within tolerance.");
         }

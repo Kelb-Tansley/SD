@@ -24,11 +24,21 @@ public class TSection : Section
                     double t2,
                     Material material,
                     double? agr = null,
+                    double? yeNa = null,
                     double? ceMajor = null,
                     double? ceMinor = null,
                     double? iMajor = null,
                     double? iMinor = null,
-                    double? j = null) : base(SectionType.T, material)
+                    double? iXX = null,
+                    double? iYY = null,
+                    double? rMajor = null,
+                    double? rMinor = null,
+                    double? zeMajor = null,
+                    double? zeMinor = null,
+                    double? zplMajor = null,
+                    double? zplMinor = null,
+                    double? j = null,
+                    double? cw = null) : base(SectionType.T, material)
     {
         B1 = b;
         B2 = 0;
@@ -38,34 +48,59 @@ public class TSection : Section
         T3 = 0;
 
         InitialiseSectionProperties(agr: agr,
+                                    yeNa: yeNa,
                                     ceMajor: ceMajor,
                                     ceMinor: ceMinor,
                                     iMajor: iMajor,
                                     iMinor: iMinor,
-                                    j: j);
+                                    iXX: iXX,
+                                    iYY: iYY,
+                                    rMajor: rMajor,
+                                    rMinor: rMinor,
+                                    zeMajor: zeMajor,
+                                    zeMinor: zeMinor,
+                                    zplMajor: zplMajor,
+                                    zplMinor: zplMinor,
+                                    j: j,
+                                    cw: cw);
     }
 
-    private void InitialiseSectionProperties(double? agr, double? ceMajor, double? ceMinor, double? iMajor, double? iMinor, double? j)
+    private void InitialiseSectionProperties(double? agr = null,
+                                             double? yeNa = null,
+                                             double? ceMajor = null,
+                                             double? ceMinor = null,
+                                             double? iMajor = null,
+                                             double? iMinor = null,
+                                             double? iXX = null,
+                                             double? iYY = null,
+                                             double? rMajor = null,
+                                             double? rMinor = null,
+                                             double? zeMajor = null,
+                                             double? zeMinor = null,
+                                             double? zplMajor = null,
+                                             double? zplMinor = null,
+                                             double? j = null,
+                                             double? cw = null)
     {
         SetHw();
         SetAgr(agr);
-        SetYeNA();
-        SetIxx();
-        SetIyy();
+        SetYeNA(yeNa);
+        SetIxx(iXX);
+        SetIyy(iYY);
         SetCeMajor(ceMajor);
         SetCeMinor(ceMinor);
         SetAMajor();
         SetAMinor();
         SetIMajor(iMajor);
         SetIMinor(iMinor);
-        SetRMajor();
-        SetRMinor();
-        SetZeMajor();
-        SetZeMinor();
-        SetZplMajor();
-        SetZplMinor();
+        SetRMajor(rMajor);
+        SetRMinor(rMinor);
+        SetZeMajor(zeMajor);
+        SetZeMinor(zeMinor);
+        SetZplMajor(zplMajor);
+        SetZplMinor(zplMinor);
         SetJ(j);
-        SetCw();
+        SetCw(cw);
     }
 
     private void SetHw()
@@ -110,15 +145,15 @@ public class TSection : Section
     }
     private void SetZeMajor(double? value = null)
     {
-        ZeMajor = value != null ? (double)value : IsYMajor ? IMajor / CeMajor : IMajor / Math.Max(CeMajor, YeNA);
-        ZeMajorTop = IsYMajor ? ZeMajor : IMajor / YeNA;
-        ZeMajorBottom = IsYMajor ? ZeMajor : IMajor / CeMajor;
+        ZeMajor = value != null ? (double)value : IsYMajor ? IMajor / (B1 / 2) : IMajor / Math.Max(D - YeNA, YeNA);
+        ZeMajorTop = IsYMajor ? IMajor / (B1 / 2) : IMajor / YeNA;
+        ZeMajorBottom = IsYMajor ? IMajor / (B1 / 2) : IMajor / (D - YeNA);
     }
     private void SetZeMinor(double? value = null)
     {
         ZeMinor = value != null ? (double)value : IsYMajor ? IMinor / Math.Max(CeMinor, D - YeNA) : IMinor / CeMinor;
-        ZeMinorTop = IsYMajor ? IMinor / YeNA : ZeMinor;
-        ZeMinorBottom = IsYMajor ? IMinor / CeMinor : ZeMinor;
+        ZeMinorTop = IsYMajor ? IMinor / YeNA : IMinor / (B1 / 2);
+        ZeMinorBottom = IsYMajor ? IMinor / (D - YeNA) : IMinor / (B1 / 2);
     }
     private void SetZplMajor(double? value = null)
     {
@@ -144,9 +179,9 @@ public class TSection : Section
     {
         Iyy = value != null ? (double)value : (D - T1) * Math.Pow(T2, 3) / 12 + T1 * Math.Pow(B1, 3) / 12;
     }
-    private void SetYeNA()
+    private void SetYeNA(double? value = null)
     {
-        YeNA = (T2 * Math.Pow(D, 2) + (B1 - T2) * Math.Pow(T1, 2)) / (2 * Agr);
+        YeNA = value != null ? (double)value : (T2 * Math.Pow(D, 2) + (B1 - T2) * Math.Pow(T1, 2)) / (2 * Agr);
     }
 
     private double CalculateZplyy()
