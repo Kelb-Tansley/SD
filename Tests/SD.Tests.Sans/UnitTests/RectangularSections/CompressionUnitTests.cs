@@ -107,4 +107,34 @@ public class CompressionUnitTests : UnitTestsBase
         Assert.AreEqual(cr.Cr, value, _class4accuracy * cr.Cr);
     }
 
+    [TestMethod]
+    public void BGLRectangularSectionUsesProvidedBXSProperties()
+    {
+        var section = new RectangularSection(
+            b: 200,
+            d: 300,
+            t1: 8,
+            t2: 8,
+            GetMaterialProperties(8, 8, 0),
+            agr: 12000,
+            iMajor: 4000000,
+            iMinor: 3500000,
+            zeMajor: 20000,
+            zeMinor: 17000,
+            zplMajor: 21000,
+            zplMinor: 18000,
+            j: 5000,
+            cw: 6000000);
+
+        Assert.AreEqual(12000, section.Agr);
+        Assert.AreEqual(4000000, section.IMajor);
+        Assert.AreEqual(3500000, section.IMinor);
+        Assert.AreEqual(20000, section.ZeMajor);
+        Assert.AreEqual(17000, section.ZeMinor);
+        Assert.AreEqual(21000, section.ZplMajor);
+        Assert.AreEqual(18000, section.ZplMinor);
+        Assert.AreEqual(5000, section.J);
+        Assert.AreEqual(6000000, section.Cw);
+    }
+
 }

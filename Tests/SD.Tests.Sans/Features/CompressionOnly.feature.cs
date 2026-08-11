@@ -118,7 +118,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the compressive analysis is run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 7
- testRunner.Then("the compressive resistance of beam 1 should be 623.72", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the compressive resistance of beam 1 should be 623.7220882405675", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

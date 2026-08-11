@@ -230,17 +230,21 @@ public abstract class BeamPropertiesService : IBeamPropertiesService
     }
     private RectangularSection GetRectangularStrand7BGLSection(UnitFactor unitFactor, double[] sectionData, double[] materialData, string steelGrade, double[] bGLDimensions)
     {
-        var t1 = sectionData[St7.ipT1] * unitFactor.Length;
-        var t2 = sectionData[St7.ipT2] * unitFactor.Length;
-        return new RectangularSection(b: sectionData[St7.ipD1] * unitFactor.Length,
-                                      d: sectionData[St7.ipD2] * unitFactor.Length,
+        var t1 = bGLDimensions[2] * unitFactor.Length;
+        var t2 = bGLDimensions[3] * unitFactor.Length;
+        return new RectangularSection(b: bGLDimensions[1] * unitFactor.Length,
+                                      d: bGLDimensions[0] * unitFactor.Length,
                                       t1: t1,
                                       t2: t2,
                                       material: GetMaterialProperties(t1, t2, 0, steelGrade, SectionType.RectangularHollow, materialData, unitFactor),
-                                      agr: sectionData[St7.ipAREA] * unitFactor.Length * unitFactor.Length,
-                                      iMajor: sectionData[St7.ipI11] * Math.Pow(unitFactor.Length, 4),
-                                      iMinor: sectionData[St7.ipI22] * Math.Pow(unitFactor.Length, 4),
-                                      j: sectionData[St7.ipJ] * Math.Pow(unitFactor.Length, 4));
+                                      agr: sectionData[St7.ipBXSArea],
+                                      iMajor: sectionData[St7.ipBXSI11],
+                                      iMinor: sectionData[St7.ipBXSI22],
+                                      j: sectionData[St7.ipBXSJ],
+                                      zeMajor: sectionData[St7.ipBXSZ11Plus],
+                                      zeMinor: sectionData[St7.ipBXSZ22Plus],
+                                      zplMajor: sectionData[St7.ipBXSS11],
+                                      zplMinor: sectionData[St7.ipBXSS22]);
     }
     private TSection GetTStrand7BGLSection(UnitFactor unitFactor, double[] sectionData, double[] materialData, string steelGrade, double[] bGLDimensions)
     {

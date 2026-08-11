@@ -117,7 +117,7 @@ namespace SD.Tests.Strand7.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SectionProperties.feature.ndjson", 7);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SectionProperties.feature.ndjson", 11);
         }
         
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 4, DisplayName="The section properties of property number 2 should match")]
@@ -401,7 +401,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.GivenAsync("the fem test file name is Section Properties.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 70
- await testRunner.WhenAsync("the section properties for property number 7 and 13 are loaded with accuracy 3%", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+ await testRunner.WhenAsync("the section properties for property number 7 and 13 are loaded with accuracy 15%", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 71
  await testRunner.ThenAsync("the section property Agr should be 2.27", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -469,14 +469,11 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line 92
  await testRunner.AndAsync("the section property J should be 118", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 93
- await testRunner.AndAsync("the section property Cw should be 0.079736064", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 96, DisplayName="The section properties of property number 8 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 95, DisplayName="The section properties of property number 8 should match")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("The section properties of property number 8 should match")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "SectionProperties")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("SectionProperties")]
@@ -489,7 +486,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("The section properties of property number 8 should match", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 96
+#line 95
 this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -499,50 +496,195 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 97
+#line 96
  await testRunner.GivenAsync("the fem test file name is Section Properties.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 98
+#line 97
  await testRunner.WhenAsync("the section properties for property number 8 and 16 are loaded with accuracy 7%", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 99
+#line 98
  await testRunner.ThenAsync("the section property Agr should be 8.36454", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 100
+#line 99
  await testRunner.AndAsync("the section property CeMajor should be 130.5", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 101
+#line 100
  await testRunner.AndAsync("the section property CeMinor should be 111.0003", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 102
+#line 101
  await testRunner.AndAsync("the section property IMajor should be 37.5210", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 103
+#line 102
  await testRunner.AndAsync("the section property ZeMajor should be 287.517", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 104
+#line 103
  await testRunner.AndAsync("the section property RMajor should be 66.9755", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 105
+#line 104
  await testRunner.AndAsync("the section property IMinor should be 8.86188", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 106
+#line 105
  await testRunner.AndAsync("the section property ZeMinor should be 79.8365", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 107
+#line 106
  await testRunner.AndAsync("the section property RMinor should be 32.5493", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 108
+#line 107
  await testRunner.AndAsync("the section property ZplMinor should be 160.496", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 109
+#line 108
  await testRunner.AndAsync("the section property ZplMajor should be 437.734", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 110
+#line 109
  await testRunner.AndAsync("the section property J should be 1498.66515948385", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 111
+#line 110
  await testRunner.AndAsync("the section property Cw should be 2.2081957653348043", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 114, DisplayName="The section properties of property number 11 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("The section properties of property number 11 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "SectionProperties")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("SectionProperties")]
+        public async global::System.Threading.Tasks.Task TheSectionPropertiesOfPropertyNumber11ShouldMatch()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "SectionProperties"};
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "5";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("The section properties of property number 11 should match", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 114
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 115
+ await testRunner.GivenAsync("the fem test file name is Section Properties.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 116
+ await testRunner.WhenAsync("the section properties for property number 11 and 17 are loaded with accuracy 15%" +
+                        "", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 117
+ await testRunner.ThenAsync("the section property Agr should be 1.53535", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 120, DisplayName="The section properties of property number 18 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("The section properties of property number 18 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "SectionProperties")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("SectionProperties")]
+        public async global::System.Threading.Tasks.Task TheSectionPropertiesOfPropertyNumber18ShouldMatch()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "SectionProperties"};
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "6";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("The section properties of property number 18 should match", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 120
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 121
+ await testRunner.GivenAsync("the fem test file name is Section Properties.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 122
+ await testRunner.WhenAsync("the section properties for property number 18 and 19 are loaded with accuracy 7%", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 123
+ await testRunner.ThenAsync("the section property Agr should be 1.6094", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 126, DisplayName="The section properties of property number 20 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("The section properties of property number 20 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "SectionProperties")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("SectionProperties")]
+        public async global::System.Threading.Tasks.Task TheSectionPropertiesOfPropertyNumber20ShouldMatch()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "SectionProperties"};
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "7";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("The section properties of property number 20 should match", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 126
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 127
+ await testRunner.GivenAsync("the fem test file name is Section Properties.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 128
+ await testRunner.WhenAsync("the section properties for property number 20 and 21 are loaded with accuracy 6%", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 129
+ await testRunner.ThenAsync("the section property Agr should be 9.6564", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 132, DisplayName="The section properties of property number 22 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("The section properties of property number 22 should match")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "SectionProperties")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("SectionProperties")]
+        public async global::System.Threading.Tasks.Task TheSectionPropertiesOfPropertyNumber22ShouldMatch()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "SectionProperties"};
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "8";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("The section properties of property number 22 should match", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 132
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 133
+ await testRunner.GivenAsync("the fem test file name is Section Properties.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 134
+ await testRunner.WhenAsync("the section properties for property number 22 and 23 are loaded with accuracy 4%", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 135
+ await testRunner.ThenAsync("the section property Agr should be 3.9632", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

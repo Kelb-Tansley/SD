@@ -117,7 +117,7 @@ namespace SD.Tests.Strand7.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ElementLength.feature.ndjson", 15);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/ElementLength.feature.ndjson", 14);
         }
         
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 4, DisplayName="Determine the effective length 2 of beam 1 in axis 2")]
@@ -194,7 +194,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 13
- await testRunner.ThenAsync("the L1 chain length of beam 1 should be 16733.2", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L1 chain length of beam 1 should be 8366.6", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -240,21 +240,21 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 22, DisplayName="Determine the effective length 2 of beam 3 in axis 1")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 2 of beam 3 in axis 1")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 22, DisplayName="Determine the effective length 1 of beam 2 in axis 3")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 2 in axis 3")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength2")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis1")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam3")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength2OfBeam3InAxis1()
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength1")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis3")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam2")]
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam2InAxis3()
         {
             string[] tagsOfScenario = new string[] {
-                    "EffectiveLength2",
-                    "Axis1",
-                    "Beam3"};
+                    "EffectiveLength1",
+                    "Axis3",
+                    "Beam2"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "3";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 2 of beam 3 in axis 1", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 2 in axis 3", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 22
@@ -274,27 +274,27 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 25
- await testRunner.ThenAsync("the L2 chain length of beam 3 should be 6000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L1 chain length of beam 2 should be 9000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 28, DisplayName="Determine the effective length 1 of beam 2 in axis 3")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 2 in axis 3")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 28, DisplayName="Determine the effective length 1 of beam 4 in axis 3")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 4 in axis 3")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength1")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis3")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam2")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam2InAxis3()
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam4")]
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam4InAxis3()
         {
             string[] tagsOfScenario = new string[] {
                     "EffectiveLength1",
                     "Axis3",
-                    "Beam2"};
+                    "Beam4"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "4";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 2 in axis 3", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 4 in axis 3", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 28
@@ -314,27 +314,27 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 31
- await testRunner.ThenAsync("the L1 chain length of beam 2 should be 9000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L1 chain length of beam 4 should be 9000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 34, DisplayName="Determine the effective length 1 of beam 4 in axis 3")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 4 in axis 3")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 34, DisplayName="Determine the effective length 2 of beam 4 in axis 3")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 2 of beam 4 in axis 3")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength1")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength2")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis3")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam4")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam4InAxis3()
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength2OfBeam4InAxis3()
         {
             string[] tagsOfScenario = new string[] {
-                    "EffectiveLength1",
+                    "EffectiveLength2",
                     "Axis3",
                     "Beam4"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "5";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 4 in axis 3", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 2 of beam 4 in axis 3", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 34
@@ -354,27 +354,27 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 37
- await testRunner.ThenAsync("the L1 chain length of beam 4 should be 9000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L2 chain length of beam 4 should be 14366.6", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 40, DisplayName="Determine the effective length 2 of beam 4 in axis 3")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 2 of beam 4 in axis 3")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 40, DisplayName="Determine the effective length 1 of beam 2 in axis 1")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 2 in axis 1")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength2")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis3")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam4")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength2OfBeam4InAxis3()
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength1")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis1")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam2")]
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam2InAxis1()
         {
             string[] tagsOfScenario = new string[] {
-                    "EffectiveLength2",
-                    "Axis3",
-                    "Beam4"};
+                    "EffectiveLength1",
+                    "Axis1",
+                    "Beam2"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "6";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 2 of beam 4 in axis 3", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 2 in axis 1", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 40
@@ -394,27 +394,27 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 43
- await testRunner.ThenAsync("the L2 chain length of beam 4 should be 14366.6", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L1 chain length of beam 2 should be 9000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 46, DisplayName="Determine the effective length 1 of beam 2 in axis 1")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 2 in axis 1")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 46, DisplayName="Determine the effective length 1 of beam 3 in axis 1 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 3 in axis 1 with beam restraints")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength1")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis1")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam2")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam2InAxis1()
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam3")]
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam3InAxis1WithBeamRestraints()
         {
             string[] tagsOfScenario = new string[] {
                     "EffectiveLength1",
                     "Axis1",
-                    "Beam2"};
+                    "Beam3"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "7";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 2 in axis 1", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 3 in axis 1 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 46
@@ -428,33 +428,33 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             {
                 await this.ScenarioStartAsync();
 #line 47
- await testRunner.GivenAsync("the fem test file name is Element Length Tests.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+ await testRunner.GivenAsync("the fem test file name is Element Length Restraint Tests.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 48
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 49
- await testRunner.ThenAsync("the L1 chain length of beam 2 should be 9000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L1 chain length of beam 3 should be 1000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 52, DisplayName="Determine the effective length 1 of beam 3 in axis 1 with beam restraints")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 3 in axis 1 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 52, DisplayName="Determine the effective length 1 of beam 1 in axis 1 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 1 in axis 1 with beam restraints")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength1")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis1")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam3")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam3InAxis1WithBeamRestraints()
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam1")]
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam1InAxis1WithBeamRestraints()
         {
             string[] tagsOfScenario = new string[] {
                     "EffectiveLength1",
                     "Axis1",
-                    "Beam3"};
+                    "Beam1"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "8";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 3 in axis 1 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 1 in axis 1 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 52
@@ -474,27 +474,27 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 55
- await testRunner.ThenAsync("the L1 chain length of beam 3 should be 1000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L1 chain length of beam 1 should be 2000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 58, DisplayName="Determine the effective length 1 of beam 1 in axis 1 with beam restraints")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 1 in axis 1 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 58, DisplayName="Determine the effective length 1 of beam 4 in axis 3 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 4 in axis 3 with beam restraints")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength1")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis1")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam1")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam1InAxis1WithBeamRestraints()
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis3")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam4")]
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam4InAxis3WithBeamRestraints()
         {
             string[] tagsOfScenario = new string[] {
                     "EffectiveLength1",
-                    "Axis1",
-                    "Beam1"};
+                    "Axis3",
+                    "Beam4"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "9";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 1 in axis 1 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 4 in axis 3 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 58
@@ -514,27 +514,27 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 61
- await testRunner.ThenAsync("the L1 chain length of beam 1 should be 2000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L1 chain length of beam 4 should be 2000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 64, DisplayName="Determine the effective length 1 of beam 4 in axis 3 with beam restraints")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 1 of beam 4 in axis 3 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 64, DisplayName="Determine the effective length 2 of beam 2 in axis 3 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 2 of beam 2 in axis 3 with beam restraints")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength1")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength2")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis3")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam4")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength1OfBeam4InAxis3WithBeamRestraints()
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam2")]
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength2OfBeam2InAxis3WithBeamRestraints()
         {
             string[] tagsOfScenario = new string[] {
-                    "EffectiveLength1",
+                    "EffectiveLength2",
                     "Axis3",
-                    "Beam4"};
+                    "Beam2"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "10";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 1 of beam 4 in axis 3 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 2 of beam 2 in axis 3 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 64
@@ -554,27 +554,27 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 67
- await testRunner.ThenAsync("the L1 chain length of beam 4 should be 2000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+ await testRunner.ThenAsync("the L2 chain length of beam 2 should be 2000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 70, DisplayName="Determine the effective length 2 of beam 2 in axis 3 with beam restraints")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 2 of beam 2 in axis 3 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 70, DisplayName="Determine the effective length 2 of beam 10 in axis 2 with beam restraints")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 2 of beam 10 in axis 2 with beam restraints")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength2")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis3")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam2")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength2OfBeam2InAxis3WithBeamRestraints()
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis2")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam10")]
+        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength2OfBeam10InAxis2WithBeamRestraints()
         {
             string[] tagsOfScenario = new string[] {
                     "EffectiveLength2",
-                    "Axis3",
-                    "Beam2"};
+                    "Axis2",
+                    "Beam10"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "11";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 2 of beam 2 in axis 3 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 2 of beam 10 in axis 2 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 70
@@ -594,46 +594,6 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
  await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 73
- await testRunner.ThenAsync("the L2 chain length of beam 2 should be 2000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute(callerLineNumber: 76, DisplayName="Determine the effective length 2 of beam 10 in axis 2 with beam restraints")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Determine the effective length 2 of beam 10 in axis 2 with beam restraints")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "ElementLength")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("EffectiveLength2")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Axis2")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("Beam10")]
-        public async global::System.Threading.Tasks.Task DetermineTheEffectiveLength2OfBeam10InAxis2WithBeamRestraints()
-        {
-            string[] tagsOfScenario = new string[] {
-                    "EffectiveLength2",
-                    "Axis2",
-                    "Beam10"};
-            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            string pickleIndex = "12";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Determine the effective length 2 of beam 10 in axis 2 with beam restraints", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
-            string[] tagsOfRule = ((string[])(null));
-            global::Reqnroll.RuleInfo ruleInfo = null;
-#line 76
-this.ScenarioInitialize(scenarioInfo, ruleInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                await testRunner.SkipScenarioAsync();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 77
- await testRunner.GivenAsync("the fem test file name is Element Length Restraint Tests.st7", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 78
- await testRunner.WhenAsync("SANS ULS design is run", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 79
  await testRunner.ThenAsync("the L2 chain length of beam 10 should be 2000", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

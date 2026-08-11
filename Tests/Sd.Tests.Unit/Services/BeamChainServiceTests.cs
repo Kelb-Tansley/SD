@@ -6,7 +6,7 @@ using SD.Core.Shared.Models.BeamModels;
 using SD.Element.Design.Services;
 
 
-namespace SD.Element.Design.Services.UnitTests;
+namespace SD.Tests.Unit.Services;
 
 /// <summary>
 /// Unit tests for the BeamChainService class.
@@ -29,7 +29,7 @@ public class BeamChainServiceTests
         List<Beam> beams = null!;
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentNullException>(() => service.GenerateBeamChains(beams));
+        Assert.ThrowsExactly<ArgumentNullException>(() => service.GenerateBeamChains(beams));
     }
 
     /// <summary>

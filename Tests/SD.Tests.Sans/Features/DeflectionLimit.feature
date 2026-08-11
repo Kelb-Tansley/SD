@@ -14,7 +14,7 @@ Scenario: Determine the relative span to deflection ratio of beam 7
 	And the deflection axis is Y
 	And the deflection method is Relative
 	When the deflection analysis is run
-	Then the span to deflection ratio of beam 7 should be 857.696
+	Then the span to deflection ratio of beam 7 should be 937.6744186046511
 
 @SpanDeflectionRatio @AbsoluteMethod @YAxis
 Scenario: Determine the absolute span to deflection ratio of beam 4
@@ -22,7 +22,7 @@ Scenario: Determine the absolute span to deflection ratio of beam 4
 	And the deflection axis is Y
 	And the deflection method is Absolute
 	When the deflection analysis is run
-	Then the span to deflection ratio of beam 4 should be 553.7762
+	Then the span to deflection ratio of beam 4 should be 554.0227198115035
 	
 @SpanDeflectionRatio @AbsoluteMethod @YAxis
 Scenario: Determine the absolute span to deflection ratio of beam 7

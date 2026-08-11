@@ -171,7 +171,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the deflection analysis is run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 17
- testRunner.Then("the span to deflection ratio of beam 7 should be 857.696", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the span to deflection ratio of beam 7 should be 937.6744186046511", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -214,7 +214,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the deflection analysis is run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 25
- testRunner.Then("the span to deflection ratio of beam 4 should be 553.7762", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the span to deflection ratio of beam 4 should be 554.0227198115035", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

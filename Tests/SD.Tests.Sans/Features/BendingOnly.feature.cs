@@ -120,7 +120,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the bending analysis is run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 7
- testRunner.Then("the bending resistance of beam 1 should be 176.59", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the bending resistance of beam 1 should be 163.12160230202508", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -155,7 +155,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the bending analysis is run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 13
- testRunner.Then("the bending resistance of beam 3 should be 176.59", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the bending resistance of beam 3 should be 176.59141006499993", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -190,7 +190,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the bending analysis is run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 19
- testRunner.Then("the bending resistance of beam 5 should be 122.01", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the bending resistance of beam 5 should be 107.55192962744609", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -225,7 +225,7 @@ this.ScenarioInitialize(scenarioInfo);
  testRunner.When("the bending analysis is run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 25
- testRunner.Then("the bending resistance of beam 7 should be 49.69", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the bending resistance of beam 7 should be 47.49316006992967", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

@@ -10,7 +10,6 @@
     <ReqnrollObsoleteCodeBehindFiles Remove="Features\ElementLength.feature.cs" />
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="FluentAssertions" Version="8.9.0" />
 	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
 	  <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="3.3.4" />
 	  <PackageReference Include="Reqnroll.MSTest" Version="3.3.4" />

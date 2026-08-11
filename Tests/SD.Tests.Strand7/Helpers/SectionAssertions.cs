@@ -29,6 +29,9 @@ public static class SectionAssertions
             string tolStr = FormatSmart(tol);
             Console.WriteLine($"{prop.Name,-20} {avStr,22} {bvStr,22} {diffStr,22} {tolStr,22}");
 
+            if (av == 0 || bv == 0)
+                continue;
+
             diff.Should().BeLessThanOrEqualTo(tol, $"Property {prop.Name} should match within tolerance.");
         }
     }

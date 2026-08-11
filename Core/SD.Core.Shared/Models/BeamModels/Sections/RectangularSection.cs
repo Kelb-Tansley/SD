@@ -2,6 +2,7 @@
 using SD.Core.Shared.Extensions;
 
 namespace SD.Core.Shared.Models.BeamModels.Sections;
+
 public class RectangularSection : Section
 {
     public RectangularSection(double b,
@@ -12,6 +13,10 @@ public class RectangularSection : Section
                               double? agr = null,
                               double? iMajor = null,
                               double? iMinor = null,
+                              double? zeMajor = null,
+                              double? zeMinor = null,
+                              double? zplMajor = null,
+                              double? zplMinor = null,
                               double? j = null) : base(SectionType.RectangularHollow, material)
     {
         B1 = b;
@@ -24,20 +29,31 @@ public class RectangularSection : Section
         InitialiseSectionProperties(agr: agr,
                                     iMajor: iMajor,
                                     iMinor: iMinor,
+                                    zeMajor: zeMajor,
+                                    zeMinor: zeMinor,
+                                    zplMajor: zplMajor,
+                                    zplMinor: zplMinor,
                                     j: j);
     }
 
-    private void InitialiseSectionProperties(double? agr, double? iMajor, double? iMinor, double? j)
+    private void InitialiseSectionProperties(double? agr,
+                                             double? iMajor,
+                                             double? iMinor,
+                                             double? zeMajor,
+                                             double? zeMinor,
+                                             double? zplMajor,
+                                             double? zplMinor,
+                                             double? j)
     {
         SetAgr(agr);
         SetIMajor(iMajor);
         SetIMinor(iMinor);
         SetRMajor();
         SetRMinor();
-        SetZeMajor();
-        SetZeMinor();
-        SetZplMajor();
-        SetZplMinor();
+        SetZeMajor(zeMajor);
+        SetZeMinor(zeMinor);
+        SetZplMajor(zplMajor);
+        SetZplMinor(zplMinor);
         SetJ(j);
     }
 
@@ -81,7 +97,6 @@ public class RectangularSection : Section
     {
         J = value != null ? (double)value : CalculateJ();
     }
-
     private double CalculateJ()
     {
         var rc = 1.5 * T1; // Mean corner radius

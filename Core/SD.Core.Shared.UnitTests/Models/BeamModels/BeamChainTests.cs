@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using Moq;
+﻿using Moq;
 using SD.Core.Shared.Enum;
 using SD.Core.Shared.Models.BeamModels;
 
@@ -1002,11 +1001,11 @@ public partial class BeamChainTests
         // Arrange
         var beamChain = new BeamChain
         {
-            K1 = 10.0,
-            K2 = 20.0,
-            Kz = 30.0,
-            KeTop = 40.0,
-            KeBottom = 50.0
+            K1 = 0.5,
+            K2 = 1,
+            Kz = 1.5,
+            KeTop = 2,
+            KeBottom = 2.5
         };
 
         var beamInList = new Beam { Section = null!, BeamChain = new BeamChain() };
@@ -1018,11 +1017,11 @@ public partial class BeamChainTests
         beamChain.SetChainKValues();
 
         // Assert
-        beamInList.BeamChain.K1.Should().Be(10.0);
-        beamInList.BeamChain.K2.Should().Be(20.0);
-        beamInList.BeamChain.Kz.Should().Be(30.0);
-        beamInList.BeamChain.KeTop.Should().Be(40.0);
-        beamInList.BeamChain.KeBottom.Should().Be(50.0);
+        beamInList.BeamChain.K1.Should().Be(0.5);
+        beamInList.BeamChain.K2.Should().Be(1);
+        beamInList.BeamChain.Kz.Should().Be(1.5);
+        beamInList.BeamChain.KeTop.Should().Be(2);
+        beamInList.BeamChain.KeBottom.Should().Be(2.5);
 
         beamNotInList.BeamChain.K1.Should().Be(1.0);
         beamNotInList.BeamChain.K2.Should().Be(2.0);

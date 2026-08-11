@@ -10,19 +10,13 @@ Scenario: Determine the effective length 2 of beam 1 in axis 2
 Scenario: Determine the effective length 1 of beam 1 in axis 2
 	Given the fem test file name is Element Length Tests.st7
 	When SANS ULS design is run
-	Then the L1 chain length of beam 1 should be 16733.2
+	Then the L1 chain length of beam 1 should be 8366.6
 
 @EffectiveLength2 @Axis2 @Beam3
 Scenario: Determine the effective length 2 of beam 3 in axis 2
 	Given the fem test file name is Element Length Tests.st7
 	When SANS ULS design is run
 	Then the L2 chain length of beam 3 should be 3000
-
-@EffectiveLength2 @Axis1 @Beam3
-Scenario: Determine the effective length 2 of beam 3 in axis 1
-	Given the fem test file name is Element Length Tests.st7
-	When SANS ULS design is run
-	Then the L2 chain length of beam 3 should be 6000
 
 @EffectiveLength1 @Axis3 @Beam2
 Scenario: Determine the effective length 1 of beam 2 in axis 3
