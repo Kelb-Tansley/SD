@@ -1,5 +1,4 @@
 <Project Sdk="WixToolset.Sdk/6.0.2">
-
   <PropertyGroup>
     <OutputType>Bundle</OutputType>
     <OutputName>AurestructSetup$(BundleVersion)</OutputName>
@@ -15,9 +14,7 @@
     <MsiPath Condition="'$(MsiPath)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)\..\SD.WiX\bin\x64\Release\Aurestruct.msi'))</MsiPath>
     <DefineConstants>BundleVersion=$(BundleVersion);MsiPath=$(MsiPath)</DefineConstants>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="WixToolset.Bal.wixext" Version="6.0.2" />
+    <PackageReference Include="WixToolset.Bal.wixext" Version="7.0.0" />
   </ItemGroup>
-
 </Project>

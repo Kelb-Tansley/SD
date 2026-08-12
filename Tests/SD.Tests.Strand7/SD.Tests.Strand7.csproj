@@ -10,11 +10,11 @@
     <ReqnrollObsoleteCodeBehindFiles Remove="Features\ElementLength.feature.cs" />
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
 	  <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="3.3.4" />
 	  <PackageReference Include="Reqnroll.MSTest" Version="3.3.4" />
-	  <PackageReference Include="MSTest.TestAdapter" Version="4.2.1" />
-	  <PackageReference Include="MSTest.TestFramework" Version="4.2.1" />
+	  <PackageReference Include="MSTest.TestAdapter" Version="4.3.3" />
+	  <PackageReference Include="MSTest.TestFramework" Version="4.3.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SD.Tests.Shared\SD.Tests.Shared.csproj" />

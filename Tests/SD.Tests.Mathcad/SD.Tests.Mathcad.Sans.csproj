@@ -1,20 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net10.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 	<ItemGroup>
-	  <SpecFlowObsoleteCodeBehindFiles Remove="Features\BeamColumn - Copy.feature.cs" />
-	  <SpecFlowObsoleteCodeBehindFiles Remove="Features\CompressionOnly - Copy.feature.cs" />
+	  <ReqnrollObsoleteCodeBehindFiles Remove="Features\BeamColumn - Copy.feature.cs" />
+	  <ReqnrollObsoleteCodeBehindFiles Remove="Features\CompressionOnly - Copy.feature.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
-		<PackageReference Include="SolidToken.SpecFlow.DependencyInjection" Version="3.9.3" />
-		<PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
-		<PackageReference Include="SpecFlow.MsTest" Version="3.9.74" />
-		<PackageReference Include="MSTest.TestAdapter" Version="4.2.1" />
-		<PackageReference Include="MSTest.TestFramework" Version="4.2.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+		<PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="3.3.4" />
+		<PackageReference Include="Reqnroll.MSTest" Version="3.3.4" />
+		<PackageReference Include="MSTest.TestAdapter" Version="4.3.3" />
+		<PackageReference Include="MSTest.TestFramework" Version="4.3.3" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Domain\SD.Element.Design\SD.Element.Design.csproj" />
@@ -73,16 +72,17 @@
 	  </None>
 	</ItemGroup>
 	<ItemGroup>
-	  <SpecFlowFeatureFiles Update="Features\SingleBeam.feature">
+	  <ReqnrollFeatureFiles Update="Features\SingleBeam.feature">
 	    <Visible>$(UsingMicrosoftNETSdk)</Visible>
 	    <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
-	  </SpecFlowFeatureFiles>
-	  <SpecFlowFeatureFiles Update="Features\BeamColumn.feature">
+	  </ReqnrollFeatureFiles>
+	  <ReqnrollFeatureFiles Update="Features\BeamColumn.feature">
 	    <Visible>$(UsingMicrosoftNETSdk)</Visible>
 	    <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
-	  </SpecFlowFeatureFiles>
+	  </ReqnrollFeatureFiles>
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="TestFiles\Single\" />
 	</ItemGroup>
 </Project>
+

@@ -1,4 +1,4 @@
-# ⚙️ Aurestruct — *Design Faster. Verify Smarter. Build Safer.*
+﻿# âš™ï¸ Aurestruct â€” *Design Faster. Verify Smarter. Build Safer.*
 
 **Aurestruct Structural Design Tools** is a modular desktop engineering platform for structural design workflows, combining FEM model interaction, code-based design checks, and report-friendly calculation pipelines in one environment.
 
@@ -52,13 +52,13 @@ The solution is organized into clear layers/projects:
 
 ### `UserInterface` projects
 - Modular WPF UI components split by functional area:
-  - `SD.UI.Main` — shell regions and main interaction views
-  - `SD.UI.Tools` — specialist engineering tool panels
-  - `SD.UI.UltimateLimitState` — ULS-focused views and view models
+  - `SD.UI.Main` â€” shell regions and main interaction views
+  - `SD.UI.Tools` â€” specialist engineering tool panels
+  - `SD.UI.UltimateLimitState` â€” ULS-focused views and view models
   - Shared styling/resources in `SD.UI`
 
 ### `Tests` projects
-- Unit and SpecFlow-driven behavior tests across domains and integrations
+- Unit and Reqnroll-driven behavior tests across domains and integrations
 
 ---
 
@@ -80,7 +80,7 @@ The solution is organized into clear layers/projects:
 - **Prism** for modular composition and regions
 - **CommunityToolkit.Mvvm** for MVVM patterns and commands
 - **Microsoft Identity Client (MSAL)** for authentication
-- **SpecFlow + test projects** for behavior and integration validation
+- **Reqnroll + test projects** for behavior and integration validation
 
 ---
 
@@ -192,3 +192,4 @@ msiexec /x Installer/SD.WiX/bin/Release/Aurestruct.msi /qn /l*v uninstall.log
 
 This means the publish folder was missing when harvesting files.
 Run Step 1 first, then rebuild Steps 2 and 3.
+
