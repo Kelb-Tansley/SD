@@ -139,6 +139,10 @@ public class SansDesignService : SansService, IElementDesignService
 
     private static BeamForces GetAllPeakBeamResults(UnitFactor unitFactor, List<StrandBeamResults> results)
     {
+        var muMajorIsColinear = results.IsResultCurveColinear(BeamResultType.BendingMomentMajor);
+        var muMinorIsColinear = results.IsResultCurveColinear(BeamResultType.BendingMomentMinor);
+        var muMajorHasOneSlopeChange = !muMajorIsColinear && results.IsResultCurveSingleSlopeChange(BeamResultType.BendingMomentMajor);
+        var muMinorHasOneSlopeChange = !muMinorIsColinear && results.IsResultCurveSingleSlopeChange(BeamResultType.BendingMomentMinor);
         return new BeamForces
         {
             MaxAxialForce = results.MaxResult(BeamResultType.AxialForce) * unitFactor.Force,
@@ -157,55 +161,61 @@ public class SansDesignService : SansService, IElementDesignService
             EndMuMajor = results.EndResult(BeamResultType.BendingMomentMajor) * unitFactor.Force * unitFactor.Length,
             StartMuMinor = results.StartResult(BeamResultType.BendingMomentMinor) * unitFactor.Force * unitFactor.Length,
             EndMuMinor = results.EndResult(BeamResultType.BendingMomentMinor) * unitFactor.Force * unitFactor.Length,
+            MuMajorIsColinear = muMajorIsColinear,
+            MuMinorIsColinear = muMinorIsColinear,
+            MuMajorHasOneSlopeChange = muMajorHasOneSlopeChange,
+            MuMinorHasOneSlopeChange = muMinorHasOneSlopeChange
         };
     }
 
     private static void Calculateω1Values(BeamForces forces, BendingConstants sbc)
     {
-        var κMajor = forces.SmallerStartOrEndMuMajor() / forces.LargerStartOrEndMuMajor();
-        var κMinor = forces.SmallerStartOrEndMuMinor() / forces.LargerStartOrEndMuMinor();
-
-        //Positive implies double curvature while - is single
-        var curvature2 = forces.MinMuMajor < 0 & forces.MaxMuMajor > 0 ? 1 : -1;
-        var curvature1 = forces.MinMuMinor < 0 & forces.MaxMuMinor > 0 ? 1 : -1;
-
-        κMajor *= curvature2;
-        κMinor *= curvature1;
-
-        //Here the w1 value is determined by assuming that if the end moment is greater than the moment at any other point within the element
-        //then it is not subjected to transverse loads between supports.
-        if (forces.MaxAbsMuMinor == Math.Max(Math.Abs(forces.StartMuMinor), Math.Abs(forces.EndMuMinor)) && Math.Abs(sbc.MuMinorQuarter) <= forces.MaxAbsMuMinor
-            && Math.Abs(sbc.MuMinorHalf) <= forces.MaxAbsMuMinor && Math.Abs(sbc.MuMinorThreeQuarter) <= forces.MaxAbsMuMinor)
+        if (forces.MuMinorIsColinear)
         {
+            var κMinor = forces.SmallerStartOrEndMuMinor() / forces.LargerStartOrEndMuMinor();
+
+            //Positive implies double curvature while - is single
+            var curvature1 = forces.MinMuMinor < 0 & forces.MaxMuMinor > 0 ? 1 : -1;
+
+            κMinor *= curvature1;
+
+            sbc.Loadω1Case = 1;
             sbc.ω1Minor = Math.Max(0.6 - 0.4 * κMinor, 0.4);
         }
-        else if (forces.MaxAbsMuMinor == Math.Max(Math.Abs(forces.StartMuMinor), Math.Abs(forces.EndMuMinor))
-            && (Math.Abs(sbc.MuMinorQuarter) == forces.MaxAbsMuMinor && Math.Abs(sbc.MuMinorHalf) == forces.MaxAbsMuMinor || Math.Abs(sbc.MuMinorHalf) == forces.MaxAbsMuMinor && Math.Abs(sbc.MuMinorThreeQuarter) == forces.MaxAbsMuMinor))
-            sbc.ω1Minor = 0.85;
-        else if (forces.MaxAbsMuMinor > Math.Max(Math.Abs(forces.StartMuMinor), Math.Abs(forces.EndMuMinor)))
-            sbc.ω1Minor = 1;
-        else
-            sbc.ω1Minor = 0.85;
-
-
-        if (forces.MaxAbsMuMajor == Math.Max(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor)) && Math.Abs(sbc.MuMajorHalf) <= forces.MaxAbsMuMajor
-            && Math.Abs(sbc.MuMajorHalf) <= forces.MaxAbsMuMajor && Math.Abs(sbc.MuMajorThreeQuarter) <= forces.MaxAbsMuMajor)
+        else if (forces.MuMinorHasOneSlopeChange)
         {
+            sbc.Loadω1Case = 3;
+            sbc.ω1Minor = 0.85;
+        }
+        else
+        {
+            sbc.Loadω1Case = 2;
+            sbc.ω1Minor = 1;
+        }
+
+
+        if (forces.MuMinorIsColinear)
+        {
+            var κMajor = forces.SmallerStartOrEndMuMajor() / forces.LargerStartOrEndMuMajor();
+
+            //Positive implies double curvature while - is single
+            var curvature2 = forces.MinMuMajor < 0 & forces.MaxMuMajor > 0 ? 1 : -1;
+
+            κMajor *= curvature2;
+
             sbc.Loadω1Case = 1;
             sbc.ω1Major = Math.Max(0.6 - 0.4 * κMajor, 0.4);
         }
-        else if (forces.MaxAbsMuMajor == Math.Max(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor))
-            && (Math.Abs(sbc.MuMajorQuarter) == forces.MaxAbsMuMajor && Math.Abs(sbc.MuMajorHalf) == forces.MaxAbsMuMajor || Math.Abs(sbc.MuMajorHalf) == forces.MaxAbsMuMajor && Math.Abs(sbc.MuMajorThreeQuarter) == forces.MaxAbsMuMajor))
+        else if (forces.MuMajorHasOneSlopeChange)
         {
             sbc.Loadω1Case = 3;
             sbc.ω1Major = 0.85;
         }
-        else if (forces.MaxAbsMuMajor > Math.Max(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor)))
-        {
-            sbc.Loadω1Case = 2; sbc.ω1Major = 1;
-        }
         else
-            sbc.ω1Major = 0.85;
+        {
+            sbc.Loadω1Case = 2;
+            sbc.ω1Major = 1;
+        }
     }
 
     private SansUlsResult GetSansDesignUlsResult(BeamForces bf, BendingConstants sbc, StrandBeamResults sbr, DesignType sansDesignType)

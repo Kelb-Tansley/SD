@@ -1,4 +1,5 @@
 ﻿namespace SD.Core.Shared.Models.BeamModels;
+
 public class BeamForces
 {
     /// <summary>
@@ -59,6 +60,30 @@ public class BeamForces
     /// Ultimate bending moment about the minor (1) axis at the start of the beam.
     /// </summary>
     public double StartMuMinor { get; set; }
+
+    /// <summary>
+    /// Bending moment diagram about the minor (1) axis is colinear. 
+    /// This implies that member is not subjected to transverse loads between supports
+    /// </summary>
+    public bool MuMinorIsColinear { get; set; }
+
+    /// <summary>
+    /// Bending moment diagram about the major (2) axis is colinear. 
+    /// This implies that member is not subjected to transverse loads between supports
+    /// </summary>
+    public bool MuMajorIsColinear { get; set; }
+
+    /// <summary>
+    /// Bending moment diagram about the minor (1) axis has only 1 slope change. 
+    /// This implies that member is subjected to a concentrated load or moment between supports.
+    /// </summary>
+    public bool MuMinorHasOneSlopeChange { get; set; }
+
+    /// <summary>
+    /// Bending moment diagram about the major (2) axis has only 1 slope change. 
+    /// This implies that member is subjected to a concentrated load or moment between supports.
+    /// </summary>
+    public bool MuMajorHasOneSlopeChange { get; set; }
 
     /// <summary>
     /// Ultimate bending moment about the minor (1) axis at the end of the beam.

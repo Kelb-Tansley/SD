@@ -123,8 +123,7 @@ public class CompressionUnitTests : UnitTestsBase
             zeMinor: 17000,
             zplMajor: 21000,
             zplMinor: 18000,
-            j: 5000,
-            cw: 6000000);
+            j: 5000);
 
         Assert.AreEqual(12000, section.Agr);
         Assert.AreEqual(4000000, section.IMajor);

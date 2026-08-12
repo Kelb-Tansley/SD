@@ -1104,6 +1104,7 @@ public class StrandApiService(IDesignCodeAdapter femDesignAdapter,
                     NumStations = numStations,
                     NumColumns = numColumns,
                     BeamRes = beamRes,
+                    BeamPos = beamPos,
                     BeamStressRes = stressRes,
                     BeamQuarters = quarterPoints
                 });

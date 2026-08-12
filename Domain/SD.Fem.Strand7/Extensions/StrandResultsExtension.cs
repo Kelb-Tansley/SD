@@ -1,6 +1,7 @@
 ﻿using SD.Core.Strand.Enum;
 
 namespace SD.Fem.Strand7.Extensions;
+
 public static class StrandResultsExtension
 {
     public static double MaxStressResult(this List<StrandBeamResults> results)
@@ -82,6 +83,83 @@ public static class StrandResultsExtension
 
         return minResult;
     }
+
+    private static List<double> GetResultCurveValues(StrandBeamResults result, BeamResultType resultType)
+    {
+        var values = new List<double>();
+
+        for (int station = 1; station <= result.NumStations; station++)
+        {
+            var index = (station - 1) * result.NumColumns + (int)resultType;
+            values.Add(result.BeamRes[index]);
+        }
+
+        return values;
+    }
+
+    public static bool IsResultCurveColinear(this List<StrandBeamResults> results,
+                                             BeamResultType resultType,
+                                             double relativeTolerance = 0.001D,
+                                             double absoluteTolerance = 1E-6D)
+    {
+        foreach (var result in results)
+        {
+            var values = GetResultCurveValues(result, resultType);
+
+            var firstValue = values[0];
+            var lastValue = values[^1];
+            var denominator = values.Count - 1D;
+            var maxAbsValue = values.Max(Math.Abs);
+            var tolerance = Math.Max(absoluteTolerance, relativeTolerance * Math.Max(1D, maxAbsValue));
+
+            for (int i = 1; i < values.Count - 1; i++)
+            {
+                var expected = firstValue + (lastValue - firstValue) * (i / denominator);
+                if (Math.Abs(values[i] - expected) > tolerance)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public static bool IsResultCurveSingleSlopeChange(this List<StrandBeamResults> results,
+                                                      BeamResultType resultType,
+                                                      double relativeTolerance = 0.001D)
+    {
+        foreach (var result in results)
+        {
+            var values = GetResultCurveValues(result, resultType);
+
+            // Strand7 result values are not sampled at equally spaced stations along the beam,
+            // so the x-step is not constant.
+            var deltaX = result.BeamPos[1] - result.BeamPos[0];
+            var previousSlope = (values[1] - values[0]) / deltaX;
+            var slopeChanges = 0;
+
+            for (int i = 2; i < values.Count; i++)
+            {
+                deltaX = result.BeamPos[i] - result.BeamPos[i - 1];
+                var currentSlope = (values[i] - values[i - 1]) / deltaX;
+                var tolerance = Math.Max(relativeTolerance * Math.Abs(previousSlope), relativeTolerance);
+
+                if (Math.Abs(currentSlope - previousSlope) > tolerance)
+                {
+                    if (deltaX > relativeTolerance)
+                    {
+                        slopeChanges++;
+                        if (slopeChanges > 1)
+                            return false;
+
+                        previousSlope = currentSlope;
+                    }
+                }
+            }
+
+        }
+
+        return true;
+    }
+
     public static double StartResult(this List<StrandBeamResults> results, BeamResultType resultType)
     {
         return results.First().BeamRes[(int)resultType];

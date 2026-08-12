@@ -27,10 +27,17 @@ public class StrandBeamResults
     /// The beam result array returned by Strand7 for this beam.
     /// </summary>
     public required double[] BeamRes { get; set; }
+
+    /// <summary>
+    /// The beam result arrays positions returned by Strand7 for this beam.
+    /// </summary>
+    public required double[] BeamPos { get; set; }
+
     /// <summary>
     /// The beam stress results array returned by Strand7 for this beam.
     /// </summary>
     public required double[] BeamStressRes { get; set; }
+
     /// <summary>
     /// The beam quarter bending moment results array returned by Strand7 for this beam.
     /// </summary>
