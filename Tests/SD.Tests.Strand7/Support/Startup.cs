@@ -8,6 +8,6 @@ public class Startup
     [ScenarioDependencies]
     public static IServiceCollection CreateServices()
     {
-        return SpecFlowStartupHelper.StartupSpecflowTests();
+        return ReqnrollStartupHelper.StartupReqnrollTests();
     }
 }

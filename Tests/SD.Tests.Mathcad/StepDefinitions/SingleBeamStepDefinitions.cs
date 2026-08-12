@@ -1,8 +1,8 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using SD.Core.Shared.Enum;
 using SD.Core.Shared.Models.Sans;
 using SD.MathcadPrime.Interfaces;
-using TechTalk.SpecFlow.Infrastructure;
+using Reqnroll;
 
 namespace SD.Tests.Mathcad.Sans.StepDefinitions;
 
@@ -19,7 +19,7 @@ public sealed class SingleBeamStepDefinitions
     private readonly IStrandApiService _strandApiService;
     private readonly IEffectiveLengthService _effectiveLengthService;
     private readonly ISansMathcadService _mathcadService;
-    private readonly ISpecFlowOutputHelper _output;
+    private readonly IReqnrollOutputHelper _output;
     private readonly int _modelId = 1;
     private string _mathcadSheet;
     private SansCapacity _mathcadResults;
@@ -35,7 +35,7 @@ public sealed class SingleBeamStepDefinitions
                                      IStrandApiService strandApiService,
                                      IEffectiveLengthService effectiveLengthService,
                                      ISansMathcadService mathcadService,
-                                     ISpecFlowOutputHelper output)
+                                     IReqnrollOutputHelper output)
     {
         _connectionService = connectionService ?? throw new ArgumentNullException(nameof(connectionService));
         _sansDesignService = sansDesignService ?? throw new ArgumentNullException(nameof(sansDesignService));

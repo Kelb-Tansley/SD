@@ -26,9 +26,9 @@ using SD.Core.Infrastructure.Interfaces;
 
 namespace SD.Tests.Shared.Helpers;
 
-public static class SpecFlowStartupHelper
+public static class ReqnrollStartupHelper
 {
-    public static IServiceCollection StartupSpecflowTests()
+    public static IServiceCollection StartupReqnrollTests()
     {
         var services = new ServiceCollection();
 
@@ -87,3 +87,4 @@ public static class SpecFlowStartupHelper
         return services;
     }
 }
+
