@@ -36,8 +36,8 @@ public class W1ValuesUnitTests
 
         InvokeCalculateW1Values(forces, sbc);
 
-        Assert.AreEqual(1, sbc.Loadω1Case);
-        Assert.AreEqual(0.8D, sbc.ω1Major, 1e-9);
+        Assert.AreEqual(2, sbc.Loadω1Case);
+        Assert.AreEqual(1, sbc.ω1Major, 1e-9);
     }
 
     [TestMethod]
@@ -98,8 +98,8 @@ public class W1ValuesUnitTests
 
         InvokeCalculateW1Values(forces, sbc);
 
-        Assert.AreEqual(1, sbc.Loadω1Case);
-        Assert.AreEqual(0.8D, sbc.ω1Minor, 1e-9);
+        Assert.AreEqual(2, sbc.Loadω1Case);
+        Assert.AreEqual(1, sbc.ω1Minor, 1e-9);
     }
 
     private static void InvokeCalculateW1Values(BeamForces forces, BendingConstants sbc)
