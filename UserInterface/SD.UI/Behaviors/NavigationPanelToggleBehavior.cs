@@ -12,6 +12,7 @@ namespace SD.UI.Behaviors
     {
         private const int _animationDelay = 300; // Milliseconds
         private double _previousWidth = 300; // Pixels
+        private double _savedCol0Width = 0;
         private Button? _toggleButton;
         private PackIcon? _toggleIcon;
 
@@ -27,6 +28,16 @@ namespace SD.UI.Behaviors
         {
             get => (bool)GetValue(IsCollapsedProperty);
             set => SetValue(IsCollapsedProperty, value);
+        }
+
+        public static readonly DependencyProperty IsForceHiddenProperty = DependencyProperty.Register(
+            nameof(IsForceHidden), typeof(bool), typeof(NavigationPanelToggleBehavior),
+            new FrameworkPropertyMetadata(false, OnIsForceHiddenChanged));
+
+        public bool IsForceHidden
+        {
+            get => (bool)GetValue(IsForceHiddenProperty);
+            set => SetValue(IsForceHiddenProperty, value);
         }
 
         protected override void OnAttached()
@@ -66,6 +77,33 @@ namespace SD.UI.Behaviors
             {
                 bool newVal = (bool)e.NewValue;
                 beh.UpdateVisualState(newVal, true);
+            }
+        }
+
+        private static void OnIsForceHiddenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is NavigationPanelToggleBehavior beh)
+                beh.ApplyForceHidden((bool)e.NewValue);
+        }
+
+        private void ApplyForceHidden(bool hide)
+        {
+            if (AssociatedObject == null || AssociatedObject.ColumnDefinitions.Count < 2)
+                return;
+
+            var col0 = AssociatedObject.ColumnDefinitions[0];
+
+            if (hide)
+            {
+                _savedCol0Width = col0.ActualWidth > 0 ? col0.ActualWidth : _previousWidth;
+                col0.BeginAnimation(ColumnDefinition.WidthProperty, null);
+                col0.Width = new GridLength(0, GridUnitType.Pixel);
+            }
+            else
+            {
+                col0.Width = new GridLength(_savedCol0Width > 0 ? _savedCol0Width : _previousWidth, GridUnitType.Pixel);
+                // Re-apply collapsed state so the toggle behavior stays in sync
+                UpdateVisualState(IsCollapsed, false);
             }
         }
 

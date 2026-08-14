@@ -18,6 +18,7 @@
             <behaviors:NavigationPanelToggleBehavior
                 MinWidth="50"
                 IsCollapsed="{Binding IsNavigationPanelCollapsed, Mode=TwoWay}"
+                IsForceHidden="{Binding SelectedTabIndex, Converter={StaticResource EqualToBoolConverter}, ConverterParameter=1}"
                 ToggleButtonName="NavToggleButton"
                 ToggleIconName="NavToggleIcon" />
         </i:Interaction.Behaviors>
@@ -28,10 +29,17 @@
         </Grid.ColumnDefinitions>
 
         <!--  Navigation Left Panel Region  -->
-        <ContentControl
-            Margin="16,0,0,0"
-            prism:RegionManager.RegionName="{x:Static ui:RegionNames.NavigationLeftPanelRegion}"
-            Visibility="{Binding IsNavigationPanelCollapsed, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+        <ContentControl Margin="16,0,0,0" prism:RegionManager.RegionName="{x:Static ui:RegionNames.NavigationLeftPanelRegion}">
+            <ContentControl.Visibility>
+                <MultiBinding Converter="{StaticResource MultiVisibilityAndConverter}">
+                    <Binding Converter="{StaticResource InverseBooleanToVisibilityConverter}" Path="IsNavigationPanelCollapsed" />
+                    <Binding
+                        Converter="{StaticResource EqualToCollapsedConverter}"
+                        ConverterParameter="1"
+                        Path="SelectedTabIndex" />
+                </MultiBinding>
+            </ContentControl.Visibility>
+        </ContentControl>
 
         <!--  Collapse/expand handle for left navigation panel  -->
         <Button
@@ -44,7 +52,8 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Panel.ZIndex="200"
-            Style="{StaticResource MaterialDesignIconButton}">
+            Style="{StaticResource MaterialDesignIconButton}"
+            Visibility="{Binding SelectedTabIndex, Converter={StaticResource EqualToCollapsedConverter}, ConverterParameter=1}">
             <materialDesign:PackIcon x:Name="NavToggleIcon" Kind="UnfoldMoreVertical" />
         </Button>
 
@@ -54,8 +63,17 @@
             Margin="8,0,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Stretch"
-            Background="{DynamicResource MaterialDesignDivider}"
-            Visibility="{Binding IsNavigationPanelCollapsed, Converter={StaticResource InverseBooleanToVisibilityConverter}}" />
+            Background="{DynamicResource MaterialDesignDivider}">
+            <GridSplitter.Visibility>
+                <MultiBinding Converter="{StaticResource MultiVisibilityAndConverter}">
+                    <Binding Converter="{StaticResource InverseBooleanToVisibilityConverter}" Path="IsNavigationPanelCollapsed" />
+                    <Binding
+                        Converter="{StaticResource EqualToCollapsedConverter}"
+                        ConverterParameter="1"
+                        Path="SelectedTabIndex" />
+                </MultiBinding>
+            </GridSplitter.Visibility>
+        </GridSplitter>
 
         <TabControl
             Grid.Column="2"

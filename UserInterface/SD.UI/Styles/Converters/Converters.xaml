@@ -24,4 +24,7 @@
     <converter:InvertedObjectNullToVisibilityConverter x:Key="InvertedObjectNullToVisibilityConverter" />
     <converter:ListToCountConverter x:Key="ListToCountConverter" />
     <converter:ListCountToVisibilityConverter x:Key="ListCountToVisibilityConverter" />
+    <converter:EqualToCollapsedConverter x:Key="EqualToCollapsedConverter" />
+    <converter:EqualToBoolConverter x:Key="EqualToBoolConverter" />
+    <converter:MultiVisibilityAndConverter x:Key="MultiVisibilityAndConverter" />
 </ResourceDictionary>
