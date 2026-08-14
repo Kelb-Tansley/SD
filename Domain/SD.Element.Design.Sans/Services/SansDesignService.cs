@@ -5,8 +5,6 @@ using SD.Fem.Strand7.Interfaces;
 using SD.Element.Design.Sans.Extensions;
 using SD.Element.Design.Services;
 using SD.Core.Shared.Models.Sans;
-using System.Collections.ObjectModel;
-using Microsoft.VisualBasic;
 
 namespace SD.Element.Design.Sans.Services;
 
@@ -34,10 +32,10 @@ public class SansDesignService : SansService, IElementDesignService
 
         foreach (var update in updates)
         {
-            var oldResult = _ulsDesignResults.SansUlsResults.FirstOrDefault(r => r.Beam.Number == update.Beam.Number && r.LoadCaseNumber == update.LoadCaseNumber);
+            var oldResult = _ulsDesignResults.SansUlsResults!.FirstOrDefault(r => r.Beam.Number == update.Beam.Number && r.LoadCaseNumber == update.LoadCaseNumber);
             if (oldResult != null)
             {
-                var index = _ulsDesignResults.SansUlsResults.IndexOf(oldResult);
+                var index = _ulsDesignResults.SansUlsResults!.IndexOf(oldResult);
                 if (index != -1)
                     _ulsDesignResults.SansUlsResults[index] = update;
             }
@@ -170,6 +168,8 @@ public class SansDesignService : SansService, IElementDesignService
 
     private static void Calculateω1Values(BeamForces forces, BendingConstants sbc)
     {
+        // κ is the ratio of smaller to larger ultimate moment at opposite ends of unbraced length, positive for
+        // double curvature and negative for single curvature
         if (forces.MuMinorIsColinear)
         {
             var κMinor = forces.SmallerStartOrEndMuMinor() / forces.LargerStartOrEndMuMinor();
@@ -194,7 +194,7 @@ public class SansDesignService : SansService, IElementDesignService
         }
 
 
-        if (forces.MuMinorIsColinear)
+        if (forces.MuMajorIsColinear)
         {
             var κMajor = forces.SmallerStartOrEndMuMajor() / forces.LargerStartOrEndMuMajor();
 
@@ -392,7 +392,7 @@ public class SansDesignService : SansService, IElementDesignService
     {
         if (_designModel.DesignSettings.IncludeSlendernessCheck)
         {
-            util.SlendernessMajor = beam.Resistance.SlendernessMajor / 200D;
+            util.SlendernessMajor = beam!.Resistance!.SlendernessMajor / 200D;
             util.SlendernessMinor = beam.Resistance.SlendernessMinor / 200D;
         }
     }
@@ -401,68 +401,8 @@ public class SansDesignService : SansService, IElementDesignService
     {
         if (_designModel.DesignSettings.IncludeSlendernessCheck)
         {
-            util.SlendernessMajor = beam.Resistance.SlendernessMajor / 300D;
+            util.SlendernessMajor = beam!.Resistance!.SlendernessMajor / 300D;
             util.SlendernessMinor = beam.Resistance.SlendernessMinor / 300D;
         }
     }
 }
-
-
-
-//private static void DetermineWValuesOld(UnitFactor unitFactor, BeamForces forces, SansBendingConstants sbc, StrandBeamResults sbr)
-//{
-//    #region Determine w2 values
-
-//    if (forces.MaxAbsMuMajor <= Math.Max(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor)))
-//    {
-//        sbc.McrMajorω = 12 / (3 * Math.Abs(sbc.MuMajor1ω2 / forces.MaxAbsMuMajor) + 4 * Math.Abs(sbc.MuMajor2ω2 / forces.MaxAbsMuMajor) + 3 * Math.Abs(sbc.MuMajor3ω2 / forces.MaxAbsMuMajor) + 2);
-//        sbc.McrMajorω = Math.Min(sbc.McrMajorω, 2.5);
-//    }
-//    else
-//        sbc.McrMajorω = 1;
-
-//    if (double.IsNaN(sbc.McrMajorω) || double.IsInfinity(sbc.McrMajorω))
-//        sbc.McrMajorω = 1;
-//    #endregion
-
-//    #region Estimating w1 values - Needs to be checked/improved!!! NB!~!
-//    //Curvature variables    
-//    var curveState2 = forces.MinMuMajor < 0 & forces.MaxMuMajor > 0;
-//    var curvature2 = curveState2 ? 1 : -1;
-
-//    var curveState1 = forces.MinMuMinor < 0 & forces.MaxMuMinor > 0;
-//    var curvature1 = curveState1 ? 1 : -1;
-
-//    //Here the w1 value is determined by assuming that if the end moment is greater than the moment at any other point within the element
-//    //then it is not subjected to transverse loads between supports.
-//    if (forces.MaxAbsMuMinor == Math.Max(Math.Abs(forces.StartMuMinor), Math.Abs(forces.EndMuMinor)) && Math.Abs(sbc.MuMinor1ω2) <= forces.MaxAbsMuMinor && Math.Abs(sbc.MuMinor2ω2) <= forces.MaxAbsMuMinor && Math.Abs(sbc.MuMinor3ω2) <= forces.MaxAbsMuMinor)
-//    {
-//        sbc.ω1Minor = 0.6 - 0.4 * curvature1 * Math.Min(Math.Abs(forces.StartMuMinor), Math.Abs(forces.EndMuMinor)) / Math.Max(Math.Abs(forces.StartMuMinor), Math.Abs(forces.EndMuMinor));
-//        sbc.ω1Minor = Math.Max(sbc.ω1Minor, 0.4);
-//    }
-//    else if (forces.MaxAbsMuMinor == Math.Max(Math.Abs(forces.StartMuMinor), Math.Abs(forces.EndMuMinor)) && (Math.Abs(sbc.MuMinor1ω2) == forces.MaxAbsMuMinor && Math.Abs(sbc.MuMinor2ω2) == forces.MaxAbsMuMinor || Math.Abs(sbc.MuMinor2ω2) == forces.MaxAbsMuMinor && Math.Abs(sbc.MuMinor3ω2) == forces.MaxAbsMuMinor))
-//        sbc.ω1Minor = 0.85;
-//    else if (forces.MaxAbsMuMinor > Math.Max(Math.Abs(forces.StartMuMinor), Math.Abs(forces.EndMuMinor)))
-//        sbc.ω1Minor = 1;
-//    else
-//        sbc.ω1Minor = 0.85;
-
-//    if (double.IsNaN(sbc.ω1Minor) || double.IsInfinity(sbc.ω1Minor))
-//        sbc.ω1Minor = 0;
-
-//    if (forces.MaxAbsMuMajor == Math.Max(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor)) && Math.Abs(sbc.MuMajor2ω2) <= forces.MaxAbsMuMajor && Math.Abs(sbc.MuMajor2ω2) <= forces.MaxAbsMuMajor && Math.Abs(sbc.MuMajor3ω2) <= forces.MaxAbsMuMajor)
-//    {
-//        sbc.ω1Major = 0.6 - 0.4 * curvature2 * Math.Min(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor)) / Math.Max(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor));
-//        sbc.ω1Major = Math.Max(sbc.ω1Major, 0.4);
-//    }
-//    else if (forces.MaxAbsMuMajor == Math.Max(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor)) && (Math.Abs(sbc.MuMajor1ω2) == forces.MaxAbsMuMajor && Math.Abs(sbc.MuMajor2ω2) == forces.MaxAbsMuMajor || Math.Abs(sbc.MuMajor2ω2) == forces.MaxAbsMuMajor && Math.Abs(sbc.MuMajor3ω2) == forces.MaxAbsMuMajor))
-//        sbc.ω1Major = 0.85;
-//    else if (forces.MaxAbsMuMajor > Math.Max(Math.Abs(forces.StartMuMajor), Math.Abs(forces.EndMuMajor)))
-//        sbc.ω1Major = 1;
-//    else
-//        sbc.ω1Major = 0.85;
-
-//    if (double.IsNaN(sbc.ω1Major) || double.IsInfinity(sbc.ω1Major))
-//        sbc.ω1Major = 0;
-//    #endregion
-//}

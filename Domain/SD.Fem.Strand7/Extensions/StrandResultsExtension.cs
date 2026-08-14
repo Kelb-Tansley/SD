@@ -108,13 +108,16 @@ public static class StrandResultsExtension
 
             var firstValue = values[0];
             var lastValue = values[^1];
-            var denominator = values.Count - 1D;
+            var firstPos = result.BeamPos[0];
+            var lastPos = result.BeamPos[values.Count - 1];
+            var totalDistance = lastPos - firstPos;
             var maxAbsValue = values.Max(Math.Abs);
             var tolerance = Math.Max(absoluteTolerance, relativeTolerance * Math.Max(1D, maxAbsValue));
 
             for (int i = 1; i < values.Count - 1; i++)
             {
-                var expected = firstValue + (lastValue - firstValue) * (i / denominator);
+                var deltaX = result.BeamPos[i] - firstPos;
+                var expected = firstValue + (lastValue - firstValue) * (deltaX / totalDistance);
                 if (Math.Abs(values[i] - expected) > tolerance)
                     return false;
             }

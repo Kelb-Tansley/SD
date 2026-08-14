@@ -40,6 +40,12 @@
     <None Update="TestFiles\Applied loads.st7">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestFiles\Calculate w1 Values Tests.LSA">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Calculate w1 Values Tests.st7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestFiles\Columns Resistance Tests.st7">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

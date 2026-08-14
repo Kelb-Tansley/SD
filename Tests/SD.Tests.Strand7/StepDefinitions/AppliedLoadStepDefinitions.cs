@@ -1,68 +1,18 @@
-using SD.Core.Shared.Enum;
 using SD.Core.Strand.Enum;
-using SD.Element.Design.Sans.Services;
-using SD.Tests.Shared.Strand7;
 
 namespace SD.Tests.Strand7.StepDefinitions;
 
 [Binding]
-public sealed class AppliedLoadStepDefinitions
+public sealed class AppliedLoadStepDefinitions(IUlsDesignResults ulsDesignResults)
 {
-    private readonly IConnectionService _connectionService;
-    private readonly IElementDesignService _sansDesignService;
-    private readonly IDesignModel _designModel;
-    private readonly IFemModelParameters _femModelParameters;
-    private readonly IFemModel _femModel;
-    private readonly IFemModelDisplayService _femModelDisplayService;
-    private readonly IUlsDesignResults _ulsDesignResults;
-    private readonly IStrandApiService _strandApiService;
-    private readonly IEffectiveLengthService _effectiveLengthService;
+    private readonly IUlsDesignResults _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
 
-    private int _modelId = 1;
     private readonly double _accuracy = 0.0002;
-    private readonly bool _designLengthCalculated = false;
-
-    public AppliedLoadStepDefinitions(
-        IConnectionService connectionService,
-        SansDesignService sansDesignService,
-        IDesignModel designModel,
-        IFemModelParameters femModelParameters,
-        IFemModelDisplayService femModelDisplayService,
-        IFemModel femModel,
-        IUlsDesignResults ulsDesignResults,
-        IStrandApiService strandApiService,
-        IEffectiveLengthService effectiveLengthService)
-    {
-        _connectionService = connectionService ?? throw new ArgumentNullException(nameof(connectionService));
-        _sansDesignService = sansDesignService ?? throw new ArgumentNullException(nameof(sansDesignService));
-        _designModel = designModel ?? throw new ArgumentNullException(nameof(designModel));
-        _femModelParameters = femModelParameters ?? throw new ArgumentNullException(nameof(femModelParameters));
-        _femModel = femModel ?? throw new ArgumentNullException(nameof(femModel));
-        _femModelDisplayService = femModelDisplayService ?? throw new ArgumentNullException(nameof(femModelDisplayService));
-        _ulsDesignResults = ulsDesignResults ?? throw new ArgumentNullException(nameof(ulsDesignResults));
-        _strandApiService = strandApiService ?? throw new ArgumentNullException(nameof(strandApiService));
-        _effectiveLengthService = effectiveLengthService ?? throw new ArgumentNullException(nameof(effectiveLengthService));
-    }
-
-    [When("the uls analysis is run")]
-    public async Task WhenTheUlsAnalysisIsRun()
-    {
-        _strandApiService.OpenFemFile(_modelId, _femModel.FileName);
-
-        _femModelDisplayService.LoadFemModelProperties(_modelId, DesignCode.SANS, _femModel.FileName, true);
-
-        var settings = new ModelDesignSettings();
-        _effectiveLengthService.CalculateDesignLengths(FemModels.ModelId, _designLengthCalculated, _femModelParameters, settings);
-
-        _femModelParameters.LoadCaseCombinations.ToList().ForEach(lcc => lcc.Include = true);
-
-        await _sansDesignService.RunUlsDesign(_modelId, _femModelParameters.Beams.ToList());
-    }
 
     [Then("the (.*) result type: (.*) of beam (.*) should be (.*)")]
     public void ThenTheAppliedLoadShouldBe(string maxMin, BeamResultType resultType, int beamNumber, double value)
     {
-        var sansUlsResult = _ulsDesignResults.SansUlsResults.FirstOrDefault(sur => sur.Beam.Number == beamNumber);
+        var sansUlsResult = _ulsDesignResults!.SansUlsResults!.FirstOrDefault(sur => sur.Beam.Number == beamNumber);
 
         switch (resultType)
         {
@@ -109,6 +59,5 @@ public sealed class AppliedLoadStepDefinitions
             default:
                 break;
         }
-
     }
 }
